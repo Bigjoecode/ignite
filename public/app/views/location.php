@@ -305,45 +305,7 @@
   <!-- ==========================================================
        8. BOOK A NO-COST CONSULTATION
        ========================================================== -->
-  <section class="ig-form-sec" id="ig-consult">
-    <div class="ig-form-grid">
-
-      <div class="ig-form__media">
-        <img src="/assets/img/invisalign-braces-scaled.jpg"
-             alt="Patient holding braces and clear aligner models" width="1600" height="1067" loading="lazy" decoding="async">
-      </div>
-
-      <div class="ig-form__panel">
-        <div class="ig-form__inner">
-          <h2>Book a No-Cost Consultation</h2>
-
-          <!-- EDIT: give the form an action/method, or swap for a form-plugin shortcode -->
-          <form class="ig-form" id="igLocForm" action="/consult" method="post" novalidate>
-            <input type="text" name="website" value="" tabindex="-1" autocomplete="off" class="ig-hp" aria-hidden="true">
-            <input type="hidden" name="location" value="<?= e($loc['slug']) ?>">
-            <div class="ig-form__row">
-              <input name="full_name" type="text" placeholder="Full Name *" aria-label="Full Name" autocomplete="name" required>
-              <input name="phone" type="tel" placeholder="Contact Number *" aria-label="Contact Number" autocomplete="tel" required>
-            </div>
-            <div class="ig-form__row">
-              <input name="email" type="email" placeholder="Email *" aria-label="Email" autocomplete="email" required>
-              <input name="zip" type="text" placeholder="Zip Code *" aria-label="Zip Code" inputmode="numeric" autocomplete="postal-code" required>
-            </div>
-            <textarea name="message" rows="4" placeholder="Write a Message" aria-label="Write a Message"></textarea>
-
-            <!-- EDIT: have your attorney review this consent wording -->
-            <label class="ig-consent">
-              <input type="checkbox" name="consent" required>
-              <span>Checking this box is my signature to agree to receive text messages and calls about my healthcare and for marketing purposes, including autodialed, from <strong>Ignite Orthodontics</strong> at the number below. Messages may occasionally be sent outside of normal business hours, including weekends. I understand that this consent is not a condition of purchasing any goods or services, I can opt out at any time, message/data rates may apply per my phone plan, and opting-in includes acceptance of our <a href="/privacy-policy/">Privacy Policy</a> and <a href="/terms-and-conditions/">Terms of Service</a>. Contact: <a href="tel:<?= e($loc['tel']) ?>"><?= e($loc['phone']) ?></a>.</span>
-            </label>
-
-            <button class="ig-btn ig-btn--primary ig-form__submit" type="submit">Schedule Now</button>
-            <p class="ig-form__note" id="igLocFormNote">Fields marked * are required.</p>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+  <?php $ctaImage = '/assets/img/invisalign-braces-scaled.jpg'; $ctaPhone = $loc['phone']; $ctaTel = $loc['tel']; require APP . '/views/partials/consult-cta.php'; ?>
 
 
     <!-- ==========================================================

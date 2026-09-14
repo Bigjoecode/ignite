@@ -130,15 +130,15 @@ return [
     'refer-a-patient' => [
         'title' => 'Refer a Patient', 'description' => 'Refer a patient to Ignite Orthodontics. Send us the details and our team will reach out to schedule a consultation.',
         'kicker' => 'Referrals', 'h1' => 'Refer a <em>Patient.</em>',
-        'lead' => 'Dentists and families can refer patients to any of our six offices. Share the details below and our team will follow up to schedule a consultation.',
+        'lead' => 'Dentists and families can refer patients to any of our six offices. Contact us and our team will follow up to schedule a consultation.',
         'sections' => [
-            ['How referrals work', 'Use the form on this page with the patient\'s contact details and any notes about their needs. We will contact the patient directly to arrange a convenient appointment.'],
+            ['How referrals work', 'Call (586) 393-7972 or the office nearest the patient with their contact details and any notes about their needs. We will contact the patient directly to arrange a convenient appointment.'],
         ],
     ],
     'contact-us' => [
         'title' => 'Contact Us', 'description' => 'Contact Ignite Orthodontics. Call your nearest office or request a no-cost consultation online.',
         'kicker' => 'Contact Us', 'h1' => 'Your Best Smile Starts With <em>a Conversation.</em>',
-        'lead' => 'Call the office nearest you, or send a request below and our team will contact you to schedule your no-cost consultation.',
+        'lead' => 'Call the office nearest you and our team will help you schedule your no-cost consultation.',
         'finder' => true,
     ],
     'testimonials' => [

@@ -27,6 +27,7 @@
 <?php foreach ($meta['css'] as $css): ?>
 <link rel="stylesheet" href="<?= asset('css/' . $css) ?>">
 <?php endforeach; ?>
+<link rel="stylesheet" href="<?= asset('css/consult.css') ?>">
 <link rel="stylesheet" href="<?= asset('css/footer.css') ?>">
 </head>
 <body>

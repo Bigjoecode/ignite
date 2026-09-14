@@ -14,6 +14,6 @@
 
 <?php require APP . '/views/partials/finder.php'; ?>
 
-<?php require APP . '/views/partials/consult-form.php'; ?>
+<?php require APP . '/views/partials/consult-cta.php'; ?>
 
 </div>

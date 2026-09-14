@@ -35,9 +35,6 @@
 
 <?php if (!empty($p['finder'])) require APP . '/views/partials/finder.php'; ?>
 
-<?php
-$formHeading = $slug === 'refer-a-patient' ? 'Refer a Patient' : null;
-require APP . '/views/partials/consult-form.php';
-?>
+<?php require APP . '/views/partials/consult-cta.php'; ?>
 
 </div>
