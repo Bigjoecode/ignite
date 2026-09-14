@@ -127,7 +127,11 @@ put('app/views/partials/header.php', sprintf(VIEW_HEADER, 'menu.html') . $h);
 /* -------------------------------------------------------------------- home */
 $s = src('home-preview.html');
 put('assets/css/home.css', "/* generated from home-preview.html */\n" . localize(block($s, '<style>', '</style>', true)));
-put('assets/js/home.js', "/* generated from home-preview.html */\n" . block($s, '<script>', '</script>', true));
+// the finder has no map, so the search hint must not send people to one
+$js = rep(block($s, '<script>', '</script>', true),
+    "'No offices matched — press Search Nearest to look it up on the map.'",
+    "'No offices matched. Try a city name or zip code.'");
+put('assets/js/home.js', "/* generated from home-preview.html */\n" . $js);
 
 $b = localize(between($s, '<div class="ig-home">', '<script>'));
 // consultation form section -> shared call-to-action band
@@ -164,8 +168,9 @@ $b = rep_re($b, '#<section class="ig-form-sec" id="ig-consult">.*?</section>#s',
     "<?php \$ctaImage = '/assets/img/invisalign-braces-scaled.jpg'; \$ctaPhone = \$loc['phone']; \$ctaTel = \$loc['tel'];"
     . " require APP . '/views/partials/consult-cta.php'; ?>");
 // per-office tokens (order matters: full address before the bare city name)
-$b = rep($b, 'https://maps.google.com/maps?q=1010+S+Arlington+Heights+Rd&z=15&output=embed',
-    "https://maps.google.com/maps?q=<?= urlencode(\$loc['map_q']) ?>&amp;z=15&amp;output=embed");
+// no Google map embed (it links off the site): a photo fills the map box instead
+$b = rep_re($b, '#<iframe src="https://maps\.google\.com/maps\?q=1010[^"]*"[^>]*></iframe>#s',
+    '<img src="/assets/img/02-image.webp" alt="Smiling patient at Ignite Orthodontics Arlington Heights" width="288" height="467" loading="lazy" decoding="async">');
 // the address is plain text: no links off the site
 $b = rep($b, '<a href="https://maps.google.com/?q=1010+S+Arlington+Heights+Rd" target="_blank" rel="noopener">1010 S Arlington Heights Rd, Arlington Heights, IL 60005</a>',
     '1010 S Arlington Heights Rd, Arlington Heights, IL 60005');

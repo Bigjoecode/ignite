@@ -168,7 +168,7 @@
         if (match) hits++;
       });
       msg.style.color = '';
-      msg.textContent = hits ? '' : 'No offices matched — press Search Nearest to look it up on the map.';
+      msg.textContent = hits ? '' : 'No offices matched. Try a city name or zip code.';
     });
   })();
 

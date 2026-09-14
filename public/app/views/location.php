@@ -338,9 +338,7 @@
         </div>
 
         <div class="ig-mapbox">
-          <iframe src="https://maps.google.com/maps?q=<?= urlencode($loc['map_q']) ?>&amp;z=15&amp;output=embed"
-                  title="Map to Ignite Orthodontics <?= e($loc['name']) ?>"
-                  loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <img src="/assets/img/02-image.webp" alt="Smiling patient at Ignite Orthodontics <?= e($loc['name']) ?>" width="288" height="467" loading="lazy" decoding="async">
         </div>
       </div>
     </div>

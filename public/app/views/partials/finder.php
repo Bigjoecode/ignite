@@ -1,6 +1,7 @@
 <?php
-// "Find Ignite Orthodontics Near You" — same markup as the home-preview design,
+// "Find Ignite Orthodontics Near You" — markup from the home-preview design,
 // rendered from the office data. Needs home.css + home.js inside .ig-home.
+// No map embed or map links: the site never links visitors to other websites.
 $locs = locations();
 $pin   = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
 $phone = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
@@ -28,7 +29,7 @@ $mail  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path 
       </div>
       <p class="ig-loc__msg" id="igLocMsg" role="status"></p>
 
-      <div class="ig-loc__body">
+      <div class="ig-loc__body ig-loc__body--nomap">
         <div class="ig-loc__list">
 <?php foreach ($locs as $l): ?>
           <article class="ig-office">
@@ -40,20 +41,11 @@ $mail  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path 
                 <a href="mailto:<?= e($l['email']) ?>"><?= $mail ?> <?= e($l['email']) ?></a>
               </div>
               <div class="ig-office__links">
-                <a class="ig-btn" href="https://maps.google.com/?q=<?= urlencode($l['map_q']) ?>" target="_blank" rel="noopener">View on Map</a>
                 <a class="ig-btn" href="/locations/<?= e($l['slug']) ?>/">View Location</a>
               </div>
             </div>
           </article>
 <?php endforeach; ?>
-        </div>
-
-        <div class="ig-loc__map">
-          <iframe
-            src="https://maps.google.com/maps?q=Michigan&amp;z=7&amp;output=embed"
-            title="Map of Ignite Orthodontics locations"
-            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen></iframe>
         </div>
       </div>
     </div>
