@@ -117,6 +117,9 @@ $h = wrap_re($h, '#(<a class="ig-menu__link" href="/locations/">Our Locations</a
 HTML);
 $h = rep($h, 'Our Locations (6)', 'Our Locations (<?= count(locations()) ?>)');
 $h = brand_phone($h);
+// no "Contact Us" item in the menu (desktop bar or mobile panel)
+$h = rep_re($h, '#\s*<!-- EDIT: email address -->\s*<div class="ig-util__item ig-util__item--contact">.*?</div>#s', '');
+$h = rep_re($h, '#\s*<li>\s*<div class="ig-menu__row">\s*<a class="ig-menu__link" href="/contact-us/">Contact Us</a>\s*</div>\s*</li>#s', '');
 // "Request a Consultation" opens the booking popup (contact page is the no-JS fallback)
 $h = rep($h, '<a class="ig-btn ig-btn--consult" href="/contact-us/">', '<a class="ig-btn ig-btn--consult" href="/contact-us/" data-book>');
 put('app/views/partials/header.php', sprintf(VIEW_HEADER, 'menu.html') . $h);
@@ -163,7 +166,9 @@ $b = rep_re($b, '#<section class="ig-form-sec" id="ig-consult">.*?</section>#s',
 // per-office tokens (order matters: full address before the bare city name)
 $b = rep($b, 'https://maps.google.com/maps?q=1010+S+Arlington+Heights+Rd&z=15&output=embed',
     "https://maps.google.com/maps?q=<?= urlencode(\$loc['map_q']) ?>&amp;z=15&amp;output=embed");
-$b = rep($b, 'https://maps.google.com/?q=1010+S+Arlington+Heights+Rd', "https://maps.google.com/?q=<?= urlencode(\$loc['map_q']) ?>");
+// the address is plain text: no links off the site
+$b = rep($b, '<a href="https://maps.google.com/?q=1010+S+Arlington+Heights+Rd" target="_blank" rel="noopener">1010 S Arlington Heights Rd, Arlington Heights, IL 60005</a>',
+    '1010 S Arlington Heights Rd, Arlington Heights, IL 60005');
 $b = rep($b, '1010 S Arlington Heights Rd, Arlington Heights, IL 60005', "<?= e(\$loc['address_full']) ?>");
 $b = str_replace('Arlington Heights, IL', "<?= e(\$loc['city']) ?>, MI", $b); // only in the reviews heading, removed above
 $b = rep($b, 'Arlington Heights', "<?= e(\$loc['name']) ?>");

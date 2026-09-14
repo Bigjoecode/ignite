@@ -17,14 +17,6 @@
           </a>
         </div>
 
-        <!-- EDIT: email address -->
-        <div class="ig-util__item ig-util__item--contact">
-          <a class="ig-util__link" href="/contact-us/">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg>
-            Contact Us
-          </a>
-        </div>
-
         <!-- LOCATIONS DROPDOWN -->
         <div class="ig-util__item" data-ig-dropdown>
           <button class="ig-util__link" type="button" aria-expanded="false" aria-haspopup="true">
@@ -145,12 +137,6 @@
         <li>
           <div class="ig-menu__row">
             <a class="ig-menu__link" href="/refer-a-patient/">Refer a Patient</a>
-          </div>
-        </li>
-
-        <li>
-          <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/contact-us/">Contact Us</a>
           </div>
         </li>
 
