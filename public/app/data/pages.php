@@ -138,7 +138,7 @@ return [
     'contact-us' => [
         'title' => 'Contact Us', 'description' => 'Contact Ignite Orthodontics. Call your nearest office or request a no-cost consultation online.',
         'kicker' => 'Contact Us', 'h1' => 'Your Best Smile Starts With <em>a Conversation.</em>',
-        'lead' => 'Call the office nearest you and our team will help you schedule your no-cost consultation.',
+        'lead' => 'Request an appointment online or call the office nearest you, and our team will help you schedule your no-cost consultation.',
         'finder' => true,
     ],
     'testimonials' => [

@@ -28,19 +28,21 @@
 <link rel="stylesheet" href="<?= asset('css/' . $css) ?>">
 <?php endforeach; ?>
 <link rel="stylesheet" href="<?= asset('css/consult.css') ?>">
+<link rel="stylesheet" href="<?= asset('css/booking.css') ?>">
 <link rel="stylesheet" href="<?= asset('css/footer.css') ?>">
 </head>
-<body>
+<body<?= !empty($meta['book_office']) ? ' data-book-office="' . e($meta['book_office']) . '"' : '' ?>>
 <a class="ig-skip" href="#main">Skip to content</a>
 <?php require APP . '/views/partials/header.php'; ?>
 <main id="main">
 <?= $content ?>
 </main>
 <?php require APP . '/views/partials/footer.php'; ?>
-<script src="<?= asset('js/site.js') ?>"></script>
+<?php require APP . '/views/partials/booking.php'; ?>
 <script src="<?= asset('js/header.js') ?>" defer></script>
 <?php foreach ($meta['js'] as $js): ?>
 <script src="<?= asset('js/' . $js) ?>" defer></script>
 <?php endforeach; ?>
+<script src="<?= asset('js/booking.js') ?>" defer></script>
 </body>
 </html>

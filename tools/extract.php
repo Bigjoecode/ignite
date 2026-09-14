@@ -86,14 +86,6 @@ function put(string $path, string $data): void
     printf("wrote %-36s %7d bytes\n", $path, strlen($data));
 }
 
-/** The previews only fake a submit; hand the validated form to site.js instead. */
-function wire_form_js(string $js): string
-{
-    return rep($js,
-        "note.textContent = 'Thanks! This form is not connected to a mail handler yet.';",
-        "window.igSubmit(form, note); return;");
-}
-
 function brand_phone(string $s): string
 {
     $s = rep($s, 'tel:+15863937972', "tel:<?= e(cfg('phone_tel')) ?>");
@@ -125,12 +117,14 @@ $h = wrap_re($h, '#(<a class="ig-menu__link" href="/locations/">Our Locations</a
 HTML);
 $h = rep($h, 'Our Locations (6)', 'Our Locations (<?= count(locations()) ?>)');
 $h = brand_phone($h);
+// "Request a Consultation" opens the booking popup (contact page is the no-JS fallback)
+$h = rep($h, '<a class="ig-btn ig-btn--consult" href="/contact-us/">', '<a class="ig-btn ig-btn--consult" href="/contact-us/" data-book>');
 put('app/views/partials/header.php', sprintf(VIEW_HEADER, 'menu.html') . $h);
 
 /* -------------------------------------------------------------------- home */
 $s = src('home-preview.html');
 put('assets/css/home.css', "/* generated from home-preview.html */\n" . localize(block($s, '<style>', '</style>', true)));
-put('assets/js/home.js', "/* generated from home-preview.html */\n" . wire_form_js(block($s, '<script>', '</script>', true)));
+put('assets/js/home.js', "/* generated from home-preview.html */\n" . block($s, '<script>', '</script>', true));
 
 $b = localize(between($s, '<div class="ig-home">', '<script>'));
 // consultation form section -> shared call-to-action band
@@ -148,7 +142,7 @@ put('app/views/home.php', sprintf(VIEW_HEADER, 'home-preview.html') . $b);
 /* ---------------------------------------------------------------- location */
 $s = src('location-preview.html');
 put('assets/css/location.css', "/* generated from location-preview.html */\n" . localize(block($s, '<style>', '</style>', true)));
-put('assets/js/location.js', "/* generated from location-preview.html */\n" . wire_form_js(block($s, '<script>', '</script>', true)));
+put('assets/js/location.js', "/* generated from location-preview.html */\n" . block($s, '<script>', '</script>', true));
 
 $b = localize(between($s, '<div class="ig-locpage">', '<script>'));
 // placeholder doctors and reviews must not go live
@@ -200,27 +194,20 @@ $css = rep($css, '.section-header h2, .section-header p, h1, h2, h3, h4, p { tex
     '.kp .section-header h2, .kp .section-header p, .kp h1, .kp h2, .kp h3, .kp h4, .kp p { text-align: left !important; }');
 $css = rep($css, "'Outfit', sans-serif", '"Poppins", sans-serif');
 $css = rep($css, "'DM Sans', sans-serif", '"Poppins", sans-serif');
-$css = rep($css, 'z-index: 2000;', 'z-index: 99995;'); // above the fixed header
 put('assets/css/kids.css', "/* generated from kids-braces-page-layout.html */\n" . $css);
 
 $js = block($s, '<script>', '</script>');
-// the popup no longer fakes a "location selected" confirmation; its links go to real office pages
-$js = rep_re($js, "#document\\.querySelectorAll\\('\\.modal-loc'\\)[\\s\\S]*?\\}\\);\\s*\\}\\);#", '');
+// the draft's location-picker popup is replaced by the site-wide booking popup
+$js = rep_re($js, '#// Modal Handlers\s*\(function\(\) \{.*?\}\)\(\);#s', '');
 put('assets/js/kids.js', "/* generated from kids-braces-page-layout.html */\n" . $js);
 
 $b = substr(between($s, '<body>', '<!-- Scripts -->'), strlen('<body>'));
 $b = localize(str_ireplace(array_keys($palette), array_values($palette), $b));
 $b = rep($b, 'href="tel:8559163956"', "href=\"tel:<?= e(cfg('phone_tel')) ?>\"");
 $b = rep($b, 'Call (855) 916-3956', "Call <?= e(cfg('phone')) ?>");
-$b = rep($b, 'Ignite Clinics office', 'Ignite Orthodontics office');
-$b = rep_re($b, '#<div class="modal-locs">.*?</div>#s', <<<'HTML'
-<div class="modal-locs">
-<?php foreach (locations() as $l): ?>
-                    <a href="/locations/<?= e($l['slug']) ?>/#ig-consult" class="modal-loc"><?= e($l['name']) ?></a>
-<?php endforeach; ?>
-                </div>
-HTML);
-if (preg_match('/Ignite Clinics|855|Lansing/', $b, $left)) {
+$b = rep($b, 'href="#" data-popup="true"', 'href="/contact-us/" data-book');
+$b = rep_re($b, '#\s*<!-- =+\s*MODAL POPUP.*$#s', "\n");
+if (preg_match('/Ignite Clinics|855|Lansing|data-popup|modal-overlay/', $b, $left)) {
     throw new RuntimeException("draft content left in kids page: {$left[0]}");
 }
 put('app/views/kids.php', sprintf(VIEW_HEADER, 'kids-braces-page-layout.html') . "<div class=\"kp\">\n" . $b . "</div>\n");

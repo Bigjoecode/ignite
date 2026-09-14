@@ -11,7 +11,7 @@
                 <h1>Creating Healthy, Confident <span>Smiles for Kids</span> &amp; Teens</h1>
                 <p>Gentle, fun, and stress-free orthodontic care designed specifically for children. Guide early jaw growth, fix crowding, and build a lifetime of confidence!</p>
                 <div class="hero-actions">
-                    <a href="#" data-popup="true" class="btn btn-primary">Book Free Consultation</a>
+                    <a href="/contact-us/" data-book class="btn btn-primary">Book Free Consultation</a>
                     <a href="tel:<?= e(cfg('phone_tel')) ?>" class="btn btn-outline" style="border-color: rgba(255,255,255,0.4); color: white;">Call <?= e(cfg('phone')) ?></a>
                 </div>
                 <div class="hero-trust-bar">
@@ -205,7 +205,7 @@
                         <p style="font-size: 0.92rem; margin: 0;">Your child's first consultation, X-rays, and 3D scans are 100% complimentary with no obligation.</p>
                     </div>
                     <div style="margin-top: 10px;">
-                        <a href="#" data-popup="true" class="btn btn-primary" style="width: 100%;">Check Financial Options</a>
+                        <a href="/contact-us/" data-book class="btn btn-primary" style="width: 100%;">Check Financial Options</a>
                     </div>
                 </div>
             </div>
@@ -276,27 +276,4 @@
             </div>
         </div>
     </section>
-
-    <!-- ============================================================
-         MODAL POPUP
-    ============================================================ -->
-    <div class="modal-overlay" id="booking-modal">
-        <div class="modal-box">
-            <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
-            <div id="modal-initial-view">
-                <h2 class="modal-title">Select Your Location</h2>
-                <p class="modal-sub">Choose your nearest Ignite Orthodontics office to schedule your child's free consultation.</p>
-                <div class="modal-locs">
-<?php foreach (locations() as $l): ?>
-                    <a href="/locations/<?= e($l['slug']) ?>/#ig-consult" class="modal-loc"><?= e($l['name']) ?></a>
-<?php endforeach; ?>
-                </div>
-            </div>
-            <div id="modal-success-view" style="display: none; padding: 20px 0;">
-                <div style="width: 60px; height: 60px; background: rgba(244, 116, 33, 0.15); color: var(--brand-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.8rem; font-weight: bold;">✓</div>
-                <h3 style="color: var(--brand-navy); font-size: 1.5rem; margin-bottom: 8px;">Location Selected!</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Thank you! Our team will reach out shortly to confirm your consultation at our <strong id="selected-loc-name" style="color: var(--brand-accent);"></strong> office.</p>
-            </div>
-        </div>
-    </div>
 </div>

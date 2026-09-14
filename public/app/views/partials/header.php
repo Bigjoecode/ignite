@@ -60,7 +60,7 @@
         </a>
 
         <div class="ig-cta-group">
-          <a class="ig-btn ig-btn--consult" href="/contact-us/">Request a Consultation</a>
+          <a class="ig-btn ig-btn--consult" href="/contact-us/" data-book>Request a Consultation</a>
         </div>
 
         <!-- inline styles are deliberate: they beat any theme stylesheet rule,
@@ -170,7 +170,7 @@
     </div>
 
     <div class="ig-panel__foot">
-      <a class="ig-btn ig-btn--consult" href="/contact-us/">Request a Consultation</a>
+      <a class="ig-btn ig-btn--consult" href="/contact-us/" data-book>Request a Consultation</a>
     </div>
   </aside>
 

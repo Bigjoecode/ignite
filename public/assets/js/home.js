@@ -91,7 +91,7 @@
 
       /* NOTE: no backend is wired up. Either give the <form> an action/method,
          or swap this whole block for your form plugin's shortcode. */
-      window.igSubmit(form, note); return;
+      note.textContent = 'Thanks! This form is not connected to a mail handler yet.';
       note.style.color = '#F47421';
     });
   })();

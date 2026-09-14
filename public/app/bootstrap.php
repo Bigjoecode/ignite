@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+date_default_timezone_set('America/Detroit'); // booking dates follow the offices' local day
+
 define('APP', __DIR__);
 define('WEBROOT', dirname(__DIR__));
 
