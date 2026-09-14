@@ -1,0 +1,350 @@
+/* generated from menu.html */
+/* ---------- BRAND TOKENS (sampled from logo) ---------- */
+.ig-nav-root{
+  --ig-navy:#0B2A55;        /* header + panel background */
+  --ig-navy-900:#051A39;    /* deepest navy (logo field)  */
+  --ig-navy-800:#082041;    /* submenus + dropdown card   */
+  --ig-orange:#F47421;
+  --ig-orange-600:#DA6210;
+  --ig-white:#FFFFFF;
+  --ig-line:rgba(255,255,255,.14);
+  --ig-h-desk:96px;   /* desktop header height */
+  --ig-h-mob:72px;    /* mobile header height  */
+  --ig-font:"Poppins","Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* ---------- RESET (scoped) ---------- */
+.ig-nav-root, .ig-nav-root *{box-sizing:border-box;}
+.ig-nav-root ul{list-style:none;margin:0;padding:0;}
+.ig-nav-root a{text-decoration:none;color:inherit;}
+.ig-nav-root button{font:inherit;background:none;border:0;cursor:pointer;color:inherit;}
+.ig-nav-root svg{display:block;flex:none;}
+
+/* ---------- SHELL ---------- */
+.ig-nav-root{font-family:var(--ig-font);}
+.ig-header{
+  position:fixed;top:0;left:0;right:0;z-index:99990;
+  background:var(--ig-navy);
+  border-bottom:1px solid var(--ig-line);
+  transition:box-shadow .25s ease,transform .25s ease;
+}
+.ig-header.is-stuck{box-shadow:0 8px 28px rgba(5,26,57,.28);}
+.ig-accent{height:4px;background:linear-gradient(90deg,var(--ig-orange) 0%,#FBA95C 50%,var(--ig-orange) 100%);}
+.ig-bar{
+  height:var(--ig-h-desk);
+  max-width:1560px;margin:0 auto;padding:0 28px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;
+  transition:height .25s ease;
+}
+.ig-header.is-stuck .ig-bar{height:78px;}
+
+/* ---------- LOGO ---------- */
+.ig-logo{justify-self:center;display:block;}
+.ig-logo img{display:block;height:52px;width:auto;max-width:100%;transition:height .25s ease;}
+.ig-header.is-stuck .ig-logo img{height:44px;}
+
+/* ---------- LEFT UTILITY LINKS ---------- */
+.ig-util{display:flex;align-items:center;gap:30px;}
+.ig-util__item{position:relative;}
+.ig-util__link{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:16px;font-weight:600;letter-spacing:.1px;color:var(--ig-white);
+  padding:10px 0;line-height:1;transition:color .18s ease;white-space:nowrap;
+}
+.ig-util__link svg{color:var(--ig-orange);transition:transform .18s ease;}
+.ig-util__link:hover{color:var(--ig-orange);}
+.ig-util__caret{transition:transform .25s ease;}
+.ig-util__item.is-open .ig-util__caret{transform:rotate(180deg);}
+
+/* ---------- LOCATIONS DROPDOWN ---------- */
+.ig-drop{
+  position:absolute;top:calc(100% + 16px);left:-18px;
+  width:min(780px,calc(100vw - 48px));
+  background:var(--ig-navy-800);border-radius:14px;
+  box-shadow:0 22px 60px rgba(0,0,0,.44);
+  border-top:4px solid var(--ig-orange);
+  padding:14px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start;
+  opacity:0;visibility:hidden;transform:translateY(-10px);
+  transition:opacity .2s ease,transform .2s ease,visibility .2s;
+}
+.ig-util__item.is-open .ig-drop{opacity:1;visibility:visible;transform:translateY(0);}
+/* both pseudo-elements are absolutely positioned so they never become grid items */
+.ig-drop::before{content:"";position:absolute;top:-18px;left:0;right:0;height:18px;}
+.ig-drop::after{content:"";position:absolute;top:-11px;left:34px;width:16px;height:16px;
+  background:var(--ig-orange);transform:rotate(45deg);border-radius:3px;}
+.ig-drop a{display:block;padding:14px 16px;border-radius:10px;
+  border:1px solid transparent;transition:background .18s ease,border-color .18s ease;}
+.ig-drop a:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);}
+.ig-drop b{display:block;font-size:15px;font-weight:700;color:var(--ig-white);margin-bottom:3px;
+  transition:color .18s ease;}
+.ig-drop a:hover b{color:var(--ig-orange);}
+.ig-drop span{display:block;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.72);font-weight:400;}
+
+/* ---------- RIGHT SIDE: CTAs + BURGER ---------- */
+.ig-right{justify-self:end;display:flex;align-items:center;gap:18px;}
+.ig-cta-group{display:flex;align-items:center;}
+.ig-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:54px;padding:0 34px;border-radius:999px;
+  font-size:16.5px;font-weight:700;letter-spacing:.2px;white-space:nowrap;
+  transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.ig-btn--consult{
+  background:var(--ig-orange);color:var(--ig-white);
+  box-shadow:0 8px 22px rgba(244,116,33,.32);
+}
+.ig-btn--consult:hover{background:var(--ig-orange-600);color:#fff;transform:translateY(-1px);}
+.ig-header.is-stuck .ig-btn{height:48px;font-size:15.5px;}
+
+/* ---------- HAMBURGER ---------- */
+.ig-burger{
+  width:46px;height:46px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;gap:7px;margin-left:6px;
+}
+.ig-burger span{display:block;width:32px;height:3px;border-radius:3px;background:var(--ig-white);
+  transition:transform .3s ease,opacity .2s ease,width .3s ease,background .2s ease;}
+.ig-burger:hover span{background:var(--ig-orange);}
+.ig-burger.is-active span:nth-child(1){transform:translateY(10px) rotate(45deg);}
+.ig-burger.is-active span:nth-child(2){opacity:0;width:0;}
+.ig-burger.is-active span:nth-child(3){transform:translateY(-10px) rotate(-45deg);}
+
+/* ---------- MOBILE-ONLY HEADER BITS ---------- */
+.ig-mob-call{display:none;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.12);
+  align-items:center;justify-content:center;color:var(--ig-white);
+  transition:background .2s ease,color .2s ease;}
+.ig-mob-call:hover{background:var(--ig-orange);color:#fff;}
+
+/* ---------- OFF-CANVAS PANEL ---------- */
+.ig-scrim{
+  position:fixed;inset:0;z-index:99991;background:rgba(5,26,57,.66);
+  backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;
+}
+.ig-scrim.is-open{opacity:1;visibility:visible;}
+.ig-panel{
+  position:fixed;top:0;right:0;bottom:0;z-index:99992;
+  width:440px;max-width:100%;background:var(--ig-navy);
+  transform:translateX(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;box-shadow:-12px 0 40px rgba(0,0,0,.35);
+}
+.ig-panel.is-open{transform:translateX(0);}
+.ig-panel__head{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:20px 26px;border-bottom:1px solid var(--ig-line);flex:none;
+}
+.ig-panel__head img{height:42px;width:auto;}
+.ig-close{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.12);color:var(--ig-white);transition:background .2s ease,color .2s ease,transform .2s ease;}
+.ig-close:hover{background:var(--ig-orange);color:#fff;transform:rotate(90deg);}
+.ig-panel__body{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;padding:10px 0 24px;}
+
+/* ---------- PANEL MENU ---------- */
+.ig-menu > li{border-bottom:1px solid var(--ig-line);}
+.ig-menu > li:last-child{border-bottom:0;}
+.ig-menu__row{display:flex;align-items:stretch;}
+.ig-menu__link{
+  flex:1 1 auto;display:flex;align-items:center;
+  padding:18px 26px;font-size:18px;font-weight:600;color:var(--ig-white);
+  transition:color .18s ease,padding-left .18s ease;
+}
+.ig-menu__link:hover{color:var(--ig-orange);padding-left:32px;}
+.ig-menu__toggle{
+  flex:none;width:64px;display:flex;align-items:center;justify-content:center;color:var(--ig-white);
+}
+.ig-menu__toggle svg{transition:transform .28s ease;}
+.ig-menu__toggle:hover{color:var(--ig-orange);}
+.ig-menu li.is-open > .ig-menu__row .ig-menu__toggle svg{transform:rotate(180deg);color:var(--ig-orange);}
+.ig-menu li.is-open > .ig-menu__row .ig-menu__link{color:var(--ig-orange);}
+
+.ig-sub{max-height:0;overflow:hidden;background:var(--ig-navy-800);transition:max-height .35s cubic-bezier(.4,0,.2,1);}
+.ig-sub a{
+  display:block;padding:14px 26px 14px 42px;font-size:15.5px;font-weight:500;color:var(--ig-white);
+  border-bottom:1px solid rgba(255,255,255,.08);position:relative;transition:color .18s ease,padding-left .18s ease;
+}
+.ig-sub a::before{content:"";position:absolute;left:26px;top:50%;width:6px;height:6px;border-radius:50%;
+  background:var(--ig-orange);transform:translateY(-50%);opacity:.55;transition:opacity .18s ease;}
+.ig-sub a:last-child{border-bottom:0;}
+.ig-sub a:hover{color:var(--ig-orange);padding-left:48px;}
+.ig-sub a:hover::before{opacity:1;}
+
+/* ---------- PANEL FOOTER (contact + CTAs, mobile-facing) ---------- */
+.ig-panel__contact{padding:26px 26px 4px;display:flex;flex-direction:column;gap:2px;}
+.ig-panel__contact h6{
+  margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--ig-orange);font-family:inherit;
+}
+.ig-panel__contact a{display:flex;align-items:center;gap:12px;padding:12px 0;font-size:16px;
+  font-weight:600;color:var(--ig-white);transition:color .18s ease;}
+.ig-panel__contact a svg{color:var(--ig-orange);}
+.ig-panel__contact a:hover{color:var(--ig-orange);}
+.ig-panel__foot{flex:none;padding:18px 26px 24px;border-top:1px solid var(--ig-line);
+  display:flex;flex-direction:column;gap:12px;background:var(--ig-navy-900);}
+.ig-panel__foot .ig-btn{height:56px;width:100%;margin:0;padding:0 24px;box-shadow:none;}
+
+/* ---------- SPACER (pushes page content below fixed header) ---------- */
+.ig-spacer{height:var(--ig-h-desk);}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1400px){
+  .ig-util{gap:22px;}
+  .ig-util__link{font-size:15px;}
+  .ig-btn{padding:0 26px;font-size:15.5px;}
+  .ig-logo img{height:46px;}
+}
+@media (max-width:1200px){
+  .ig-util__item--contact{display:none;}   /* fold email into the panel */
+  .ig-drop{grid-template-columns:repeat(2,1fr);width:min(560px,calc(100vw - 48px));}
+}
+
+/* ---- TABLET / MOBILE ---- */
+@media (max-width:1024px){
+  .ig-bar{
+    height:var(--ig-h-mob);padding:0 16px;
+    grid-template-columns:auto 1fr auto;gap:10px;
+  }
+  .ig-header.is-stuck .ig-bar{height:var(--ig-h-mob);}
+  .ig-spacer{height:var(--ig-h-mob);}
+  .ig-accent{height:3px;}
+
+  .ig-util{display:none;}
+  .ig-logo{justify-self:start;grid-column:1;}
+  .ig-logo img,.ig-header.is-stuck .ig-logo img{height:38px;}
+
+  .ig-right{grid-column:3;gap:8px;}
+  .ig-mob-call{display:flex;}
+  .ig-cta-group .ig-btn--consult{height:44px;padding:0 20px;font-size:14.5px;box-shadow:none;}
+  .ig-header.is-stuck .ig-btn{height:44px;font-size:14.5px;}
+  .ig-burger{width:44px;height:44px;margin-left:2px;}
+  .ig-burger span{width:28px;height:3px;gap:6px;}
+
+  .ig-panel{width:100%;}
+  .ig-menu__link{font-size:17px;padding:17px 22px;}
+  .ig-menu__toggle{width:58px;}
+  .ig-sub a{padding-left:38px;}
+  .ig-sub a::before{left:22px;}
+}
+@media (max-width:480px){
+  .ig-logo img,.ig-header.is-stuck .ig-logo img{height:34px;}
+  .ig-cta-group .ig-btn--consult{padding:0 16px;font-size:13.5px;height:42px;}
+  .ig-mob-call{width:42px;height:42px;}
+  .ig-panel__head{padding:16px 18px;}
+  .ig-panel__contact{padding:18px 18px 4px;}
+  .ig-panel__foot{padding:16px 18px 20px;}
+}
+@media (max-width:380px){
+  .ig-cta-group{display:none;}   /* very small screens: burger + call only */
+}
+
+/* ============================================================
+   THEME OVERRIDE GUARD  —  keep this block LAST.
+   WordPress themes and Elementor global colors set link/button
+   colours with high specificity (e.g. `.elementor a{color:...}`),
+   which is why the menu text renders black without this.
+   ============================================================ */
+.ig-nav-root .ig-util__link,
+.ig-nav-root .ig-util__link:visited,
+.ig-nav-root .ig-util__link:focus,
+.ig-nav-root .ig-menu__link,
+.ig-nav-root .ig-menu__link:visited,
+.ig-nav-root .ig-menu__link:focus,
+.ig-nav-root .ig-menu__toggle,
+.ig-nav-root .ig-sub a,
+.ig-nav-root .ig-sub a:visited,
+.ig-nav-root .ig-sub a:focus,
+.ig-nav-root .ig-panel__contact a,
+.ig-nav-root .ig-panel__contact a:visited,
+.ig-nav-root .ig-drop b,
+.ig-nav-root .ig-close,
+.ig-nav-root .ig-mob-call,
+.ig-nav-root .ig-btn--consult,
+.ig-nav-root .ig-btn--consult:visited{color:#FFFFFF !important;}
+
+.ig-nav-root .ig-drop a{color:#FFFFFF !important;}
+.ig-nav-root .ig-drop span{color:rgba(255,255,255,.72) !important;}
+
+/* icons inherit the text colour unless the theme forces a fill */
+.ig-nav-root svg{fill:currentColor !important;}
+/* Orange icons must pin `fill` on the PATH, not just `color` on the <svg>.
+   A theme rule like `svg path{fill:#000}` targets the path directly, so a
+   currentColor inherit on the parent never reaches it. */
+.ig-nav-root .ig-util__link svg,.ig-nav-root .ig-util__link svg path,
+.ig-nav-root .ig-panel__contact a svg,.ig-nav-root .ig-panel__contact a svg path,
+.ig-nav-root .ig-drop a svg,.ig-nav-root .ig-drop a svg path{
+  color:var(--ig-orange) !important;fill:var(--ig-orange) !important;
+}
+.ig-nav-root .ig-mob-call svg,.ig-nav-root .ig-mob-call svg path{fill:#FFFFFF !important;}
+.ig-nav-root .ig-mob-call:hover svg,.ig-nav-root .ig-mob-call:hover svg path{fill:#FFFFFF !important;}
+
+/* hover states must still win — they come after, so they do */
+.ig-nav-root .ig-util__link:hover,
+.ig-nav-root .ig-menu__link:hover,
+.ig-nav-root .ig-menu__toggle:hover,
+.ig-nav-root .ig-sub a:hover,
+.ig-nav-root .ig-panel__contact a:hover,
+.ig-nav-root .ig-drop a:hover b,
+.ig-nav-root .ig-menu li.is-open > .ig-menu__row .ig-menu__link,
+.ig-nav-root .ig-menu li.is-open > .ig-menu__row .ig-menu__toggle{color:var(--ig-orange) !important;}
+.ig-nav-root .ig-close:hover,
+.ig-nav-root .ig-mob-call:hover{color:#FFFFFF !important;}
+
+/* themes love to restyle links and buttons — neutralise the rest */
+.ig-nav-root a,
+.ig-nav-root button{text-decoration:none !important;box-shadow:none;}
+
+/* ---- HAMBURGER + CHEVRON ICONS: white, no matter what ----
+   Extra-specific on purpose. Themes target bare `span`/`svg` inside
+   buttons, and Elementor injects its own nav-toggle colours. */
+.ig-nav-root .ig-header .ig-burger,
+.ig-nav-root .ig-header .ig-burger:hover,
+.ig-nav-root .ig-header .ig-burger:focus{
+  display:flex !important;flex-direction:column !important;
+  justify-content:center !important;align-items:center !important;
+  gap:7px !important;width:46px !important;height:46px !important;
+  padding:0 !important;color:#FFFFFF !important;background:none !important;
+  visibility:visible !important;opacity:1 !important;
+}
+/* The bars are EMPTY spans. Their size AND colour are forced here, because a
+   theme rule like `span{display:inline}` or a colour override makes the icon
+   disappear completely. They also carry inline styles as a second line of
+   defence — see the markup. */
+.ig-nav-root .ig-header .ig-burger > span,
+.ig-nav-root .ig-header .ig-burger.is-active > span{
+  display:block !important;flex:none !important;
+  width:32px !important;height:3px !important;border-radius:3px !important;
+  background:#FFFFFF !important;background-color:#FFFFFF !important;
+  border:0 !important;margin:0 !important;font-size:0 !important;line-height:0 !important;
+  visibility:visible !important;opacity:1;
+}
+.ig-nav-root .ig-header .ig-burger.is-active > span:nth-child(2){opacity:0;width:0 !important;}
+.ig-nav-root .ig-header .ig-burger:hover > span{
+  background:var(--ig-orange) !important;background-color:var(--ig-orange) !important;
+}
+@media (max-width:1024px){
+  .ig-nav-root .ig-header .ig-burger{width:44px !important;height:44px !important;gap:6px !important;}
+  .ig-nav-root .ig-header .ig-burger > span{width:28px !important;}
+  .ig-nav-root .ig-header .ig-burger.is-active > span:nth-child(1){transform:translateY(9px) rotate(45deg);}
+  .ig-nav-root .ig-header .ig-burger.is-active > span:nth-child(3){transform:translateY(-9px) rotate(-45deg);}
+  .ig-nav-root .ig-header .ig-burger.is-active > span:nth-child(2){width:0 !important;}
+}
+.ig-nav-root .ig-panel .ig-menu__toggle,
+.ig-nav-root .ig-panel .ig-menu__toggle svg,
+.ig-nav-root .ig-panel .ig-menu__toggle svg path,
+.ig-nav-root .ig-panel .ig-close,
+.ig-nav-root .ig-panel .ig-close svg,
+.ig-nav-root .ig-panel .ig-close svg path{color:#FFFFFF !important;fill:#FFFFFF !important;stroke:none !important;}
+.ig-nav-root .ig-panel .ig-menu li.is-open > .ig-menu__row .ig-menu__toggle svg,
+.ig-nav-root .ig-panel .ig-menu li.is-open > .ig-menu__row .ig-menu__toggle svg path,
+.ig-nav-root .ig-panel .ig-menu__toggle:hover svg,
+.ig-nav-root .ig-panel .ig-menu__toggle:hover svg path{fill:var(--ig-orange) !important;}
+.ig-nav-root .ig-header .ig-util__link .ig-util__caret,
+.ig-nav-root .ig-header .ig-util__link .ig-util__caret path{fill:var(--ig-orange) !important;}
+.ig-nav-root .ig-btn--consult{background:var(--ig-orange) !important;border:0 !important;}
+.ig-nav-root .ig-btn--consult:hover{background:var(--ig-orange-600) !important;}
+
+/* ---- Elementor editor safety: don't let the fixed header hide the canvas ---- */
+body.elementor-editor-active .ig-header{position:relative;}
+@media (prefers-reduced-motion:reduce){
+  .ig-nav-root *{transition-duration:.01ms !important;}
+}

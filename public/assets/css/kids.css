@@ -1,0 +1,843 @@
+/* generated from kids-braces-page-layout.html */
+/* ============================================================
+           DESIGN SYSTEM & CSS VARIABLES
+           Brand Primary: #0B2A55 (Navy)
+           Brand Accent:  #F47421 (Warm Copper / Orange)
+           Backgrounds:   #FFFFFF, #F8FAFC, #F1F5F9
+        ============================================================ */
+        .kp {
+            --brand-navy:    #0B2A55;
+            --brand-navy-light: #082041;
+            --brand-accent:  #F47421;
+            --brand-accent-hover: #DA6210;
+            --brand-blue-glow: #60A5FA;
+            --text-dark:     #0F172A;
+            --text-muted:    #475569;
+            --text-light:    #64748B;
+            --bg-light:      #F8FAFC;
+            --bg-alt:        #F1F5F9;
+            --white:         #FFFFFF;
+            --border-color:  #E2E8F0;
+            --radius-sm:     8px;
+            --radius-md:     16px;
+            --radius-lg:     24px;
+            --radius-full:   9999px;
+            --shadow-sm:     0 4px 12px rgba(11, 42, 85, 0.05);
+            --shadow-md:     0 10px 25px rgba(11, 42, 85, 0.08);
+            --shadow-lg:     0 20px 40px rgba(11, 42, 85, 0.12);
+            --font-head:     "Poppins", sans-serif;
+            --font-body:     "Poppins", sans-serif;
+            --transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .kp *, .kp *::before, .kp *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .kp {
+            font-family: var(--font-body);
+            color: var(--text-dark);
+            background-color: var(--white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Typography Helper */
+        .kp h1, .kp h2, .kp h3, .kp h4, .kp h5 {
+            font-family: var(--font-head);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--brand-navy);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-center { text-align: center; }
+        .text-accent { color: var(--brand-accent); }
+
+        /* Section Header Component */
+        .section-header {
+            max-width: 750px;
+            margin: 0 auto 50px;
+            text-align: center;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px;
+            border-radius: var(--radius-full);
+            background: rgba(244, 116, 33, 0.1);
+            color: var(--brand-accent);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 3.5vw, 2.75rem);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 30px;
+            border-radius: var(--radius-full);
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--brand-accent);
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(244, 116, 33, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--brand-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(244, 116, 33, 0.4);
+        }
+
+        .btn-navy {
+            background-color: var(--brand-navy);
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(11, 42, 85, 0.25);
+        }
+
+        .btn-navy:hover {
+            background-color: var(--brand-navy-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border-color: var(--brand-navy);
+            color: var(--brand-navy);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-navy);
+            color: var(--white);
+        }
+
+
+        /* ============================================================
+           HERO SECTION
+        ============================================================ */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, #0B2A55 0%, #051A39 100%);
+            color: var(--white);
+            padding: 90px 0 100px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(244, 116, 33, 0.15) 0%, rgba(11, 42, 85, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            color: #60A5FA;
+            font-weight: 700;
+            font-size: 0.88rem;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .hero-content h1 {
+            color: var(--white);
+            font-size: clamp(2.5rem, 4.5vw, 3.6rem);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-content h1 span {
+            color: var(--brand-accent);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.88);
+            margin-bottom: 36px;
+            max-width: 560px;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .hero-trust-bar {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .trust-item svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--brand-accent);
+            flex-shrink: 0;
+        }
+
+        .hero-image-box {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            height: 480px;
+        }
+
+        .hero-image-box:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-image-box img.hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-form-group {
+            margin-bottom: 16px;
+        }
+
+        .hero-form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+            color: var(--brand-navy);
+        }
+
+        .hero-form-group input,
+        .hero-form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .hero-form-group input:focus,
+        .hero-form-group select:focus {
+            border-color: var(--brand-accent);
+            box-shadow: 0 0 0 3px rgba(244, 116, 33, 0.15);
+        }
+
+        .hero-form-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* ============================================================
+           SECTION 2: WHY AGE 7? (EARLY ASSESSMENT)
+        ============================================================ */
+        .early-assessment {
+            padding: 100px 0;
+            background: var(--bg-light);
+        }
+
+        .early-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .early-card-highlight {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--brand-accent);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .early-card-highlight:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .early-card-highlight h3 {
+            font-size: 1.75rem;
+            margin-bottom: 14px;
+        }
+
+        .early-card-highlight p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .benefit-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefit-checklist li {
+            position: relative;
+            padding-left: 34px;
+            margin-bottom: 14px;
+            font-weight: 600;
+            color: var(--brand-navy);
+            text-align: left;
+        }
+
+        .benefit-checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 22px;
+            height: 22px;
+            background: rgba(244, 116, 33, 0.15);
+            color: var(--brand-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+        }
+
+        .phases-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .phase-box {
+            background: var(--brand-navy);
+            color: var(--white);
+            padding: 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .phase-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            border-color: var(--brand-accent);
+        }
+
+        .phase-tag {
+            background: var(--brand-accent);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .phase-box h4 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .phase-box p {
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ============================================================
+           SECTION 3: TREATMENT OPTIONS FOR KIDS & TEENS
+        ============================================================ */
+        .treatments-section {
+            padding: 100px 0;
+            background: var(--brand-navy);
+            color: var(--white);
+        }
+
+        .treatments-section .section-header h2 {
+            color: var(--white);
+        }
+
+        .treatments-section .section-header p {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .treatments-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .treatment-card {
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .treatment-card.card-white {
+            background: var(--white);
+            color: var(--brand-navy);
+            border: 1px solid var(--border-color);
+        }
+
+        .treatment-card.card-white h3 {
+            color: var(--brand-navy);
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+
+        .treatment-card.card-white p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 20px;
+        }
+
+        .treatment-card.card-white .tag-accent {
+            color: var(--brand-accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .treatment-card.card-orange {
+            background: var(--brand-accent);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(244, 116, 33, 0.35);
+        }
+
+        .treatment-card.card-orange h3 {
+            color: var(--white);
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+
+        .treatment-card.card-orange p {
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 0.92rem;
+            margin-bottom: 20px;
+        }
+
+        .treatment-card.card-orange .tag-accent {
+            color: var(--white);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+
+        .treatment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+        }
+
+        .treatment-card.card-white:hover {
+            border-color: var(--brand-accent);
+        }
+
+        .treatment-card.card-orange:hover {
+            border-color: var(--white);
+        }
+
+        /* ============================================================
+           SECTION 4: KIDS STRESS-FREE EXPERIENCE (STEPS)
+        ============================================================ */
+        .experience-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+        }
+
+        .steps-wrapper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+
+        .step-card {
+            background: var(--brand-navy);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            padding: 32px 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 30px rgba(11, 42, 85, 0.3);
+            border-color: var(--brand-accent);
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            background: var(--brand-accent);
+            color: var(--white);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(244, 116, 33, 0.3);
+        }
+
+        .step-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .step-card p {
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ============================================================
+           SECTION 5: FINANCIAL & AFFORDABILITY
+        ============================================================ */
+        .affordability-section {
+            padding: 90px 0;
+            background: var(--brand-navy);
+            color: var(--white);
+        }
+
+        .affordability-section h2, .affordability-section p.sub {
+            color: var(--white);
+        }
+
+        .affordability-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 45px;
+        }
+
+        .afford-box {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 36px 28px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .afford-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            border-color: var(--brand-accent);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .afford-box h3 {
+            color: var(--brand-accent);
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .afford-box p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.98rem;
+        }
+
+        /* ============================================================
+           SECTION 6: FAQ ACCORDION
+        ============================================================ */
+        .faq-section {
+            padding: 100px 0;
+            background: var(--bg-light);
+        }
+
+        .faq-container {
+            max-width: 840px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--brand-navy) !important;
+            color: var(--white) !important;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: none !important;
+        }
+
+        /* Forcefully disable all hover effects from Elementor or theme CSS */
+        .faq-section *:hover,
+        .faq-item:hover,
+        .faq-item:focus,
+        .faq-question:hover,
+        .faq-question:focus,
+        .faq-question:active {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: none !important;
+            transform: none !important;
+            outline: none !important;
+        }
+
+        .faq-item:hover {
+            background: var(--brand-navy) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 22px 28px;
+            background: none !important;
+            border: none !important;
+            text-align: left;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            outline: none !important;
+        }
+
+        .faq-question:hover,
+        .faq-question:focus {
+            color: #ffffff !important;
+            background: none !important;
+        }
+
+        .faq-item.active .faq-question {
+            color: #ffffff !important;
+        }
+
+        .faq-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--white) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            background: var(--brand-accent) !important;
+            color: var(--white) !important;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 28px;
+            color: #ffffff; /* Crisp White Answer Text */
+            font-size: 0.98rem;
+            line-height: 1.65;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 28px 24px;
+        }
+
+        /* ============================================================
+           MODAL POPUP
+        ============================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 42, 85, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 99995;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: var(--white);
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .modal-locs {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-loc {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            text-decoration: none;
+            color: var(--brand-navy);
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+
+        .modal-loc:hover {
+            border-color: var(--brand-accent);
+            background: rgba(244, 116, 33, 0.08);
+            color: var(--brand-accent);
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media (max-width: 992px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 32px; text-align: left; }
+            .hero-content { text-align: left; }
+            .hero-image-box { height: 340px; width: 100%; }
+            .section-header, .section-header.text-center, .container.text-center { text-align: left !important; }
+            .section-header p, .hero-content p { margin-left: 0 !important; margin-right: auto !important; }
+            .early-grid { grid-template-columns: 1fr; }
+            .treatments-grid { grid-template-columns: 1fr 1fr; }
+            .treatment-card { text-align: left; }
+            .experience-grid { grid-template-columns: 1fr !important; }
+            .afford-horizontal-grid { grid-template-columns: 1fr !important; }
+            .afford-box { text-align: left !important; }
+        }
+
+        @media (max-width: 600px) {
+            .kp { text-align: left; }
+            .early-card-highlight { padding: 28px 20px !important; }
+            .benefit-checklist { padding: 0 !important; margin: 0 !important; }
+            .hero-image-box { height: 260px; }
+            .hero-actions { justify-content: flex-start; }
+            .hero-trust-bar { align-items: flex-start; }
+            .treatments-grid { grid-template-columns: 1fr; }
+            .steps-wrapper { grid-template-columns: 1fr !important; }
+            .phases-comparison { grid-template-columns: 1fr; }
+            .kp .section-header h2, .kp .section-header p, .kp h1, .kp h2, .kp h3, .kp h4, .kp p { text-align: left !important; }
+        }

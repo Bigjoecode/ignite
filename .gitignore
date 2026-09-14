@@ -3,5 +3,7 @@
 config.local.php
 *.sql
 backups/
+# Form submissions (patient contact details) — local dev copy of the server data dir
+ignite-data/
 .DS_Store
 Thumbs.db

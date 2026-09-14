@@ -1,0 +1,6 @@
+<?php
+// Copy to config.local.php on the server. Never commit the real file (the repo is public).
+// Any key here overrides the defaults in app/bootstrap.php.
+return [
+    'lead_email' => 'frontdesk@igniteorthodontics.com',
+];
