@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braces for Kids & Early Orthodontics | Ignite Clinics</title>
+    <meta name="description" content="Gentle, fun, and affordable braces for kids and teens. Free 3D scans, early growth guidance, flexible payment plans, and zero-stress children's orthodontic care.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM & CSS VARIABLES
+           Brand Primary: #061A3A (Navy)
+           Brand Accent:  #C76F34 (Warm Copper / Orange)
+           Backgrounds:   #FFFFFF, #F8FAFC, #F1F5F9
+        ============================================================ */
+        :root {
+            --brand-navy:    #061A3A;
+            --brand-navy-light: #0d2854;
+            --brand-accent:  #C76F34;
+            --brand-accent-hover: #af5d28;
+            --brand-blue-glow: #60A5FA;
+            --text-dark:     #0F172A;
+            --text-muted:    #475569;
+            --text-light:    #64748B;
+            --bg-light:      #F8FAFC;
+            --bg-alt:        #F1F5F9;
+            --white:         #FFFFFF;
+            --border-color:  #E2E8F0;
+            --radius-sm:     8px;
+            --radius-md:     16px;
+            --radius-lg:     24px;
+            --radius-full:   9999px;
+            --shadow-sm:     0 4px 12px rgba(6, 26, 58, 0.05);
+            --shadow-md:     0 10px 25px rgba(6, 26, 58, 0.08);
+            --shadow-lg:     0 20px 40px rgba(6, 26, 58, 0.12);
+            --font-head:     'Outfit', sans-serif;
+            --font-body:     'DM Sans', sans-serif;
+            --transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-dark);
+            background-color: var(--white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Typography Helper */
+        h1, h2, h3, h4, h5 {
+            font-family: var(--font-head);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--brand-navy);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-center { text-align: center; }
+        .text-accent { color: var(--brand-accent); }
+
+        /* Section Header Component */
+        .section-header {
+            max-width: 750px;
+            margin: 0 auto 50px;
+            text-align: center;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px;
+            border-radius: var(--radius-full);
+            background: rgba(199, 111, 52, 0.1);
+            color: var(--brand-accent);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 3.5vw, 2.75rem);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 30px;
+            border-radius: var(--radius-full);
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--brand-accent);
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(199, 111, 52, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--brand-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(199, 111, 52, 0.4);
+        }
+
+        .btn-navy {
+            background-color: var(--brand-navy);
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(6, 26, 58, 0.25);
+        }
+
+        .btn-navy:hover {
+            background-color: var(--brand-navy-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border-color: var(--brand-navy);
+            color: var(--brand-navy);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-navy);
+            color: var(--white);
+        }
+
+
+        /* ============================================================
+           HERO SECTION
+        ============================================================ */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, #061A3A 0%, #0d2d5e 100%);
+            color: var(--white);
+            padding: 90px 0 100px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(199, 111, 52, 0.15) 0%, rgba(6, 26, 58, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            color: #60A5FA;
+            font-weight: 700;
+            font-size: 0.88rem;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .hero-content h1 {
+            color: var(--white);
+            font-size: clamp(2.5rem, 4.5vw, 3.6rem);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-content h1 span {
+            color: var(--brand-accent);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.88);
+            margin-bottom: 36px;
+            max-width: 560px;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .hero-trust-bar {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .trust-item svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--brand-accent);
+            flex-shrink: 0;
+        }
+
+        .hero-image-box {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            height: 480px;
+        }
+
+        .hero-image-box:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-image-box img.hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-form-group {
+            margin-bottom: 16px;
+        }
+
+        .hero-form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+            color: var(--brand-navy);
+        }
+
+        .hero-form-group input,
+        .hero-form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .hero-form-group input:focus,
+        .hero-form-group select:focus {
+            border-color: var(--brand-accent);
+            box-shadow: 0 0 0 3px rgba(199, 111, 52, 0.15);
+        }
+
+        .hero-form-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* ============================================================
+           SECTION 2: WHY AGE 7? (EARLY ASSESSMENT)
+        ============================================================ */
+        .early-assessment {
+            padding: 100px 0;
+            background: var(--bg-light);
+        }
+
+        .early-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .early-card-highlight {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            border-left: 6px solid var(--brand-accent);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .early-card-highlight:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .early-card-highlight h3 {
+            font-size: 1.75rem;
+            margin-bottom: 14px;
+        }
+
+        .early-card-highlight p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .benefit-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefit-checklist li {
+            position: relative;
+            padding-left: 34px;
+            margin-bottom: 14px;
+            font-weight: 600;
+            color: var(--brand-navy);
+            text-align: left;
+        }
+
+        .benefit-checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 22px;
+            height: 22px;
+            background: rgba(199, 111, 52, 0.15);
+            color: var(--brand-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 900;
+        }
+
+        .phases-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .phase-box {
+            background: var(--brand-navy);
+            color: var(--white);
+            padding: 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .phase-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            border-color: var(--brand-accent);
+        }
+
+        .phase-tag {
+            background: var(--brand-accent);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .phase-box h4 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .phase-box p {
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ============================================================
+           SECTION 3: TREATMENT OPTIONS FOR KIDS & TEENS
+        ============================================================ */
+        .treatments-section {
+            padding: 100px 0;
+            background: var(--brand-navy);
+            color: var(--white);
+        }
+
+        .treatments-section .section-header h2 {
+            color: var(--white);
+        }
+
+        .treatments-section .section-header p {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .treatments-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .treatment-card {
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .treatment-card.card-white {
+            background: var(--white);
+            color: var(--brand-navy);
+            border: 1px solid var(--border-color);
+        }
+
+        .treatment-card.card-white h3 {
+            color: var(--brand-navy);
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+
+        .treatment-card.card-white p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 20px;
+        }
+
+        .treatment-card.card-white .tag-accent {
+            color: var(--brand-accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .treatment-card.card-orange {
+            background: var(--brand-accent);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(199, 111, 52, 0.35);
+        }
+
+        .treatment-card.card-orange h3 {
+            color: var(--white);
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+
+        .treatment-card.card-orange p {
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 0.92rem;
+            margin-bottom: 20px;
+        }
+
+        .treatment-card.card-orange .tag-accent {
+            color: var(--white);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+
+        .treatment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+        }
+
+        .treatment-card.card-white:hover {
+            border-color: var(--brand-accent);
+        }
+
+        .treatment-card.card-orange:hover {
+            border-color: var(--white);
+        }
+
+        /* ============================================================
+           SECTION 4: KIDS STRESS-FREE EXPERIENCE (STEPS)
+        ============================================================ */
+        .experience-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+        }
+
+        .steps-wrapper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+
+        .step-card {
+            background: var(--brand-navy);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            padding: 32px 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 30px rgba(6, 26, 58, 0.3);
+            border-color: var(--brand-accent);
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            background: var(--brand-accent);
+            color: var(--white);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.25rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(199, 111, 52, 0.3);
+        }
+
+        .step-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .step-card p {
+            font-size: 0.92rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* ============================================================
+           SECTION 5: FINANCIAL & AFFORDABILITY
+        ============================================================ */
+        .affordability-section {
+            padding: 90px 0;
+            background: var(--brand-navy);
+            color: var(--white);
+        }
+
+        .affordability-section h2, .affordability-section p.sub {
+            color: var(--white);
+        }
+
+        .affordability-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 45px;
+        }
+
+        .afford-box {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 36px 28px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .afford-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            border-color: var(--brand-accent);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .afford-box h3 {
+            color: var(--brand-accent);
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .afford-box p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.98rem;
+        }
+
+        /* ============================================================
+           SECTION 6: FAQ ACCORDION
+        ============================================================ */
+        .faq-section {
+            padding: 100px 0;
+            background: var(--bg-light);
+        }
+
+        .faq-container {
+            max-width: 840px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--brand-navy) !important;
+            color: var(--white) !important;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: none !important;
+        }
+
+        /* Forcefully disable all hover effects from Elementor or theme CSS */
+        .faq-section *:hover,
+        .faq-item:hover,
+        .faq-item:focus,
+        .faq-question:hover,
+        .faq-question:focus,
+        .faq-question:active {
+            background: transparent !important;
+            background-color: transparent !important;
+            color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: none !important;
+            transform: none !important;
+            outline: none !important;
+        }
+
+        .faq-item:hover {
+            background: var(--brand-navy) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 22px 28px;
+            background: none !important;
+            border: none !important;
+            text-align: left;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            outline: none !important;
+        }
+
+        .faq-question:hover,
+        .faq-question:focus {
+            color: #ffffff !important;
+            background: none !important;
+        }
+
+        .faq-item.active .faq-question {
+            color: #ffffff !important;
+        }
+
+        .faq-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--white) !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            background: var(--brand-accent) !important;
+            color: var(--white) !important;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            padding: 0 28px;
+            color: #ffffff; /* Crisp White Answer Text */
+            font-size: 0.98rem;
+            line-height: 1.65;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 28px 24px;
+        }
+
+        /* ============================================================
+           MODAL POPUP
+        ============================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 26, 58, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: var(--white);
+            width: 90%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            margin-bottom: 8px;
+        }
+
+        .modal-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .modal-locs {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-loc {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            text-decoration: none;
+            color: var(--brand-navy);
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+
+        .modal-loc:hover {
+            border-color: var(--brand-accent);
+            background: rgba(199, 111, 52, 0.08);
+            color: var(--brand-accent);
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        @media (max-width: 992px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 32px; text-align: left; }
+            .hero-content { text-align: left; }
+            .hero-image-box { height: 340px; width: 100%; }
+            .section-header, .section-header.text-center, .container.text-center { text-align: left !important; }
+            .section-header p, .hero-content p { margin-left: 0 !important; margin-right: auto !important; }
+            .early-grid { grid-template-columns: 1fr; }
+            .treatments-grid { grid-template-columns: 1fr 1fr; }
+            .treatment-card { text-align: left; }
+            .experience-grid { grid-template-columns: 1fr !important; }
+            .afford-horizontal-grid { grid-template-columns: 1fr !important; }
+            .afford-box { text-align: left !important; }
+        }
+
+        @media (max-width: 600px) {
+            body { text-align: left; }
+            .early-card-highlight { padding: 28px 20px !important; }
+            .benefit-checklist { padding: 0 !important; margin: 0 !important; }
+            .hero-image-box { height: 260px; }
+            .hero-actions { justify-content: flex-start; }
+            .hero-trust-bar { align-items: flex-start; }
+            .treatments-grid { grid-template-columns: 1fr; }
+            .steps-wrapper { grid-template-columns: 1fr !important; }
+            .phases-comparison { grid-template-columns: 1fr; }
+            .section-header h2, .section-header p, h1, h2, h3, h4, p { text-align: left !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+         HERO SECTION
+    ============================================================ -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <h1>Creating Healthy, Confident <span>Smiles for Kids</span> &amp; Teens</h1>
+                <p>Gentle, fun, and stress-free orthodontic care designed specifically for children. Guide early jaw growth, fix crowding, and build a lifetime of confidence!</p>
+                <div class="hero-actions">
+                    <a href="#" data-popup="true" class="btn btn-primary">Book Free Consultation</a>
+                    <a href="tel:8559163956" class="btn btn-outline" style="border-color: rgba(255,255,255,0.4); color: white;">Call (855) 916-3956</a>
+                </div>
+                <div class="hero-trust-bar">
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        <span>0% Interest Payment Plans</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                        <span>Most Insurances Accepted</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image Box -->
+            <div class="hero-image-box">
+                <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/istockphoto-1202583861-612x612-1.webp" alt="Kids Braces Smile Consultation" class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 2: WHY AGE 7? (EARLY ASSESSMENT)
+    ============================================================ -->
+    <section class="early-assessment" id="why-age-7">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge-pill">Early Growth Guidance</span>
+                <h2>Why the AAO Recommends a Checkup by Age 7</h2>
+                <p>By age 7, a child has a mix of baby teeth and adult teeth, allowing orthodontists to catch potential jaw and bite issues before they become complex problems.</p>
+            </div>
+
+            <div class="early-grid">
+                <div class="early-card-highlight">
+                    <h3>Benefits of Interceptive Treatment</h3>
+                    <p>Early treatment (Phase 1) works with your child's natural growth spurts to achieve optimal facial symmetry and jaw expansion.</p>
+                    <ul class="benefit-checklist">
+                        <li>Guides jaw growth for proper facial structure</li>
+                        <li>Creates room for crowded, emerging adult teeth</li>
+                        <li>Fixes thumb-sucking and tongue-thrust habits</li>
+                        <li>Reduces the need to extract permanent teeth later</li>
+                        <li>Simplifies future comprehensive treatment (Phase 2)</li>
+                    </ul>
+                </div>
+
+                <div class="early-right-col">
+                    <div style="margin-bottom: 24px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md);">
+                        <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/shutterstock_2331223617-min.jpg" alt="Child Orthodontic Examination" style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                    </div>
+                    <div class="phases-comparison">
+                        <div class="phase-box">
+                            <span class="phase-tag">Phase 1 (Ages 7–10)</span>
+                            <h4>Preventative Guidance</h4>
+                            <p>Focuses on jaw expansion and space maintenance while your child is actively growing.</p>
+                        </div>
+                        <div class="phase-box">
+                            <span class="phase-tag">Phase 2 (Ages 11+)</span>
+                            <h4>Comprehensive Alignment</h4>
+                            <p>Full braces or clear aligners once permanent adult teeth erupt to finalize alignment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3: TREATMENT OPTIONS FOR KIDS & TEENS
+    ============================================================ -->
+    <section class="treatments-section" id="treatments">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge-pill">Tailored Treatments</span>
+                <h2>Orthodontic Options Designed for Kids</h2>
+                <p>Every child’s smile is unique. We offer modern, comfortable treatment options that match your child’s lifestyle and aesthetic preferences.</p>
+            </div>
+
+            <div class="treatments-grid">
+                <!-- Option 1: White Card -->
+                <div class="treatment-card card-white">
+                    <div>
+                        <h3>Metal Braces</h3>
+                        <p>Durable, precise, and fun! Kids love choosing custom colored elastics at every appointment.</p>
+                    </div>
+                    <span class="tag-accent">Most Popular for Kids</span>
+                </div>
+
+                <!-- Option 2: Brand Orange Card -->
+                <div class="treatment-card card-orange">
+                    <div>
+                        <h3>Clear Ceramic Braces</h3>
+                        <p>Blends naturally with tooth color for a discreet look that image-conscious teens prefer.</p>
+                    </div>
+                    <span class="tag-accent">Discreet &amp; Aesthetic</span>
+                </div>
+
+                <!-- Option 3: White Card -->
+                <div class="treatment-card card-white">
+                    <div>
+                        <h3>Invisalign® First</h3>
+                        <p>Removable, clear aligners engineered specifically for growing children with mixed baby and adult teeth.</p>
+                    </div>
+                    <span class="tag-accent">No Food Restrictions</span>
+                </div>
+
+                <!-- Option 4: Brand Orange Card -->
+                <div class="treatment-card card-orange">
+                    <div>
+                        <h3>Palatal Expanders</h3>
+                        <p>Gentle appliances that widen narrow upper jaws, alleviating severe crowding and improving breathing.</p>
+                    </div>
+                    <span class="tag-accent">Early Growth Helper</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 4: KIDS STRESS-FREE EXPERIENCE (STEPS)
+    ============================================================ -->
+    <section class="experience-section" id="kids-experience">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge-pill">Parent &amp; Kid Friendly</span>
+                <h2>What to Expect: A Stress-Free Journey</h2>
+                <p>We make orthodontic appointments welcoming, engaging, and fun for your child from day one.</p>
+            </div>
+
+            <div class="experience-grid" style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center;">
+                <!-- Left: 4 Step Cards Grid -->
+                <div class="steps-wrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>Warm Welcome</h4>
+                        <p>Friendly staff, comfortable environment, and zero pressure. We explain everything in kid-friendly terms.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>3D Digital Scans</h4>
+                        <p>No gooey, uncomfortable mold impressions! Our fast 3D digital scanner creates a precise digital model of teeth.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>Personalized Plan</h4>
+                        <p>Our orthodontists design a tailored roadmap with clear timelines, transparent pricing, and flexible payment plans.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h4>Pick Color Bands!</h4>
+                        <p>Your child gets to personalize their braces with their favorite sports team, holiday, or school colors.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Experience Feature Image Card -->
+                <div style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); height: 100%; min-height: 380px;">
+                    <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/istockphoto-2166449878-612x612-1.webp" alt="Kids Orthodontic Care Experience" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 5: FINANCIAL & AFFORDABILITY
+    ============================================================ -->
+    <section class="affordability-section" id="affordability">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="badge-pill" style="background: rgba(255,255,255,0.15); color: #60A5FA;">Financial Peace of Mind</span>
+                <h2 style="color: white;">Making Kids Braces Affordable for Every Family</h2>
+                <p style="color: rgba(255,255,255,0.85);">We believe every child deserves a healthy smile. We work directly with your insurance and offer low monthly payment options.</p>
+            </div>
+
+            <div class="afford-horizontal-grid" style="display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 40px; align-items: center; margin-top: 40px;">
+                <!-- Left: Image Card FIRST -->
+                <div style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); height: 100%; min-height: 360px;">
+                    <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/istockphoto-1367329991-612x612-1.webp" alt="Affordable Orthodontics for Kids" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </div>
+
+                <!-- Right: Content Cards & CTA -->
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="afford-box" style="text-align: left; padding: 22px 24px;">
+                        <h3 style="font-size: 1.4rem; margin-bottom: 6px;">$0 Down Options</h3>
+                        <p style="font-size: 0.92rem; margin: 0;">Flexible low monthly payment plans with zero interest options to fit your family budget.</p>
+                    </div>
+                    <div class="afford-box" style="text-align: left; padding: 22px 24px;">
+                        <h3 style="font-size: 1.4rem; margin-bottom: 6px;">Insurance Maximized</h3>
+                        <p style="font-size: 0.92rem; margin: 0;">We accept most dental PPO plans and file claims on your behalf to maximize your orthodontic benefits.</p>
+                    </div>
+                    <div class="afford-box" style="text-align: left; padding: 22px 24px;">
+                        <h3 style="font-size: 1.4rem; margin-bottom: 6px;">Free Consultation</h3>
+                        <p style="font-size: 0.92rem; margin: 0;">Your child's first consultation, X-rays, and 3D scans are 100% complimentary with no obligation.</p>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a href="#" data-popup="true" class="btn btn-primary" style="width: 100%;">Check Financial Options</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 6: FREQUENTLY ASKED QUESTIONS
+    ============================================================ -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge-pill">Parent FAQs</span>
+                <h2>Frequently Asked Questions</h2>
+                <p>Have questions about your child's orthodontic care? Here are answers to common parent inquiries.</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item active">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        At what age should my child first see an orthodontist?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        The American Association of Orthodontists (AAO) recommends that every child have their first orthodontic evaluation by age 7. At this stage, early jaw problems and crowding can be identified and corrected before permanent teeth fully erupt.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Does early treatment (Phase 1) mean my child won't need braces later?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Phase 1 prepares the jaw and creates necessary space for permanent teeth to erupt properly. While many children still require Phase 2 (full braces or aligners) in their teen years, Phase 1 makes Phase 2 significantly shorter, easier, and less invasive.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Do braces hurt when first put on?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Putting braces on does not hurt at all! Your child may feel mild soreness or pressure for a few days after adjustments as teeth begin moving. Over-the-counter pain relievers and soft foods easily keep them comfortable.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Can my child still play sports or musical instruments?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Absolutely! Children with braces can participate in all sports and play wind or brass instruments. We recommend wearing a custom orthodontic mouthguard during sports to protect their teeth and lips.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        How much do braces for kids cost?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Treatment costs vary based on your child's specific alignment needs and treatment duration. We offer free consultations, accept dental insurance, and provide flexible 0% interest monthly payment options to ensure braces fit comfortably within your budget.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         MODAL POPUP
+    ============================================================ -->
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
+            <div id="modal-initial-view">
+                <h2 class="modal-title">Select Your Location</h2>
+                <p class="modal-sub">Choose your nearest Ignite Clinics office to schedule your child's free consultation.</p>
+                <div class="modal-locs">
+                    <a href="#" class="modal-loc" data-loc="Lansing">Lansing Location</a>
+                    <a href="#" class="modal-loc" data-loc="Charlotte">Charlotte Location</a>
+                    <a href="#" class="modal-loc" data-loc="Adrian">Adrian Location</a>
+                </div>
+            </div>
+            <div id="modal-success-view" style="display: none; padding: 20px 0;">
+                <div style="width: 60px; height: 60px; background: rgba(199, 111, 52, 0.15); color: var(--brand-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.8rem; font-weight: bold;">✓</div>
+                <h3 style="color: var(--brand-navy); font-size: 1.5rem; margin-bottom: 8px;">Location Selected!</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Thank you! Our team will reach out shortly to confirm your consultation at our <strong id="selected-loc-name" style="color: var(--brand-accent);"></strong> office.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script>
+        // Modal Handlers
+        (function() {
+            var modal = document.getElementById('booking-modal');
+            var closeBtn = document.getElementById('modal-close-btn');
+            var initialView = document.getElementById('modal-initial-view');
+            var successView = document.getElementById('modal-success-view');
+            var locName = document.getElementById('selected-loc-name');
+            
+            document.querySelectorAll('[data-popup="true"]').forEach(function(el) {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (initialView && successView) {
+                        initialView.style.display = 'block';
+                        successView.style.display = 'none';
+                    }
+                    modal.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.modal-loc').forEach(function(locBtn) {
+                locBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var selected = locBtn.getAttribute('data-loc') || locBtn.textContent;
+                    if (locName) locName.textContent = selected;
+                    if (initialView && successView) {
+                        initialView.style.display = 'none';
+                        successView.style.display = 'block';
+                    }
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                modal.classList.remove('active');
+            });
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        })();
+
+        // Accordion FAQ Toggle
+        function toggleFaq(btn) {
+            var item = btn.parentElement;
+            var isActive = item.classList.contains('active');
+            
+            document.querySelectorAll('.faq-item').forEach(function(el) {
+                el.classList.remove('active');
+            });
+
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exact Brand Footer Snippet</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f6f9;">
+
+<!-- ====================================================
+     EXACT BRAND FOOTER SNIPPET START
+     Brand Primary: #061A3A
+     Brand Accent:  #C76F34
+==================================================== -->
+<style>
+.oe-footer {
+    background: #061A3A;
+    color: #ffffff;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 60px 0 30px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+.oe-footer * {
+    box-sizing: border-box;
+}
+
+/* Faint background watermark icon effect on right side like screenshot */
+.oe-footer::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    bottom: -60px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+.oe-footer .footer-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.oe-footer .footer-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 45px;
+    align-items: start;
+}
+
+/* BRAND COLUMN */
+.oe-footer .brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-right: 15px;
+}
+
+.oe-footer .brand-logo-link {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.oe-footer .brand-logo-img {
+    max-height: 65px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.oe-footer .brand-description {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+    max-width: 320px;
+}
+
+/* CTA BUTTON */
+.oe-footer .cta-btn-wrap {
+    margin-top: 4px;
+}
+
+.oe-footer .btn-cta-brand {
+    background: #C76F34;
+    color: #ffffff;
+    padding: 12px 26px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(199, 111, 52, 0.35);
+    transition: all 0.25s ease;
+}
+
+.oe-footer .btn-cta-brand:hover {
+    background: #af5d28;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(199, 111, 52, 0.45);
+}
+
+/* COLUMN HEADINGS & LINKS */
+.oe-footer .col-heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: #C76F34; /* Orange text color */
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: 0.2px;
+}
+
+.oe-footer .footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.oe-footer .footer-links-list li {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.oe-footer .footer-links-list a {
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.oe-footer .footer-links-list a:hover {
+    color: #C76F34;
+}
+
+.oe-footer .bullet-dot {
+    color: #C76F34;
+    font-weight: bold;
+    margin-right: 8px;
+    font-size: 15px;
+}
+
+/* DIVIDER & COPYRIGHT */
+.oe-footer .footer-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.oe-footer .copyright-text {
+    text-align: center;
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.oe-footer .copyright-text a {
+    color: #C76F34;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.oe-footer .copyright-text a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+@media (max-width: 992px) {
+    .oe-footer .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 35px 25px;
+    }
+    .oe-footer .brand-col {
+        grid-column: span 2;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .oe-footer {
+        padding: 45px 0 25px;
+    }
+    .oe-footer .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .oe-footer .brand-col {
+        grid-column: span 1;
+    }
+    .oe-footer .copyright-text {
+        font-size: 12.5px;
+    }
+}
+</style>
+
+<footer class="oe-footer">
+    <div class="footer-container">
+        <div class="footer-grid">
+            
+            <!-- Column 1: Brand Info -->
+            <div class="brand-col">
+                <a href="#" class="brand-logo-link">
+                    <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/06/cropped-WhatsApp-Image-2026-06-10-at-15.54.44-1-300x103.jpeg" alt="Brand Logo" class="brand-logo-img">
+                </a>
+                <p class="brand-description">
+                    Get the confidence you deserve and discover your new true smile with Orthodontic Experts.
+                </p>
+                <div class="cta-btn-wrap">
+                    <a href="#" class="btn-cta-brand">Ignite Clinics</a>
+                </div>
+            </div>
+
+            <!-- Column 2: Orthodontic Services -->
+            <div>
+                <h3 class="col-heading">Orthodontic Services</h3>
+                <ul class="footer-links-list">
+                    <li><a href="#"><span class="bullet-dot">•</span>Orthodontics</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Orthodontic Appliances</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Early Age Orthodontics</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Braces FAQs</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Types of Braces</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Braces Emergencies</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Clear Aligners</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Smile Protection Plans</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Smile Correction Packages</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Patient Resources -->
+            <div>
+                <h3 class="col-heading">Patient Resources</h3>
+                <ul class="footer-links-list">
+                    <li><a href="#"><span class="bullet-dot">•</span>Orthodontic News</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Financial Information</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>No-Cost Consultation</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Dental Assistant School</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Referring Dentists</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Accepted Insurances</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Terms and Conditions</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Quick Links -->
+            <div>
+                <h3 class="col-heading">Quick Links</h3>
+                <ul class="footer-links-list">
+                    <li><a href="#"><span class="bullet-dot">•</span>About us</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Who We Serve</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Patients</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Doctors</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Meet Our Team</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Life with Braces</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Office Visit</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Before and After</a></li>
+                    <li><a href="#"><span class="bullet-dot">•</span>Career</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Divider Line -->
+        <div class="footer-divider"></div>
+
+        <!-- Copyright Line -->
+        <p class="copyright-text">
+            Copyright &copy; 2026. Orthodontic Experts Ltd. | <a href="#">Privacy Policy</a>
+        </p>
+
+    </div>
+</footer>
+<!-- ====================================================
+     EXACT BRAND FOOTER SNIPPET END
+==================================================== -->
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Server secrets (CMS config, DB credentials) — repo is public
+.env
+config.local.php
+*.sql
+backups/
+.DS_Store
+Thumbs.db

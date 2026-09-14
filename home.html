@@ -1,0 +1,1392 @@
+<!-- ============================================================
+     IGNITE ORTHODONTICS — HOME PAGE (all sections, no header/footer)
+     Structure mirrors https://www.orthodonticexprts.com/ section-for-section:
+       1. Hero carousel (2 slides)
+       2. Orthodontic Treatment Options (4 cards)
+       3. Book a Consultation (direct contact CTA)
+       4. The Ignite Difference (3 cards)
+       5. Insurance & Payment Options (logo strip)
+       6. We Are A Community (banner)
+       7. Patients With Reasons to Smile (4 reviews)
+       8. Find Ignite Orthodontics Near You (6 offices + finder)
+       9. Final CTA
+     Paste into ONE Elementor "HTML" widget in a full-width section.
+     Self-contained: no jQuery, no external CSS/JS, no external images.
+     Every placeholder is marked with an EDIT comment.
+     ============================================================ -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS  (same palette as the header widget)
+   ============================================================ */
+.ig-home{
+  --ig-navy:#0B2A55;
+  --ig-navy-900:#051A39;
+  --ig-navy-800:#082041;
+  --ig-orange:#F47421;
+  --ig-orange-600:#DA6210;
+  --ig-orange-100:#FDEEE3;
+  --ig-white:#FFFFFF;
+  --ig-ink:#0B2A55;
+  --ig-muted:#5B6B82;
+  --ig-line:#E3E9F1;
+  --ig-tint:#F4F7FB;
+  --ig-font:"Poppins","Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ig-pad:clamp(56px,7vw,104px);
+  font-family:var(--ig-font);
+  color:var(--ig-ink);
+  overflow-x:hidden;
+}
+.ig-home,.ig-home *{box-sizing:border-box;}
+:where(.ig-home) ul{list-style:none;margin:0;padding:0;}
+:where(.ig-home) a{text-decoration:none;color:inherit;}
+:where(.ig-home) img{max-width:100%;display:block;}
+:where(.ig-home) button{font:inherit;cursor:pointer;border:0;background:none;color:inherit;}
+:where(.ig-home) svg{display:block;flex:none;}
+:where(.ig-home) p{margin:0;}
+
+/* ---------- shared layout ---------- */
+.ig-wrap{max-width:1280px;margin:0 auto;padding:0 24px;}
+.ig-sec{padding:var(--ig-pad) 0;position:relative;}
+
+
+.ig-kicker{
+  display:block;font-size:clamp(13px,1.08vw,18px);font-weight:600;
+  letter-spacing:.04em;color:var(--ig-orange);margin-bottom:clamp(9px,1.1vw,18px);
+}
+
+/* ---------- buttons ---------- */
+.ig-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  height:56px;padding:0 32px;border-radius:999px;
+  font-size:16px;font-weight:700;letter-spacing:.2px;white-space:nowrap;
+  transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.ig-btn--primary{background:var(--ig-orange);color:#fff;box-shadow:0 10px 26px rgba(244,116,33,.32);}
+.ig-btn--primary:hover{background:var(--ig-orange-600);color:#fff;transform:translateY(-2px);}
+.ig-btn--navy{background:var(--ig-navy);color:#fff;}
+.ig-btn--navy:hover{background:var(--ig-navy-800);color:#fff;transform:translateY(-2px);}
+.ig-btns{display:flex;flex-wrap:wrap;gap:14px;}
+
+/* ============================================================
+   1. HERO SLIDER
+   ============================================================ */
+.ig-hero{position:relative;background:var(--ig-navy);overflow:hidden;}
+.ig-hero__track{position:relative;}
+.ig-hero__slide{
+  position:absolute;inset:0;
+  opacity:0;visibility:hidden;transition:opacity .65s ease,visibility .65s;
+  /* per-slide accent — the badge border, band and highlight words read from these */
+  --acc:var(--ig-orange);
+  --acc-ink:var(--ig-navy);
+  --acc-2:#FFC08A;
+}
+.ig-hero__slide.is-active{opacity:1;visibility:visible;position:relative;z-index:2;}
+.ig-hero__slide--aligners{--acc:#FFFFFF;--acc-ink:var(--ig-orange);--acc-2:#FFC08A;}
+
+.ig-hero__inner{
+  position:relative;z-index:2;
+  min-height:clamp(520px,53vw,740px);
+  display:flex;align-items:center;
+  padding:clamp(52px,6vw,84px) 0 clamp(56px,6vw,92px);
+}
+.ig-hero__copy{max-width:640px;color:#fff;}
+
+/* --- price badge --- */
+.ig-hero__badge{
+  display:inline-flex;flex-direction:column;text-align:center;
+  border:3px solid var(--acc);border-radius:14px;overflow:hidden;
+  min-width:clamp(266px,26vw,360px);margin-bottom:clamp(22px,2.6vw,34px);
+}
+.ig-hero__badge span{display:block;line-height:1.12;}
+.ig-hero__badge-top,.ig-hero__badge-bot{
+  padding:11px 30px;color:#fff;
+  font-size:clamp(16px,1.6vw,25px);font-weight:700;
+  letter-spacing:2.4px;text-transform:uppercase;
+}
+.ig-hero__badge-mid{
+  background:var(--acc);color:var(--acc-ink);
+  padding:8px 30px;font-weight:800;letter-spacing:.5px;
+  font-size:clamp(34px,4.4vw,58px);
+}
+.ig-hero__badge-mid sup{font-size:.62em;vertical-align:super;line-height:0;}
+
+/* --- headline --- */
+.ig-hero__head{
+  font-size:clamp(32px,4.6vw,62px);line-height:1.06;font-weight:800;
+  letter-spacing:-.5px;text-transform:uppercase;margin:0 0 14px;color:#fff;
+}
+.ig-hero__head em{font-style:normal;color:var(--acc-2);}
+.ig-hero__head b{font-weight:800;color:var(--ig-orange);}
+.ig-hero__slide--aligners .ig-hero__head b{color:var(--ig-orange);}
+.ig-hero__terms{
+  font-size:clamp(12.5px,1vw,15px);font-style:italic;font-weight:600;
+  color:rgba(255,255,255,.82);margin:0 0 clamp(22px,2.4vw,32px);
+}
+
+/* --- hero buttons: squared off, like the reference --- */
+.ig-hero .ig-btn{height:clamp(48px,4.4vw,60px);border-radius:7px;padding:0 clamp(24px,2.6vw,38px);box-shadow:none;}
+.ig-hero .ig-btn--primary{background:var(--ig-orange);color:#fff;}
+.ig-hero .ig-btn--primary:hover{background:var(--ig-orange-600);transform:translateY(-2px);}
+.ig-hero .ig-btn--white{background:#fff;color:var(--ig-navy);}
+.ig-hero .ig-btn--white:hover{background:var(--ig-orange);color:#fff;transform:translateY(-2px);}
+
+/* --- full-bleed photo behind the copy ---
+   The hero images are 16:9 photographs with their own backgrounds (not cut-outs),
+   so they sit as a background layer under a gradient that keeps the left column
+   dark enough for white text while the subject stays visible on the right. --- */
+.ig-hero__media{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.ig-hero__media img{width:100%;height:100%;object-fit:cover;}
+.ig-hero__media::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,
+    rgba(5,26,57,.95) 0%,
+    rgba(5,26,57,.88) 34%,
+    rgba(5,26,57,.60) 58%,
+    rgba(5,26,57,.28) 100%);
+}
+.ig-hero__slide--braces   .ig-hero__media img{object-position:72% 28%;}
+.ig-hero__slide--aligners .ig-hero__media img{object-position:64% 24%;}
+
+/* slider chrome */
+.ig-hero__nav{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.16);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s ease;
+}
+.ig-hero__nav:hover{background:var(--ig-orange);}
+.ig-hero__nav--prev{left:20px;}
+.ig-hero__nav--next{right:20px;}
+.ig-hero__dots{
+  position:absolute;left:0;right:0;bottom:clamp(20px,2.4vw,32px);z-index:5;
+  display:flex;justify-content:center;gap:10px;
+}
+.ig-hero__dots button{
+  width:34px;height:5px;border-radius:3px;background:rgba(255,255,255,.34);
+  transition:background .25s ease,width .25s ease;
+}
+.ig-hero__dots button.is-active{background:var(--ig-orange);width:58px;}
+
+/* ============================================================
+   2. TREATMENTS
+   ============================================================ */
+.ig-treat{overflow:hidden;}
+.ig-treat__head{max-width:1000px;margin:0 auto clamp(40px,5vw,72px);text-align:center;}
+.ig-treat__head h1{
+  font-size:clamp(28px,3.9vw,52px);line-height:1.22;font-weight:700;
+  letter-spacing:-.4px;margin:0;color:var(--ig-navy);
+}
+.ig-treat__head h1 em{font-style:normal;color:var(--ig-orange);}
+.ig-treat__lead{
+  margin:clamp(14px,1.6vw,24px) auto 0;max-width:900px;
+  font-size:clamp(14.5px,1.12vw,17px);line-height:1.78;color:var(--ig-muted);
+}
+
+/* staggered card row — even cards drop, exactly like the reference */
+.ig-treat__grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(14px,1.9vw,30px);align-items:start;
+  --ig-stagger:clamp(28px,4.4vw,72px);
+  padding-bottom:var(--ig-stagger);
+}
+.ig-card-t{
+  position:relative;display:block;border-radius:18px;overflow:hidden;
+  aspect-ratio:288/467;background:var(--ig-navy);
+  box-shadow:0 16px 40px rgba(11,42,85,.17);
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.ig-card-t:nth-child(even){transform:translateY(var(--ig-stagger));}
+.ig-card-t:hover{transform:translateY(-9px);box-shadow:0 26px 54px rgba(11,42,85,.26);}
+.ig-card-t:nth-child(even):hover{transform:translateY(calc(var(--ig-stagger) - 9px));}
+
+.ig-card-t img{width:100%;height:100%;object-fit:cover;transition:transform .55s ease;}
+.ig-card-t:hover img{transform:scale(1.06);}
+/* navy scrim so the label stays readable over any photo */
+.ig-card-t::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,
+    rgba(11,42,85,.97) 0%,
+    rgba(11,42,85,.92) 30%,
+    rgba(11,42,85,.55) 58%,
+    rgba(11,42,85,0) 84%);
+}
+.ig-card-t__body{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:0 clamp(14px,1.5vw,22px) clamp(18px,2vw,28px);text-align:center;color:#fff;
+}
+.ig-card-t__title{
+  margin:0;color:#fff;
+  font-size:clamp(16px,1.45vw,21px);font-weight:700;line-height:1.3;
+}
+.ig-card-t__desc{
+  margin:clamp(7px,.8vw,12px) 0 clamp(10px,1.1vw,16px);
+  font-size:clamp(12.5px,.95vw,14.5px);line-height:1.5;color:rgba(255,255,255,.88);
+}
+.ig-card-t__more{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:clamp(12.5px,.95vw,14.5px);font-weight:700;color:var(--ig-orange);
+}
+.ig-card-t__more svg{width:14px;height:14px;transition:transform .2s ease;}
+.ig-card-t:hover .ig-card-t__more svg{transform:translateX(4px);}
+.ig-treat__cta{margin-top:clamp(38px,4.6vw,66px);display:flex;justify-content:center;}
+.ig-treat__cta .ig-btn{border-radius:7px;height:clamp(50px,4.2vw,58px);padding:0 clamp(32px,3.4vw,48px);}
+
+/* ============================================================
+   3. CONSULTATION CTA
+   ============================================================ */
+.ig-form-sec{background:var(--ig-navy);color:#fff;position:relative;overflow:hidden;padding:0;}
+.ig-form-grid{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;}
+
+/* left: photo panel, bled to the section edges and faded into the navy */
+.ig-form__media{position:relative;min-height:clamp(340px,42vw,680px);}
+.ig-form__media img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center 32%;
+}
+.ig-form__media::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(11,42,85,.30) 0%,
+    rgba(11,42,85,.05) 28%,
+    rgba(11,42,85,.55) 76%,
+    var(--ig-navy) 100%);
+}
+
+/* right: direct consultation options */
+.ig-consult__panel{
+  padding:clamp(48px,5.4vw,92px) clamp(20px,3.6vw,60px);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.ig-consult__inner{width:100%;max-width:660px;margin:0 auto;}
+.ig-consult__eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  color:var(--ig-orange);font-size:13px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;
+}
+.ig-consult__eyebrow::before{
+  content:"";width:9px;height:9px;border-radius:50%;background:var(--ig-orange);
+  box-shadow:0 0 0 5px rgba(244,116,33,.16);
+}
+.ig-consult__panel h2{
+  font-size:clamp(30px,3.7vw,54px);line-height:1.14;font-weight:800;
+  color:#fff;margin:0 0 18px;
+}
+.ig-consult__panel h2 em{font-style:normal;color:var(--ig-orange);}
+.ig-consult__lead{
+  color:rgba(255,255,255,.82);font-size:clamp(15px,1.2vw,18px);
+  line-height:1.7;max-width:590px;margin:0 0 clamp(24px,2.6vw,34px);
+}
+.ig-consult__benefits{display:grid;gap:14px;list-style:none;margin:0 0 clamp(28px,3vw,40px);padding:0;}
+.ig-consult__benefits li{
+  display:flex;align-items:center;gap:13px;color:#fff;
+  font-size:clamp(14px,1.08vw,16px);font-weight:700;line-height:1.45;
+}
+.ig-consult__check{
+  width:28px;height:28px;border-radius:50%;flex:none;
+  display:grid;place-items:center;background:rgba(244,116,33,.16);
+  border:1px solid rgba(244,116,33,.5);color:var(--ig-orange);
+}
+.ig-consult__check svg{width:15px;height:15px;stroke:currentColor;stroke-width:3;fill:none;}
+.ig-consult__actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.ig-consult__actions .ig-btn{
+  min-height:54px;height:auto;border-radius:7px;padding:12px clamp(22px,2.4vw,34px);
+  white-space:normal;text-align:center;line-height:1.3;
+}
+.ig-consult__actions .ig-btn--outline{
+  color:#fff;background:transparent;border:2px solid rgba(255,255,255,.55);box-shadow:none;
+}
+.ig-consult__actions .ig-btn--outline:hover{
+  color:var(--ig-navy);background:#fff;border-color:#fff;transform:translateY(-2px);
+}
+.ig-consult__note{font-size:13px;color:rgba(255,255,255,.62);margin:16px 0 0;}
+
+/* ============================================================
+   4. PROMISE
+   ============================================================ */
+.ig-promise__head{max-width:1040px;margin:0 auto clamp(36px,4.2vw,60px);text-align:center;}
+.ig-promise__head h2{
+  font-size:clamp(30px,4.3vw,58px);line-height:1.16;font-weight:800;
+  letter-spacing:-.5px;color:var(--ig-navy);margin:0 0 clamp(18px,1.8vw,26px);
+}
+.ig-promise__head h2 em{font-style:normal;color:var(--ig-orange);}
+.ig-promise__head p{
+  font-size:clamp(14.5px,1.15vw,17px);line-height:1.78;color:var(--ig-muted);
+  max-width:980px;margin:0 auto;
+}
+
+.ig-promise__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,32px);}
+.ig-card-p{
+  position:relative;background:#E9EDF6;border-radius:0;
+  padding:clamp(28px,2.7vw,44px);
+  display:flex;flex-direction:column;
+  min-height:clamp(320px,25vw,400px);
+  transition:background .3s ease,transform .3s ease,box-shadow .3s ease;
+}
+/* icon sits top-right; margin-bottom:auto pushes the copy to the card floor */
+.ig-card-p__icon{align-self:flex-end;margin-bottom:auto;color:var(--ig-orange);line-height:0;}
+.ig-card-p__icon svg{
+  width:clamp(66px,6.2vw,104px);height:auto;
+  fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.ig-card-p h4{
+  font-size:clamp(20px,1.95vw,30px);line-height:1.22;font-weight:700;
+  margin:clamp(20px,2vw,30px) 0 clamp(10px,1vw,15px);color:var(--ig-navy);
+  transition:color .3s ease;
+}
+.ig-card-p p{
+  font-size:clamp(14.5px,1.08vw,16.5px);line-height:1.62;
+  color:var(--ig-navy);transition:color .3s ease;
+}
+/* hover: the whole card flips to navy and lifts above its neighbours */
+.ig-card-p:hover{
+  background:var(--ig-navy);z-index:2;
+  transform:scale(1.055);
+  box-shadow:0 26px 58px rgba(11,42,85,.30);
+}
+.ig-card-p:hover h4{color:var(--ig-orange);}
+.ig-card-p:hover p{color:rgba(255,255,255,.88);}
+
+/* ============================================================
+   5. INSURANCES
+   ============================================================ */
+.ig-ins__head{text-align:center;margin-bottom:clamp(28px,3.4vw,52px);}
+.ig-ins__head h2{
+  font-size:clamp(25px,3.1vw,44px);line-height:1.2;font-weight:700;
+  color:var(--ig-navy);margin:0 0 clamp(14px,1.6vw,24px);
+}
+.ig-ins__head h2 em{font-style:normal;color:var(--ig-orange);}
+.ig-ins__head p{
+  max-width:900px;margin-inline:auto;
+  font-size:clamp(14.5px,1.12vw,17px);line-height:1.78;color:var(--ig-muted);
+}
+.ig-ins__cta{margin:clamp(22px,2.6vw,38px) 0 clamp(26px,3vw,44px);}
+.ig-ins__label{
+  font-size:clamp(13px,1.05vw,16px);font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ig-navy);
+}
+.ig-ins__note{
+  max-width:760px;margin-inline:auto;
+  font-size:clamp(12px,.92vw,13.5px);line-height:1.6;color:var(--ig-muted);
+}
+.ig-marquee{
+  position:relative;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+}
+.ig-marquee__track{
+  display:flex;align-items:center;width:max-content;
+  gap:clamp(18px,2.8vw,52px);
+  animation:ig-scroll 36s linear infinite;
+}
+.ig-marquee:hover .ig-marquee__track{animation-play-state:paused;}
+@keyframes ig-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+/* each tile is a 200x220 artwork holding TWO stacked carrier logos —
+   that pairing is what gives the strip its two rows */
+.ig-ins__logo{flex:none;width:clamp(146px,14.5vw,208px);}
+.ig-ins__logo img{
+  width:100%;height:auto;
+  transition:opacity .25s ease;
+}
+.ig-marquee:hover .ig-ins__logo{opacity:.55;transition:opacity .25s ease;}
+.ig-marquee .ig-ins__logo:hover{opacity:1;}
+.ig-ins__foot{text-align:center;margin-top:clamp(30px,3.4vw,50px);}
+.ig-ins__foot .ig-btn{border-radius:7px;height:clamp(50px,4.2vw,58px);padding:0 clamp(32px,3.4vw,46px);}
+
+/* ============================================================
+   6. WE ARE A COMMUNITY
+   ============================================================ */
+/* the community panel and the reviews collage share one full-width band */
+.ig-band{display:grid;grid-template-columns:38.5% 61.5%;align-items:stretch;}
+
+.ig-comm{position:relative;overflow:hidden;background:var(--ig-navy);isolation:isolate;}
+.ig-comm__media{position:absolute;inset:0;z-index:0;}
+.ig-comm__media img{
+  width:100%;height:100%;object-fit:cover;
+  /* keeps the faces in frame when the narrow panel crops the landscape shot */
+  object-position:center 22%;
+}
+/* two layers: a navy duotone over the whole photo, then a bottom-weighted
+   scrim so the headline sits on solid colour instead of on the faces */
+.ig-comm__media::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:rgba(11,42,85,.52);
+  mix-blend-mode:multiply;
+}
+.ig-comm__media::after{
+  content:"";position:absolute;inset:0;z-index:2;
+  background:linear-gradient(to top,
+    rgba(5,26,57,.95) 0%,
+    rgba(5,26,57,.78) 32%,
+    rgba(5,26,57,.34) 62%,
+    rgba(5,26,57,.10) 100%);
+}
+.ig-comm__inner{
+  position:relative;z-index:3;
+  padding:clamp(52px,5.4vw,90px) clamp(26px,3.4vw,62px);
+  min-height:clamp(430px,44vw,620px);
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.ig-comm__mark{display:block;width:clamp(120px,11vw,170px);margin-bottom:clamp(20px,2.4vw,34px);}
+.ig-comm__mark img{width:100%;height:auto;}
+.ig-comm h2{
+  font-size:clamp(34px,4.4vw,64px);line-height:1.08;font-weight:800;
+  letter-spacing:-1px;margin:0 0 clamp(24px,2.6vw,38px);color:#fff;
+}
+.ig-comm h2 em{font-style:normal;display:block;color:var(--ig-orange);}
+.ig-comm .ig-btn{border-radius:7px;height:auto;min-height:clamp(48px,4vw,58px);padding:12px clamp(22px,2.4vw,34px);align-self:flex-start;white-space:normal;text-align:center;line-height:1.35;}
+
+/* ============================================================
+   7. TESTIMONIALS
+   ============================================================ */
+.ig-test{
+  background:#F7F8FA;
+  padding:clamp(48px,5vw,84px) clamp(24px,3.4vw,62px);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.ig-test__head{text-align:center;margin-bottom:clamp(20px,2.4vw,34px);}
+.ig-test__head h2{
+  font-size:clamp(27px,3.5vw,50px);line-height:1.18;font-weight:800;
+  letter-spacing:-.6px;color:var(--ig-navy);margin:0;
+}
+.ig-test__head h2 em{font-style:normal;color:var(--ig-orange);}
+
+/* four reviews: a staggered 2x2 keeps the scattered look of the 3-up collage
+   without absolute positioning, which could overlap once quotes vary in length */
+.ig-test__collage{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(12px,1.5vw,22px);
+  --ig-rev-stagger:clamp(14px,2.2vw,38px);
+  padding-bottom:var(--ig-rev-stagger);
+}
+.ig-card-q{
+  border-radius:16px;padding:clamp(16px,1.6vw,24px);
+  box-shadow:0 16px 38px rgba(11,42,85,.20);
+  transition:transform .28s ease,box-shadow .28s ease;
+}
+.ig-card-q:nth-child(even){transform:translateY(var(--ig-rev-stagger));}
+.ig-card-q:hover{transform:translateY(-7px);box-shadow:0 26px 56px rgba(11,42,85,.30);}
+.ig-card-q:nth-child(even):hover{transform:translateY(calc(var(--ig-rev-stagger) - 7px));}
+.ig-card-q--a{background:var(--ig-orange);color:#fff;}
+.ig-card-q--b{background:var(--ig-navy);color:#fff;}
+.ig-card-q--c{background:#fff;color:var(--ig-navy);}
+.ig-card-q--d{background:var(--ig-navy-800);color:#fff;}
+
+.ig-card-q__stars{display:flex;gap:2px;margin-bottom:clamp(9px,1vw,14px);color:#FFC08A;}
+.ig-card-q--c .ig-card-q__stars{color:var(--ig-orange);}
+.ig-card-q__stars svg{width:clamp(13px,1.05vw,16px);height:clamp(13px,1.05vw,16px);}
+.ig-card-q__who{display:flex;align-items:center;gap:11px;margin-bottom:10px;}
+.ig-card-q__av{
+  width:clamp(34px,2.7vw,42px);height:clamp(34px,2.7vw,42px);border-radius:50%;flex:none;
+  border:2px solid currentColor;display:flex;align-items:center;justify-content:center;
+}
+.ig-card-q__av svg{width:60%;height:60%;fill:currentColor;}
+.ig-card-q__who h4{margin:0;font-size:clamp(14.5px,1.2vw,18px);font-weight:700;line-height:1.25;}
+.ig-card-q__text{
+  font-size:clamp(12px,.95vw,14.5px);line-height:1.6;font-weight:500;margin:0;
+}
+.ig-card-q--a .ig-card-q__av{color:#fff;}
+.ig-card-q--b .ig-card-q__av,.ig-card-q--d .ig-card-q__av{color:var(--ig-orange);}
+.ig-card-q--c .ig-card-q__av{color:var(--ig-navy);}
+.ig-card-q--c .ig-card-q__text{color:var(--ig-muted);}
+.ig-test__foot{display:flex;justify-content:center;margin-top:clamp(26px,3vw,44px);}
+.ig-test__foot .ig-btn{border-radius:7px;height:clamp(48px,4vw,58px);padding:0 clamp(30px,3vw,44px);}
+
+/* ============================================================
+   8. LOCATIONS
+   ============================================================ */
+.ig-loc__head{text-align:center;max-width:1120px;margin:0 auto clamp(26px,3vw,42px);}
+.ig-loc__head h2{
+  font-size:clamp(29px,4.2vw,58px);line-height:1.16;font-weight:800;
+  letter-spacing:-.6px;color:var(--ig-navy);margin:0 0 clamp(16px,1.8vw,26px);
+}
+.ig-loc__head h2 em{font-style:normal;color:var(--ig-orange);}
+.ig-loc__head p{font-size:clamp(14.5px,1.15vw,17px);line-height:1.78;color:var(--ig-muted);margin:0;}
+
+/* state tallies */
+.ig-loc__states{
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  gap:clamp(20px,5vw,92px);margin-bottom:clamp(24px,2.8vw,40px);
+}
+.ig-state{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:clamp(16px,1.5vw,22px);font-weight:600;color:var(--ig-navy);
+  transition:color .18s ease;
+}
+.ig-state:hover{color:var(--ig-orange);}
+.ig-state svg{width:clamp(15px,1.3vw,19px);height:auto;color:var(--ig-navy);}
+.ig-state b{font-weight:600;color:var(--ig-orange);}
+
+/* search bar */
+.ig-loc__search{display:flex;gap:clamp(10px,1.2vw,16px);margin-bottom:clamp(26px,3vw,44px);}
+.ig-loc__search input{
+  flex:1 1 auto;min-width:0;font:inherit;
+  height:clamp(52px,4.6vw,64px);border-radius:7px;padding:0 clamp(16px,1.4vw,22px);
+  font-size:clamp(15px,1.15vw,17px);color:var(--ig-navy);
+  background:#fff;border:1.5px solid rgba(244,116,33,.55);
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+.ig-loc__search input::placeholder{color:#8A99AE;}
+.ig-loc__search input:focus{outline:none;border-color:var(--ig-orange);box-shadow:0 0 0 3px rgba(244,116,33,.16);}
+.ig-loc__search .ig-btn{
+  flex:none;width:clamp(160px,20vw,300px);
+  height:clamp(52px,4.6vw,64px);border-radius:7px;padding:0 20px;
+}
+.ig-loc__msg{font-size:13.5px;color:var(--ig-muted);margin:-24px 0 24px;min-height:1.2em;}
+
+/* list + map */
+.ig-loc__body{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.4vw,42px);align-items:start;}
+.ig-loc__list{
+  max-height:clamp(430px,44vw,580px);overflow-y:auto;overscroll-behavior:contain;
+  padding-right:clamp(12px,1.4vw,22px);
+}
+.ig-loc__list::-webkit-scrollbar{width:6px;}
+.ig-loc__list::-webkit-scrollbar-track{background:var(--ig-line);border-radius:3px;}
+.ig-loc__list::-webkit-scrollbar-thumb{background:var(--ig-orange);border-radius:3px;}
+.ig-office{padding:clamp(18px,1.9vw,30px) 0;border-bottom:1px solid var(--ig-line);}
+.ig-office:first-child{padding-top:0;}
+.ig-office:last-child{border-bottom:0;}
+.ig-office h3{
+  font-size:clamp(17px,1.75vw,26px);line-height:1.25;font-weight:700;
+  color:var(--ig-navy);margin:0 0 clamp(8px,.9vw,13px);
+}
+.ig-office__addr{font-size:clamp(13.5px,1.05vw,15.5px);line-height:1.55;color:var(--ig-muted);margin:0 0 clamp(10px,1.1vw,16px);}
+.ig-office__row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;}
+.ig-office__contact a{
+  display:flex;align-items:center;gap:11px;
+  font-size:clamp(13.5px,1.05vw,15.5px);color:var(--ig-orange);
+  margin-bottom:8px;transition:color .18s ease;
+}
+.ig-office__contact a:last-child{margin-bottom:0;}
+.ig-office__contact a:hover{color:var(--ig-orange-600);}
+.ig-office__contact svg{width:17px;height:17px;color:var(--ig-navy);flex:none;}
+.ig-office__links{display:flex;gap:10px;flex-wrap:wrap;}
+.ig-office .ig-btn{
+  height:clamp(40px,3.4vw,48px);padding:0 clamp(14px,1.5vw,22px);border-radius:8px;
+  font-size:clamp(12.5px,1vw,14.5px);
+  background:transparent;color:var(--ig-navy);box-shadow:inset 0 0 0 2px var(--ig-navy);
+}
+.ig-office .ig-btn:hover{background:var(--ig-navy);color:#fff;}
+.ig-loc__map{
+  border-radius:6px;overflow:hidden;background:var(--ig-line);
+  height:clamp(430px,44vw,580px);
+}
+.ig-loc__map iframe{width:100%;height:100%;border:0;display:block;}
+
+/* ============================================================
+   9. FINAL CTA
+   ============================================================ */
+.ig-final{background:var(--ig-navy);color:#fff;text-align:center;}
+.ig-final h2{
+  font-size:clamp(26px,3.6vw,50px);line-height:1.18;font-weight:800;
+  letter-spacing:-.02em;color:#fff;margin:0 0 clamp(22px,2.6vw,38px);
+}
+.ig-final h2 em{font-style:normal;color:var(--ig-orange);}
+.ig-final .ig-kicker{color:var(--ig-orange);}
+.ig-final .ig-btn{border-radius:7px;}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1100px){
+  .ig-treat__grid{grid-template-columns:repeat(2,1fr);}
+  .ig-card-p{min-height:clamp(300px,34vw,360px);}
+  /* band: stop overlapping and stack the reviews normally */
+  .ig-band{grid-template-columns:1fr;}
+  .ig-comm__inner{min-height:clamp(340px,46vw,460px);}
+  .ig-test__collage{grid-template-columns:1fr;--ig-rev-stagger:0px;padding-bottom:0;gap:14px;}
+  .ig-card-q:nth-child(even){transform:none;}
+  .ig-card-q:hover,.ig-card-q:nth-child(even):hover{transform:translateY(-5px);}
+  .ig-form-grid{grid-template-columns:1fr;}
+  .ig-loc__body{grid-template-columns:1fr;}
+  .ig-loc__list{max-height:none;overflow:visible;padding-right:0;}
+  .ig-loc__map{height:clamp(320px,52vw,440px);}
+  .ig-form__media{min-height:0;height:clamp(280px,44vw,420px);}
+  .ig-form__media::after{background:linear-gradient(180deg,rgba(11,42,85,.25) 0%,rgba(11,42,85,.05) 40%,var(--ig-navy) 100%);}
+}
+/* hero on small screens: the scrim turns vertical so the copy stays readable
+   over the middle of the photo rather than only its left edge */
+@media (max-width:900px){
+  .ig-hero__inner{min-height:clamp(430px,66vw,600px);padding:clamp(44px,7vw,64px) 0 clamp(56px,8vw,80px);}
+  .ig-hero__copy{max-width:none;}
+  .ig-hero__media::after{
+    background:linear-gradient(180deg,
+      rgba(5,26,57,.70) 0%,rgba(5,26,57,.82) 52%,rgba(5,26,57,.94) 100%);
+  }
+  .ig-hero__slide--braces .ig-hero__media img,
+  .ig-hero__slide--aligners .ig-hero__media img{object-position:center 22%;}
+  .ig-hero__nav{display:none;}
+}
+@media (max-width:860px){
+  .ig-promise__grid{grid-template-columns:1fr;}
+  .ig-card-p{min-height:0;}
+  .ig-card-p:hover{transform:none;}
+  .ig-card-p__icon svg{width:64px;}
+}
+@media (max-width:720px){
+  .ig-wrap{padding:0 18px;}
+  .ig-hero__badge{min-width:0;width:100%;max-width:320px;}
+  .ig-hero .ig-btns{width:100%;gap:10px;}
+  .ig-hero .ig-btns .ig-btn{flex:1 1 0;padding:0 12px;font-size:15px;}
+  .ig-treat__cta .ig-btn,.ig-test__foot .ig-btn{width:100%;}
+  .ig-treat__grid{--ig-stagger:clamp(18px,4vw,30px);}
+  .ig-consult__panel{padding:44px 20px 48px;}
+  .ig-consult__actions{flex-direction:column;align-items:stretch;}
+  .ig-consult__actions .ig-btn{width:100%;}
+  .ig-loc__search{flex-direction:column;}
+  .ig-loc__search .ig-btn{width:100%;}
+  .ig-office__row{align-items:stretch;flex-direction:column;}
+  .ig-office__links{width:100%;}
+  .ig-office__links .ig-btn{flex:1 1 0;}
+}
+/* single column: the tall 288x467 crop becomes a letterbox so cards don't tower */
+@media (max-width:540px){
+  .ig-treat__grid{grid-template-columns:1fr;--ig-stagger:0px;padding-bottom:0;gap:18px;}
+  .ig-card-t,.ig-card-t:nth-child(even){transform:none;aspect-ratio:3/2.1;}
+  .ig-card-t:hover,.ig-card-t:nth-child(even):hover{transform:translateY(-6px);}
+  .ig-card-t img{object-position:center 28%;}
+  .ig-card-t__title br{display:none;}
+  .ig-card-t__title{padding-bottom:20px;}
+}
+
+/* ============================================================
+   THEME OVERRIDE GUARD — keep last (same reasoning as the header
+   widget: WordPress/Elementor repaint links, headings and inputs).
+   ============================================================ */
+.ig-home h1,.ig-home h2,.ig-home h3,.ig-home h4{font-family:var(--ig-font) !important;margin-top:0;}
+.ig-home .ig-hero__copy,.ig-home .ig-hero__copy *{color:#FFFFFF;}
+.ig-home .ig-hero__head,.ig-home .ig-hero__badge-top,.ig-home .ig-hero__badge-bot{color:#FFFFFF !important;}
+.ig-home .ig-hero__head b{color:var(--ig-orange) !important;}
+.ig-home .ig-hero__head em{color:var(--acc-2,#FFC08A) !important;}
+.ig-home .ig-hero__badge-mid{background:var(--acc) !important;color:var(--acc-ink) !important;}
+.ig-home .ig-hero__terms{color:rgba(255,255,255,.82) !important;}
+.ig-home .ig-hero .ig-btn--white,.ig-home .ig-hero .ig-btn--white:visited{background:#FFFFFF !important;color:var(--ig-navy) !important;}
+.ig-home .ig-hero .ig-btn--white:hover{background:var(--ig-orange) !important;color:#FFFFFF !important;}
+.ig-home a{text-decoration:none !important;}
+.ig-home .ig-btn--primary,.ig-home .ig-btn--primary:visited{background:var(--ig-orange) !important;color:#FFFFFF !important;}
+.ig-home .ig-btn--primary:hover{background:var(--ig-orange-600) !important;color:#FFFFFF !important;}
+.ig-home .ig-btn--navy,.ig-home .ig-btn--navy:visited{background:var(--ig-navy) !important;color:#FFFFFF !important;}
+.ig-home input,.ig-home textarea{font-family:var(--ig-font) !important;}
+.ig-home .ig-treat__head h1{color:var(--ig-navy) !important;}
+.ig-home .ig-treat__head h1 em{color:var(--ig-orange) !important;}
+.ig-home .ig-card-t__title{color:#FFFFFF !important;}
+.ig-home .ig-consult__panel h2{color:#FFFFFF !important;}
+.ig-home .ig-consult__panel h2 em{color:var(--ig-orange) !important;}
+.ig-home .ig-consult__check svg{fill:none !important;stroke:currentColor !important;}
+/* promise cards — the icons are STROKE art, so the global svg{fill:currentColor} must be undone */
+.ig-home .ig-card-p__icon svg{fill:none !important;stroke:currentColor !important;}
+.ig-home .ig-card-p__icon{color:var(--ig-orange) !important;}
+.ig-home .ig-promise__head h2{color:var(--ig-navy) !important;}
+.ig-home .ig-promise__head h2 em{color:var(--ig-orange) !important;}
+.ig-home .ig-card-p h4,.ig-home .ig-card-p p{color:var(--ig-navy) !important;}
+.ig-home .ig-card-p:hover h4{color:var(--ig-orange) !important;}
+.ig-home .ig-card-p:hover p{color:rgba(255,255,255,.88) !important;}
+.ig-home svg{fill:currentColor;}
+.ig-home .ig-ins__head h2{color:var(--ig-navy) !important;}
+.ig-home .ig-comm h2{color:#FFFFFF !important;}
+.ig-home .ig-comm h2 em{color:var(--ig-orange) !important;}
+.ig-home .ig-test__head h2{color:var(--ig-navy) !important;}
+.ig-home .ig-test__head h2 em{color:var(--ig-orange) !important;}
+.ig-home .ig-kicker{color:var(--ig-orange) !important;}
+.ig-home .ig-treat__head h1 em,.ig-home .ig-ins__head h2 em,
+.ig-home .ig-test__head h2 em,.ig-home .ig-final h2 em{color:var(--ig-orange) !important;}
+.ig-home .ig-final h2{color:#FFFFFF !important;}
+.ig-home .ig-card-t__title,.ig-home .ig-card-t__desc{color:#FFFFFF !important;}
+.ig-home .ig-card-t__more{color:var(--ig-orange) !important;}
+.ig-home .ig-card-q--d,.ig-home .ig-card-q--d h4{color:#FFFFFF !important;}
+.ig-home .ig-ins__label{color:var(--ig-navy) !important;}
+.ig-home .ig-loc__head h2{color:var(--ig-navy) !important;}
+.ig-home .ig-loc__head h2 em{color:var(--ig-orange) !important;}
+.ig-home .ig-state{color:var(--ig-navy) !important;}
+.ig-home .ig-state b{color:var(--ig-orange) !important;}
+.ig-home .ig-office h3{color:var(--ig-navy) !important;}
+.ig-home .ig-office__contact a{color:var(--ig-orange) !important;}
+.ig-home .ig-office .ig-btn{background:transparent !important;color:var(--ig-navy) !important;}
+.ig-home .ig-office .ig-btn:hover{background:var(--ig-navy) !important;color:#FFFFFF !important;}
+.ig-home .ig-loc__search input{background:#FFFFFF !important;color:var(--ig-navy) !important;}
+.ig-home .ig-card-q--a,.ig-home .ig-card-q--a h4{color:#FFFFFF !important;}
+.ig-home .ig-card-q--b,.ig-home .ig-card-q--b h4{color:#FFFFFF !important;}
+.ig-home .ig-card-q--c h4{color:var(--ig-navy) !important;}
+.ig-home .ig-card-q__av svg{fill:currentColor !important;stroke:none !important;}
+@media (prefers-reduced-motion:reduce){
+  .ig-home *{transition-duration:.01ms !important;animation-duration:.01ms !important;}
+  /* the blanket rule above would spin the marquee — stop it and let it scroll by hand instead */
+  .ig-home .ig-marquee__track{animation:none !important;transform:none !important;}
+  .ig-home .ig-marquee{overflow-x:auto;-webkit-mask-image:none;mask-image:none;}
+}
+</style>
+
+
+<div class="ig-home">
+
+  <!-- ==========================================================
+       1. HERO SLIDER
+       ========================================================== -->
+  <section class="ig-hero" id="igHero" aria-roledescription="carousel" aria-label="Featured offers">
+
+    <div class="ig-hero__track">
+
+      <!-- EDIT: pricing and terms -->
+      <div class="ig-hero__slide ig-hero__slide--braces is-active"
+           role="group" aria-roledescription="slide" aria-label="1 of 2">
+
+        <div class="ig-hero__media">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/home-page-hero-image-kids-ortho.jpg" alt="Smiling girl wearing braces" width="1920" height="1080" fetchpriority="high" decoding="async">
+        </div>
+
+        <div class="ig-wrap">
+          <div class="ig-hero__inner">
+            <div class="ig-hero__copy">
+
+              <div class="ig-hero__badge">
+                <span class="ig-hero__badge-top">Braces from</span>
+                <span class="ig-hero__badge-mid">$99<sup>*</sup></span>
+                <span class="ig-hero__badge-bot">per month</span>
+              </div>
+
+              <h2 class="ig-hero__head">A Straight Smile That Fits Your <b>Budget.</b></h2>
+              <p class="ig-hero__terms">*Offer terms and eligibility apply.</p>
+
+              <div class="ig-btns">
+                <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule Now</a>
+                <a class="ig-btn ig-btn--white" href="tel:+15863937972">Call Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ig-hero__slide ig-hero__slide--aligners"
+           role="group" aria-roledescription="slide" aria-label="2 of 2">
+
+        <div class="ig-hero__media">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/home-page-hero-image-adults-orth.jpg" alt="Woman holding a clear aligner" width="1920" height="1080" loading="lazy" decoding="async">
+        </div>
+
+        <div class="ig-wrap">
+          <div class="ig-hero__inner">
+            <div class="ig-hero__copy">
+
+              <div class="ig-hero__badge">
+                <span class="ig-hero__badge-top">Clear Aligners from</span>
+                <span class="ig-hero__badge-mid">$185<sup>*</sup></span>
+                <span class="ig-hero__badge-bot">per month</span>
+              </div>
+
+              <h2 class="ig-hero__head">Wear Your <b>Best Smile.</b></h2>
+              <p class="ig-hero__terms">*Offer terms and eligibility apply.</p>
+
+              <div class="ig-btns">
+                <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule Now</a>
+                <a class="ig-btn ig-btn--white" href="tel:+15863937972">Call Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="ig-hero__nav ig-hero__nav--prev" type="button" aria-label="Previous slide">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.4 4.6 13.9 3.1 5 12l8.9 8.9 1.5-1.5L8 12z"/></svg>
+    </button>
+    <button class="ig-hero__nav ig-hero__nav--next" type="button" aria-label="Next slide">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 4.6 10.1 3.1 19 12l-8.9 8.9-1.5-1.5L16 12z"/></svg>
+    </button>
+
+    <div class="ig-hero__dots" role="tablist" aria-label="Choose slide">
+      <button type="button" class="is-active" aria-label="Slide 1"></button>
+      <button type="button" aria-label="Slide 2"></button>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       2. TREATMENTS
+       ========================================================== -->
+  <section class="ig-sec ig-treat">
+    <div class="ig-wrap">
+
+      <div class="ig-treat__head">
+        <span class="ig-kicker">Orthodontic Treatment Options</span>
+        <h1>A Smile Is <em>Timeless.</em> Your Treatment Should Fit You.</h1>
+        <p class="ig-treat__lead">There isn&rsquo;t one right way to straighten every smile. Ignite Orthodontics offers proven treatment options for children, teens, and adults, so you can find an approach that fits your orthodontic needs, preferences, and lifestyle.</p>
+      </div>
+
+      <!-- EDIT: point each card at its treatment page -->
+      <div class="ig-treat__grid">
+
+        <a class="ig-card-t" href="/types-of-braces/">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/IMG_20260814_125055.jpg" alt="Teenager smiling with traditional metal braces" width="800" height="800" loading="lazy" decoding="async">
+          <div class="ig-card-t__body">
+            <h3 class="ig-card-t__title">Traditional<br>Metal Braces</h3>
+            <p class="ig-card-t__desc">A proven approach to straightening teeth and correcting a wide range of orthodontic concerns.</p>
+            <span class="ig-card-t__more">Learn More <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 4.6 10.1 3.1 19 12l-8.9 8.9-1.5-1.5L16 12z"/></svg></span>
+          </div>
+        </a>
+
+        <a class="ig-card-t" href="/gold-braces/">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/IMG_20260814_125131.jpg" alt="Close-up of gold braces on upper and lower teeth" width="800" height="800" loading="lazy" decoding="async">
+          <div class="ig-card-t__body">
+            <h3 class="ig-card-t__title">Gold<br>Braces</h3>
+            <p class="ig-card-t__desc">The reliability of traditional braces with a polished gold finish for patients who want their treatment to stand out.</p>
+            <span class="ig-card-t__more">Learn More <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 4.6 10.1 3.1 19 12l-8.9 8.9-1.5-1.5L16 12z"/></svg></span>
+          </div>
+        </a>
+
+        <a class="ig-card-t" href="/clear-aligners/">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/IMG_20260814_125204.jpg" alt="Patient placing a clear aligner tray" width="800" height="800" loading="lazy" decoding="async">
+          <div class="ig-card-t__body">
+            <h3 class="ig-card-t__title">Clear<br>Aligners</h3>
+            <p class="ig-card-t__desc">Removable, discreet trays that gradually straighten your teeth without traditional brackets and wires.</p>
+            <span class="ig-card-t__more">Learn More <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 4.6 10.1 3.1 19 12l-8.9 8.9-1.5-1.5L16 12z"/></svg></span>
+          </div>
+        </a>
+
+        <a class="ig-card-t" href="/ceramic-braces/">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/IMG_20260814_125146.jpg" alt="Close-up smile with tooth-coloured ceramic braces" width="800" height="800" loading="lazy" decoding="async">
+          <div class="ig-card-t__body">
+            <h3 class="ig-card-t__title">Ceramic<br>Braces</h3>
+            <p class="ig-card-t__desc">Tooth-colored brackets offer effective orthodontic treatment with a more subtle appearance.</p>
+            <span class="ig-card-t__more">Learn More <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.6 4.6 10.1 3.1 19 12l-8.9 8.9-1.5-1.5L16 12z"/></svg></span>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="ig-treat__cta">
+        <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       3. BOOK A NO-COST CONSULTATION
+       ========================================================== -->
+  <section class="ig-form-sec" id="ig-consult">
+    <div class="ig-form-grid">
+
+      <div class="ig-form__media">
+        <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/IMG_20260814_125716.jpg" alt="Orthodontist holding a braces model and a clear aligner" width="1920" height="1080" loading="lazy" decoding="async">
+      </div>
+
+      <div class="ig-consult__panel">
+        <div class="ig-consult__inner">
+          <span class="ig-consult__eyebrow">Your first visit is on us</span>
+          <h2>Book A <em>No-Cost Consultation</em></h2>
+          <p class="ig-consult__lead">Talk with our team, explore your treatment options, and get clear next steps&mdash;without pressure or obligation.</p>
+
+          <ul class="ig-consult__benefits" aria-label="Consultation benefits">
+            <li>
+              <span class="ig-consult__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              Complimentary orthodontic evaluation
+            </li>
+            <li>
+              <span class="ig-consult__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              Clear treatment options and estimated costs
+            </li>
+            <li>
+              <span class="ig-consult__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+              Flexible appointments across six Michigan offices
+            </li>
+          </ul>
+
+          <div class="ig-consult__actions">
+            <a class="ig-btn ig-btn--primary" href="tel:+15863937972">Call (586) 393-7972</a>
+            <a class="ig-btn ig-btn--outline" href="#ig-locations">Choose a Location</a>
+          </div>
+          <p class="ig-consult__note">No referral needed. New patients are welcome.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       4. IGNITE ORTHODONTICS' PROMISE
+       ========================================================== -->
+  <section class="ig-sec">
+    <div class="ig-wrap">
+
+      <div class="ig-promise__head">
+        <span class="ig-kicker">The Ignite Difference</span>
+        <h2>Orthodontic Care <em>Built Around You.</em></h2>
+        <p>Choosing an orthodontist is about more than finding someone who can straighten teeth. It&rsquo;s about finding a team that listens, explains your options clearly, and makes treatment work with your life.</p>
+        <p style="margin-top:1.1em;">At Ignite Orthodontics, we combine specialist orthodontic care with flexible options designed around our patients. From your first consultation through the final stages of treatment, our goal is to make your experience clear, comfortable, and easier to manage.</p>
+      </div>
+
+      <div class="ig-promise__grid">
+
+        <div class="ig-card-p">
+          <div class="ig-card-p__icon">
+            <!-- clock inside a refresh loop -->
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="14"/>
+              <path d="M32 24v8.6l6 3.4"/>
+              <path d="M53.5 22.5A24 24 0 0 0 9.4 27"/>
+              <path d="M44.5 21.6l9.6 1.6 1.6-9.6"/>
+              <path d="M10.5 41.5A24 24 0 0 0 54.6 37"/>
+              <path d="M19.5 42.4l-9.6-1.6-1.6 9.6"/>
+            </svg>
+          </div>
+          <h4>Night &amp; Weekend Appointments</h4>
+          <p>Your schedule doesn&rsquo;t always fit a traditional 9-to-5. We offer convenient appointment times to make orthodontic care easier to fit around work, school, and family.</p>
+        </div>
+
+        <div class="ig-card-p">
+          <div class="ig-card-p__icon">
+            <!-- payment card with a coin -->
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <rect x="6" y="15" width="44" height="30" rx="4"/>
+              <path d="M6 25h44"/>
+              <path d="M14 36h9"/>
+              <circle cx="46" cy="42" r="12"/>
+              <path d="M46 36.5v11M43 39h4a2.5 2.5 0 0 1 0 5h-2a2.5 2.5 0 0 0 0 5h4"/>
+            </svg>
+          </div>
+          <h4>Flexible Payment Options</h4>
+          <p>Orthodontic treatment is an investment. Flexible payment options can help you spread the cost of care and choose an approach that works with your budget.</p>
+        </div>
+
+        <div class="ig-card-p">
+          <div class="ig-card-p__icon">
+            <!-- policy document with a verified shield -->
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <path d="M12 8h22l12 12v18"/>
+              <path d="M12 8v48h20"/>
+              <path d="M34 8v12h12"/>
+              <path d="M20 28h18M20 36h18M20 44h10"/>
+              <path d="M46 34l11 4.6v7.4c0 6.4-4.7 11.6-11 13-6.3-1.4-11-6.6-11-13v-7.4z"/>
+              <path d="M41 44.5l3.6 3.6 6.4-7"/>
+            </svg>
+          </div>
+          <h4>Insurance-Friendly Care</h4>
+          <p>We work with many dental insurance plans and can help you understand your available orthodontic benefits and expected out-of-pocket costs.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       5. INSURANCES WE ACCEPT
+       ========================================================== -->
+  <section class="ig-sec ig-ins">
+    <div class="ig-wrap">
+      <div class="ig-ins__head">
+        <span class="ig-kicker">Insurance &amp; Payment Options</span>
+        <h2>Make the Most of Your <em>Dental Benefits.</em></h2>
+        <p>Paying for orthodontic treatment shouldn&rsquo;t leave you guessing about what your insurance will cover. Ignite Orthodontics works with many major insurance plans and can help you understand your benefits before treatment begins.</p>
+        <p style="margin-top:1.1em;">We&rsquo;ll help you look at your coverage, explain what it means for your treatment, and identify payment options for any remaining costs.</p>
+        <div class="ig-ins__cta"><a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a></div>
+        <p class="ig-ins__label">Accepted Insurance</p>
+      </div>
+    </div>
+
+    <!-- the track is duplicated by JS so the leftward scroll loops seamlessly -->
+    <div class="ig-marquee">
+      <div class="ig-marquee__track" id="igMarquee">
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-4.webp" alt="BlueCross BlueShield of Illinois and Cigna" width="200" height="220" loading="lazy" decoding="async"></div>
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-5-1.webp" alt="Molina Healthcare and UniCare" width="200" height="220" loading="lazy" decoding="async"></div>
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-3.webp" alt="Aetna and Delta Dental" width="200" height="220" loading="lazy" decoding="async"></div>
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-2.webp" alt="Medicaid and Careington" width="200" height="220" loading="lazy" decoding="async"></div>
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-1.webp" alt="All Kids and Unum" width="200" height="220" loading="lazy" decoding="async"></div>
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-7.webp" alt="IlliniCare Health and Colonial Life" width="200" height="220" loading="lazy" decoding="async"></div>
+        <div class="ig-ins__logo"><img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/08/insurences-6.webp" alt="CountyCare Health Plan and AlwaysCare" width="200" height="220" loading="lazy" decoding="async"></div>
+      </div>
+    </div>
+
+    <div class="ig-wrap">
+      <div class="ig-ins__foot">
+        <p class="ig-ins__note">Insurance coverage varies by plan. Benefits and eligibility should be confirmed before treatment.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       6 + 7. WE ARE A COMMUNITY  /  PATIENTS WITH REASONS TO SMILE
+       (one full-width band, split 38.5 / 61.5 like the reference)
+       ========================================================== -->
+  <section class="ig-band">
+
+    <!-- ---------- LEFT: community ---------- -->
+    <div class="ig-comm">
+      <div class="ig-comm__media">
+        <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/09/IMG_20260814_125736.jpg" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+      </div>
+
+      <div class="ig-comm__inner">
+        <span class="ig-comm__mark">
+          <img src="https://deepskyblue-okapi-345023.hostingersite.com/wp-content/uploads/2026/07/ignitelogo.png"
+               alt="Ignite Orthodontics" width="300" height="92" loading="lazy" decoding="async">
+        </span>
+        <h2>We Are A<em>Community.</em></h2>
+        <a class="ig-btn ig-btn--primary" href="/about-us/">Learn More About Ignite Orthodontics</a>
+      </div>
+    </div>
+
+    <!-- ---------- RIGHT: reviews collage ---------- -->
+    <div class="ig-test">
+
+      <div class="ig-test__head">
+        <span class="ig-kicker">Patients With Reasons to Smile</span>
+        <h2>See Why Patients <em>Choose Ignite.</em></h2>
+      </div>
+
+      <!-- EDIT: replace with real Google reviews -->
+      <div class="ig-test__collage">
+
+        <article class="ig-card-q ig-card-q--a">
+          <div class="ig-card-q__stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></div>
+          <div class="ig-card-q__who">
+            <span class="ig-card-q__av"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg></span>
+            <div><h4>Sarah M.</h4></div>
+          </div>
+          <p class="ig-card-q__text">&ldquo;From the first consultation, everyone made us feel comfortable. They explained my daughter&rsquo;s treatment clearly, answered all our questions, and made the whole process much easier than we expected.&rdquo;</p>
+        </article>
+
+        <article class="ig-card-q ig-card-q--b">
+          <div class="ig-card-q__stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></div>
+          <div class="ig-card-q__who">
+            <span class="ig-card-q__av"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg></span>
+            <div><h4>Marcus T.</h4></div>
+          </div>
+          <p class="ig-card-q__text">&ldquo;I was nervous about getting braces as an adult, but the team made me feel completely comfortable. They took the time to explain my options and helped me choose a treatment that fit my needs and budget.&rdquo;</p>
+        </article>
+
+        <article class="ig-card-q ig-card-q--c">
+          <div class="ig-card-q__stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></div>
+          <div class="ig-card-q__who">
+            <span class="ig-card-q__av"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg></span>
+            <div><h4>Jennifer R.</h4></div>
+          </div>
+          <p class="ig-card-q__text">&ldquo;The staff is friendly, appointments are easy to manage, and we always know what to expect next. My son has had a great experience with his treatment so far.&rdquo;</p>
+        </article>
+
+        <article class="ig-card-q ig-card-q--d">
+          <div class="ig-card-q__stars" aria-label="5 out of 5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></div>
+          <div class="ig-card-q__who">
+            <span class="ig-card-q__av"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg></span>
+            <div><h4>David K.</h4></div>
+          </div>
+          <p class="ig-card-q__text">&ldquo;Everyone at Ignite has been professional, welcoming, and easy to talk to. I really appreciated how clearly they explained the treatment and payment options before we got started.&rdquo;</p>
+        </article>
+
+      </div>
+
+      <div class="ig-test__foot">
+        <a class="ig-btn ig-btn--navy" href="/testimonials/">View More Reviews</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       8. FIND IGNITE ORTHODONTICS NEAR YOU
+       ========================================================== -->
+  <section class="ig-sec ig-loc" id="ig-locations">
+    <div class="ig-wrap">
+
+      <div class="ig-loc__head">
+        <span class="ig-kicker">Find Your Nearest Office</span>
+        <h2>Find Ignite Orthodontics <em>Near You.</em></h2>
+        <p>Looking for an orthodontist close to home, work, or school? Find the Ignite Orthodontics location that&rsquo;s most convenient for you.</p>
+      </div>
+
+      <div class="ig-loc__states">
+        <a class="ig-state" href="/locations/">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+          Michigan <b>&mdash; 6 Locations</b>
+        </a>
+      </div>
+
+      <div class="ig-loc__search">
+        <input id="igLocInput" type="text" placeholder="Enter your location" aria-label="Enter your location" autocomplete="postal-code">
+        <button class="ig-btn ig-btn--navy" type="button" id="igLocBtn">Find My Nearest Location</button>
+      </div>
+      <p class="ig-loc__msg" id="igLocMsg" role="status"></p>
+
+      <div class="ig-loc__body">
+
+        <div class="ig-loc__list">
+
+          <article class="ig-office">
+            <h3>Ignite Orthodontics &mdash; Sterling Heights</h3>
+            <p class="ig-office__addr">8130 Constitution Blvd<br>Sterling Heights, MI 48313</p>
+            <div class="ig-office__row">
+              <div class="ig-office__contact">
+                <a href="tel:+15863937972"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg> (586) 393-7972</a>
+                <a href="mailto:sterlingheights@igniteorthodontics.com"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg> sterlingheights@igniteorthodontics.com</a>
+              </div>
+              <div class="ig-office__links">
+                <a class="ig-btn" href="https://maps.google.com/?q=8130+Constitution+Blvd+Sterling+Heights+MI+48313" target="_blank" rel="noopener">View on Map</a>
+                <a class="ig-btn" href="/locations/sterling-heights/">View Location</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ig-office">
+            <h3>Ignite Orthodontics &mdash; Madison Heights</h3>
+            <p class="ig-office__addr">1190 E 12 Mile Rd<br>Madison Heights, MI 48071</p>
+            <div class="ig-office__row">
+              <div class="ig-office__contact">
+                <a href="tel:+12489559727"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg> (248) 955-9727</a>
+                <a href="mailto:madisonheights@igniteorthodontics.com"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg> madisonheights@igniteorthodontics.com</a>
+              </div>
+              <div class="ig-office__links">
+                <a class="ig-btn" href="https://maps.google.com/?q=1190+E+12+Mile+Rd+Madison+Heights+MI+48071" target="_blank" rel="noopener">View on Map</a>
+                <a class="ig-btn" href="/locations/madison-heights/">View Location</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ig-office">
+            <h3>Ignite Orthodontics &mdash; Farmington Hills</h3>
+            <p class="ig-office__addr">31700 W 12 Mile Rd<br>Farmington Hills, MI 48334</p>
+            <div class="ig-office__row">
+              <div class="ig-office__contact">
+                <a href="tel:+12489559722"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg> (248) 955-9722</a>
+                <a href="mailto:farmingtonhills@igniteorthodontics.com"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg> farmingtonhills@igniteorthodontics.com</a>
+              </div>
+              <div class="ig-office__links">
+                <a class="ig-btn" href="https://maps.google.com/?q=31700+W+12+Mile+Rd+Farmington+Hills+MI+48334" target="_blank" rel="noopener">View on Map</a>
+                <a class="ig-btn" href="/locations/farmington-hills/">View Location</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ig-office">
+            <h3>Ignite Orthodontics &mdash; Flint</h3>
+            <p class="ig-office__addr">G3535 Beecher Rd, Ste A<br>Flint, MI 48532</p>
+            <div class="ig-office__row">
+              <div class="ig-office__contact">
+                <a href="tel:+18103569707"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg> (810) 356-9707</a>
+                <a href="mailto:flint@igniteorthodontics.com"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg> flint@igniteorthodontics.com</a>
+              </div>
+              <div class="ig-office__links">
+                <a class="ig-btn" href="https://maps.google.com/?q=G3535+Beecher+Rd+Ste+A+Flint+MI+48532" target="_blank" rel="noopener">View on Map</a>
+                <a class="ig-btn" href="/locations/flint/">View Location</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ig-office">
+            <h3>Ignite Orthodontics &mdash; 8 Mile</h3>
+            <p class="ig-office__addr">511 W. 8 Mile<br>Highland Park, MI</p>
+            <div class="ig-office__row">
+              <div class="ig-office__contact">
+                <a href="tel:+13133517447"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg> (313) 351-7447</a>
+                <a href="mailto:8mile@detroitdentalnow.com"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg> 8mile@detroitdentalnow.com</a>
+              </div>
+              <div class="ig-office__links">
+                <a class="ig-btn" href="https://maps.google.com/?q=511+W+8+Mile+Highland+Park+MI" target="_blank" rel="noopener">View on Map</a>
+                <a class="ig-btn" href="/locations/8-mile/">View Location</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="ig-office">
+            <h3>Ignite Orthodontics &mdash; Lathrup Village</h3>
+            <p class="ig-office__addr">28625 Southfield Rd<br>Lathrup Village, MI 48076</p>
+            <div class="ig-office__row">
+              <div class="ig-office__contact">
+                <a href="tel:+12486577440"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg> (248) 657-7440</a>
+                <a href="mailto:lathrupvillage@igniteorthodontics.com"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg> lathrupvillage@igniteorthodontics.com</a>
+              </div>
+              <div class="ig-office__links">
+                <a class="ig-btn" href="https://maps.google.com/?q=28625+Southfield+Rd+Lathrup+Village+MI+48076" target="_blank" rel="noopener">View on Map</a>
+                <a class="ig-btn" href="/locations/lathrup-village/">View Location</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- EDIT: swap for a Google My Maps embed to show all six offices as pins -->
+        <div class="ig-loc__map">
+          <iframe
+            src="https://maps.google.com/maps?q=Michigan&z=7&output=embed"
+            title="Map of Ignite Orthodontics locations"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================
+       9. FINAL CTA
+       ========================================================== -->
+  <section class="ig-sec ig-final">
+    <div class="ig-wrap">
+      <span class="ig-kicker">Ignite Orthodontics</span>
+      <h2>Your Best Smile Starts With <em>a Conversation.</em></h2>
+      <div class="ig-btns" style="justify-content:center;">
+        <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a>
+        <a class="ig-btn ig-btn--white" href="tel:+15863937972">Call (586) 393-7972</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<script>
+(function () {
+  var root = document.querySelector('.ig-home');
+  if (!root || root.dataset.igHomeReady) return;
+  root.dataset.igHomeReady = '1';
+
+  /* ---------- 1. HERO SLIDER ---------- */
+  (function () {
+    var hero = root.querySelector('#igHero');
+    if (!hero) return;
+    var slides = hero.querySelectorAll('.ig-hero__slide');
+    var dots   = hero.querySelectorAll('.ig-hero__dots button');
+    var prev   = hero.querySelector('.ig-hero__nav--prev');
+    var next   = hero.querySelector('.ig-hero__nav--next');
+    if (slides.length < 2) return;
+
+    var i = 0, timer;
+    var DELAY = 6500;
+
+    function show(n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); });
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); });
+    }
+    function start() { stop(); timer = setInterval(function () { show(i + 1); }, DELAY); }
+    function stop()  { if (timer) clearInterval(timer); }
+
+    next.addEventListener('click', function () { show(i + 1); start(); });
+    prev.addEventListener('click', function () { show(i - 1); start(); });
+    dots.forEach(function (d, k) {
+      d.addEventListener('click', function () { show(k); start(); });
+    });
+
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+
+    /* swipe on touch devices */
+    var x0 = null;
+    hero.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; stop(); }, { passive: true });
+    hero.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 45) show(dx < 0 ? i + 1 : i - 1);
+      x0 = null; start();
+    });
+
+    /* pause when the section is off-screen */
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (entries) {
+        entries[0].isIntersecting ? start() : stop();
+      }, { threshold: 0.15 }).observe(hero);
+    } else { start(); }
+  })();
+
+  /* ---------- 5. INSURANCE MARQUEE ----------
+     Clone one full set so the -50% keyframe lands exactly on a repeat.
+     Clones are aria-hidden so screen readers don't read every carrier twice. */
+  (function () {
+    var track = root.querySelector('#igMarquee');
+    if (!track) return;
+    Array.prototype.slice.call(track.children).forEach(function (node) {
+      var clone = node.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+  })();
+
+  /* ---------- 8. "SEARCH NEAREST" ----------
+     Filters the office list in place and re-centres the map embed.
+     No backend and no API key needed — it matches against the text
+     already in each card (practice name + street address). */
+  (function () {
+    var input  = root.querySelector('#igLocInput');
+    var btn    = root.querySelector('#igLocBtn');
+    var msg    = root.querySelector('#igLocMsg');
+    var list   = root.querySelector('.ig-loc__list');
+    var frame  = root.querySelector('.ig-loc__map iframe');
+    if (!btn || !input || !list) return;
+
+    var offices = Array.prototype.slice.call(list.querySelectorAll('.ig-office'));
+    var haystack = offices.map(function (el) {
+      return (el.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+    });
+    var MAP = 'https://maps.google.com/maps?q=%Q%&z=%Z%&output=embed';
+
+    function setMap(query, zoom) {
+      if (!frame) return;
+      var next = MAP.replace('%Q%', encodeURIComponent(query)).replace('%Z%', zoom);
+      if (frame.getAttribute('src') !== next) frame.setAttribute('src', next);
+    }
+
+    function reset() {
+      offices.forEach(function (el) { el.style.display = ''; });
+      msg.textContent = '';
+      /* EDIT: default map view */
+      setMap('Michigan', 7);
+    }
+
+    function search() {
+      var q = (input.value || '').trim();
+      if (!q) { reset(); return; }
+
+      var needle = q.toLowerCase().replace(/\s+/g, ' ');
+      var hits = 0;
+
+      offices.forEach(function (el, i) {
+        var match = haystack[i].indexOf(needle) !== -1;
+        el.style.display = match ? '' : 'none';
+        if (match) hits++;
+      });
+
+      if (hits) {
+        msg.textContent = hits + (hits === 1 ? ' office' : ' offices') + ' matching "' + q + '".';
+        msg.style.color = '';
+        setMap(q + ', Michigan', 11);   /* EDIT: state used to disambiguate the map query */
+      } else {
+        offices.forEach(function (el) { el.style.display = ''; });
+        msg.textContent = 'No offices matched "' + q + '" - showing all locations.';
+        msg.style.color = '#D64545';
+        setMap(q, 10);
+      }
+      list.scrollTop = 0;
+    }
+
+    btn.addEventListener('click', search);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); search(); }
+    });
+    /* live filter as you type, but leave the map to the button/Enter */
+    input.addEventListener('input', function () {
+      if (!input.value.trim()) { reset(); return; }
+      var needle = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+      var hits = 0;
+      offices.forEach(function (el, i) {
+        var match = haystack[i].indexOf(needle) !== -1;
+        el.style.display = match ? '' : 'none';
+        if (match) hits++;
+      });
+      msg.style.color = '';
+      msg.textContent = hits ? '' : 'No offices matched - press Search Nearest to look it up on the map.';
+    });
+  })();
+
+  /* ---------- smooth scroll for the in-page "Schedule Now" links ---------- */
+  root.querySelectorAll('a[href^="#ig-"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var t = document.querySelector(a.getAttribute('href'));
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
