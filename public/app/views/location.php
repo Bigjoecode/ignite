@@ -30,58 +30,6 @@
         </div>
       </div>
     </div>
-
-    <!-- trust card — hangs below the photo into the next section -->
-    <div class="ig-trustwrap">
-      <div class="ig-trustcard">
-        <!-- EDIT: real patient count -->
-        <p class="ig-trustcard__banner">Over 10,000 Happy Patients</p>
-
-        <!-- EDIT: swap the wordmarks for real platform logos, and set true ratings -->
-        <div class="ig-trustcard__logos">
-        <div class="ig-plat">
-          <span class="ig-plat__logo">
-            <span class="ig-plat__g"><i class="b">G</i><i class="r">o</i><i class="y">o</i><i class="b">g</i><i class="g">l</i><i class="r">e</i></span>
-          </span>
-          <span class="ig-plat__rate">Rating <span class="ig-plat__stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></span></span>
-        </div>
-
-        <div class="ig-plat ig-plat--bing">
-          <span class="ig-plat__logo">
-            <svg viewBox="0 0 24 32" aria-hidden="true">
-              <defs><linearGradient id="igBing" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#00CACD"/><stop offset="1" stop-color="#0A80CE"/>
-              </linearGradient></defs>
-              <path fill="url(#igBing)" d="M2 0l6 2.2v20.6l8.4-4.9-4.1-1.9-2.6-6.6L22 13.7v7.8L8 32l-6-3.4z"/>
-            </svg>
-            <span class="ig-plat__word ig-plat__word--bing">Bing</span>
-          </span>
-          <span class="ig-plat__rate">Rating <span class="ig-plat__stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></span></span>
-        </div>
-
-        <div class="ig-plat ig-plat--hg">
-          <span class="ig-plat__logo">
-            <svg viewBox="0 0 32 28" aria-hidden="true">
-              <path fill="#0B4DA2" d="M16 27S2 18.6 2 10.6A6.6 6.6 0 0 1 16 6.8 6.6 6.6 0 0 1 30 10.6C30 18.6 16 27 16 27z"/>
-              <path fill="#fff" d="M9.6 12.6 8 14.2l5.4 5.4L24 9l-1.7-1.7-8.9 8.9z"/>
-            </svg>
-            <span class="ig-plat__word ig-plat__word--hg">healthgrades.</span>
-          </span>
-          <span class="ig-plat__rate">Rating <span class="ig-plat__stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></span></span>
-        </div>
-
-        <div class="ig-plat ig-plat--yelp">
-          <span class="ig-plat__logo">
-            <span class="ig-plat__word ig-plat__word--yelp">yelp</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#FF1A1A" d="M12 1.4l1.7 6.9 4.8-4.1-2.6 6.3 6.9-1.6-6 3.8 6 3.8-6.9-1.6 2.6 6.3-4.8-4.1L12 22.6l-1.7-6.9-4.8 4.1 2.6-6.3-6.9 1.6 6-3.8-6-3.8 6.9 1.6-2.6-6.3 4.8 4.1z"/>
-            </svg>
-          </span>
-          <span class="ig-plat__rate">Rating <span class="ig-plat__stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 17.3-6.2 3.7 1.7-7L2 9.2l7.2-.6L12 2l2.8 6.6 7.2.6-5.5 4.8 1.7 7z"/></svg></span></span>
-        </div>
-        </div>
-      </div>
-    </div>
   </section>
 
 

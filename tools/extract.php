@@ -152,6 +152,8 @@ put('assets/css/location.css', "/* generated from location-preview.html */\n" . 
 put('assets/js/location.js', "/* generated from location-preview.html */\n" . block($s, '<script>', '</script>', true));
 
 $b = localize(between($s, '<div class="ig-locpage">', '<script>'));
+// no "Over 10,000 Happy Patients" trust card (with its review-site ratings) under the hero
+$b = rep_re($b, '#\s*<!-- trust card[^>]*-->\s*<div class="ig-trustwrap">.*?(?=\s*</section>)#s', '');
 // placeholder doctors and reviews must not go live
 $b = rep_re($b, '#<!-- =+\s*5\. MEET YOUR ORTHODONTIST.*?(?=<!-- =+\s*6\. FAMILY)#s', '');
 $b = rep_re($b, '#<!-- =+\s*10\. REVIEWS.*?(?=<!-- =+\s*14\. CONTACT)#s', '');
