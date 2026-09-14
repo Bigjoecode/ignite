@@ -17,7 +17,7 @@
   var step     = 1;
   var trigger  = null;
   var lastPointer = 0;
-  var FALLBACK = 'Something went wrong. Please call us at (586) 393-7972.';
+  var FALLBACK = 'Something went wrong. Please try again in a moment.';
 
   function track(name) {
     window.dataLayer = window.dataLayer || [];

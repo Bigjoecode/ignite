@@ -8,7 +8,7 @@
 //         note (highlighted notice), finder (show office list), draft
 return [
     'about-us' => [
-        'title' => 'About Us', 'description' => 'Ignite Orthodontics provides braces and clear aligners for children, teens and adults across six Michigan offices.',
+        'title' => 'About Us', 'description' => 'Ignite Orthodontics provides braces and clear aligners for children, teens and adults across our Michigan offices.',
         'kicker' => 'About Ignite Orthodontics', 'h1' => 'Orthodontic Care <em>Built Around You.</em>',
         'lead' => 'Choosing an orthodontist is about more than straightening teeth. It is about finding a team that listens, explains your options clearly, and makes treatment work with your life.',
         'sections' => [
@@ -32,7 +32,7 @@ return [
         ],
     ],
     'braces-for-teens' => [
-        'title' => 'Braces for Teens', 'description' => 'Braces and clear aligners for teenagers at Ignite Orthodontics. Book a no-cost consultation at one of our six Michigan offices.',
+        'title' => 'Braces for Teens', 'description' => 'Braces and clear aligners for teenagers at Ignite Orthodontics. Book a no-cost consultation at one of our Michigan offices.',
         'kicker' => 'Teen Orthodontics', 'h1' => 'Braces That Fit <em>Teen Life.</em>',
         'lead' => 'The teen years are a common time to start orthodontic treatment, once most permanent teeth have come in.',
         'sections' => [
@@ -130,9 +130,9 @@ return [
     'refer-a-patient' => [
         'title' => 'Refer a Patient', 'description' => 'Refer a patient to Ignite Orthodontics. Send us the details and our team will reach out to schedule a consultation.',
         'kicker' => 'Referrals', 'h1' => 'Refer a <em>Patient.</em>',
-        'lead' => 'Dentists and families can refer patients to any of our six offices. Contact us and our team will follow up to schedule a consultation.',
+        'lead' => 'Dentists and families can refer patients to any of our offices. Contact us and our team will follow up to schedule a consultation.',
         'sections' => [
-            ['How referrals work', 'Call (586) 393-7972 or the office nearest the patient with their contact details and any notes about their needs. We will contact the patient directly to arrange a convenient appointment.'],
+            ['How referrals work', 'Call us or the office nearest the patient with their contact details and any notes about their needs. We will contact the patient directly to arrange a convenient appointment.'],
         ],
     ],
     'contact-us' => [
@@ -163,14 +163,14 @@ return [
         'title' => 'Privacy Policy', 'description' => 'Ignite Orthodontics privacy policy.',
         'kicker' => 'Legal', 'h1' => 'Privacy <em>Policy.</em>',
         'lead' => 'Our full privacy policy is being finalized and will be published on this page.',
-        'note' => 'If you have questions about how we handle your information, please contact us at (586) 393-7972.',
+        'note' => 'If you have questions about how we handle your information, please contact us.',
         'draft' => true,
     ],
     'terms-and-conditions' => [
         'title' => 'Terms and Conditions', 'description' => 'Ignite Orthodontics terms and conditions.',
         'kicker' => 'Legal', 'h1' => 'Terms and <em>Conditions.</em>',
         'lead' => 'Our full terms and conditions, including offer terms and eligibility, are being finalized and will be published on this page.',
-        'note' => 'For questions about current offers or terms, please contact us at (586) 393-7972.',
+        'note' => 'For questions about current offers or terms, please contact us.',
         'draft' => true,
     ],
 ];

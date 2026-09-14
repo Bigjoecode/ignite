@@ -19,7 +19,7 @@ function reply(int $code, array $body): void
     exit;
 }
 
-$callUs = 'Please call us at ' . cfg('phone') . '.';
+$callUs = 'Please try again later.';
 
 // only accept submissions sent from this site's own pages
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

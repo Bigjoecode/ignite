@@ -21,7 +21,11 @@ if ($path !== '' && substr($uri, -1) !== '/') {
     redirect('/' . $path . '/' . ($qs !== '' ? '?' . $qs : ''));
 }
 
-$aliases = ['home' => '', 'terms-of-service' => 'terms-and-conditions', 'contact' => 'contact-us', 'about' => 'about-us', 'thankyou' => 'thank-you'];
+$aliases = [
+    'home' => '', 'terms-of-service' => 'terms-and-conditions', 'contact' => 'contact-us', 'about' => 'about-us', 'thankyou' => 'thank-you',
+    // closed offices
+    'locations/8-mile' => 'locations', 'locations/lathrup-village' => 'locations',
+];
 if (array_key_exists($path, $aliases)) {
     redirect($aliases[$path] === '' ? '/' : '/' . $aliases[$path] . '/');
 }
@@ -31,16 +35,17 @@ $meta = ['path' => $path === '' ? '/' : '/' . $path . '/'];
 if ($path === '') {
     render('home', [], $meta + [
         'title'       => 'Ignite Orthodontics | Braces & Clear Aligners in Michigan',
-        'description' => 'Braces and clear aligners for kids, teens and adults at 6 Ignite Orthodontics offices in Michigan. Flexible payment options and no-cost consultations.',
+        'description' => 'Braces and clear aligners for kids, teens and adults at ' . count(locations()) . ' Ignite Orthodontics offices in Michigan. Flexible payment options and no-cost consultations.',
         'css' => ['home.css'], 'js' => ['home.js'],
     ]);
     exit;
 }
 
 if ($path === 'locations') {
+    $names = array_column(locations(), 'name');
     render('locations', [], $meta + [
         'title'       => 'Our Locations | Ignite Orthodontics',
-        'description' => 'Find your nearest Ignite Orthodontics office in Sterling Heights, Madison Heights, Farmington Hills, Flint, Highland Park or Lathrup Village.',
+        'description' => 'Find your nearest Ignite Orthodontics office in ' . implode(', ', array_slice($names, 0, -1)) . ' or ' . end($names) . '.',
         'css' => ['home.css', 'page.css'], 'js' => ['home.js'],
     ]);
     exit;

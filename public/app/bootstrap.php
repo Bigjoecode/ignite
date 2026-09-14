@@ -11,8 +11,8 @@ $local  = APP . '/config.local.php';
 $config = array_merge([
     'site_name'  => 'Ignite Orthodontics',
     'base_url'   => 'https://igniteorthodontics.com',
-    'phone'      => '(586) 393-7972',
-    'phone_tel'  => '+15863937972',
+    'phone'      => '(xxx) xxx-xxxx',                    // placeholder until the real number is available
+    'phone_tel'  => '',
     'lead_email' => '',                                  // set to email each new consultation request
     'data_dir'   => dirname(WEBROOT) . '/ignite-data',   // outside the web root
 ], is_file($local) ? (require $local) : []);
