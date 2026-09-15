@@ -49,6 +49,12 @@ $ogImage   = cfg('base_url') . ($meta['image'] ?? '/assets/img/home-page-hero-im
 </head>
 <body<?= !empty($meta['book_office']) ? ' data-book-office="' . e($meta['book_office']) . '"' : '' ?>>
 <a class="ig-skip" href="#main">Skip to content</a>
+<?php if (!empty($meta['preview_id'])): ?>
+<div style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:100001;display:flex;align-items:center;gap:14px;padding:10px 12px 10px 18px;border-radius:999px;background:#051A39;color:#fff;font:600 14px/1.2 Poppins,system-ui,sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.35)">
+  Preview &mdash; not visible to visitors
+  <a href="/admin/posts/<?= (int) $meta['preview_id'] ?>/" style="padding:8px 14px;border-radius:999px;background:#F47421;color:#fff;text-decoration:none">Back to editor</a>
+</div>
+<?php endif; ?>
 <?php require APP . '/views/partials/header.php'; ?>
 <main id="main">
 <?= $content ?>

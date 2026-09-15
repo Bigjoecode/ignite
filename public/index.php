@@ -11,6 +11,9 @@ require __DIR__ . '/app/bootstrap.php';
 $uri  = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = trim($uri, '/');
 
+// admin CMS has its own router (login, posts, media, account)
+if ($path === 'admin' || strncmp($path, 'admin/', 6) === 0) { require APP . '/admin/router.php'; exit; }
+
 // endpoints without the trailing-slash convention
 if ($path === 'book') { require APP . '/book.php'; exit; }
 if ($path === 'sitemap.xml') { require APP . '/sitemap.php'; exit; }

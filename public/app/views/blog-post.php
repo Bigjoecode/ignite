@@ -1,8 +1,9 @@
 <?php
 $list  = array_values(posts());
 $index = array_search($post['slug'], array_column($list, 'slug'), true);
-$newer = $index > 0 ? $list[$index - 1] : null;
-$older = $list[$index + 1] ?? null;
+// drafts opened from the admin preview are not in the published list
+$newer = $index !== false && $index > 0 ? $list[$index - 1] : null;
+$older = $index !== false ? ($list[$index + 1] ?? null) : null;
 
 // same topic first, then the most recent
 $related = array_values(array_filter($list, static fn(array $p): bool => $p['slug'] !== $post['slug']));

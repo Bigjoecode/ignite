@@ -18,3 +18,4 @@ $config = array_merge([
 ], is_file($local) ? (require $local) : []);
 
 require APP . '/helpers.php';
+require APP . '/db.php';

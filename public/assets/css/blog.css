@@ -191,6 +191,12 @@ a.bl-pill:hover{background:var(--ig-orange);color:#FFFFFF;}
   width:28px;height:28px;border-radius:50%;background:var(--ig-navy);color:#FFFFFF;font-size:13px;font-weight:700;line-height:1;
 }
 
+/* images and quotes added in the admin editor */
+.ig-home .bl-prose img{display:block;max-width:100%;height:auto;margin:1.8em 0;border-radius:18px;box-shadow:0 16px 40px rgba(11,42,85,.12);}
+.ig-home .bl-prose blockquote{margin:1.8em 0;padding:.4em 0 .4em 1.4em;border-left:4px solid var(--ig-orange);font-size:1.08em;font-style:italic;color:var(--ig-navy);}
+.ig-home .bl-prose blockquote p:last-child{margin-bottom:0;}
+.ig-home .bl-prose hr{margin:2.4em 0;border:0;border-top:1px solid var(--ig-line);}
+
 .post-table{margin:1.6em 0 2em;overflow-x:auto;border:1px solid var(--ig-line);border-radius:16px;}
 .post-table table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.5;}
 .post-table table:has(th:nth-child(4)){min-width:560px;}

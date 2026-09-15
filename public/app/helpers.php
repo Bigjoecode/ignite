@@ -42,25 +42,46 @@ function pages(): array
 }
 
 /**
- * Blog posts keyed by slug (one file per post in app/data/posts/), newest first.
- * Each post gains: slug, toc [[id, heading]], words, minutes (reading time).
+ * Published blog posts keyed by slug, newest first (managed in /admin; stored in the CMS database).
+ * Scheduled posts appear once their publish time has passed.
  */
 function posts(): array
 {
     static $posts;
     if ($posts === null) {
         $posts = [];
-        foreach (glob(APP . '/data/posts/*.php') ?: [] as $file) {
-            $post = require $file;
-            $post['slug'] = basename($file, '.php');
-            [$post['body'], $post['toc']] = post_toc($post['body']);
-            $post['words']   = str_word_count(strip_tags($post['body']));
-            $post['minutes'] = max(1, (int) ceil($post['words'] / 200));
+        $stmt = db()->prepare("SELECT * FROM posts WHERE status = 'published' AND published_at <= ? ORDER BY published_at DESC, id DESC");
+        $stmt->execute([date('Y-m-d H:i:s')]);
+        foreach ($stmt as $row) {
+            $post = post_prepare($row);
             $posts[$post['slug']] = $post;
         }
-        uasort($posts, static fn(array $a, array $b): int => strcmp($b['published'], $a['published']));
     }
     return $posts;
+}
+
+/** Shapes a posts-table row for the blog views (also used by the admin preview). */
+function post_prepare(array $row): array
+{
+    $published = substr((string) ($row['published_at'] ?: $row['created_at']), 0, 10);
+    $updated   = substr((string) $row['updated_at'], 0, 10);
+    $post = [
+        'id'          => (int) $row['id'],
+        'slug'        => $row['slug'],
+        'title'       => $row['title'] !== '' ? $row['title'] : 'Untitled post',
+        'description' => $row['description'],
+        'category'    => $row['category'] !== '' ? $row['category'] : 'Articles',
+        'published'   => $published,
+        'updated'     => $updated > $published ? $updated : $published,
+        'image'       => $row['image'] !== '' ? $row['image'] : '/assets/img/IMG_20260814_125716.jpg',
+        'image_alt'   => $row['image_alt'],
+        'featured'    => (bool) $row['featured'],
+        'faq'         => json_decode((string) $row['faq'], true) ?: [],
+    ];
+    [$post['body'], $post['toc']] = post_toc((string) $row['body']);
+    $post['words']   = str_word_count(strip_tags($post['body']));
+    $post['minutes'] = max(1, (int) ceil($post['words'] / 200));
+    return $post;
 }
 
 /** Gives each <h2> an id and returns [body, table of contents]. */

@@ -3,7 +3,9 @@
 config.local.php
 *.sql
 backups/
-# Form submissions (patient contact details) — local dev copy of the server data dir
+# Form submissions, CMS database and sessions — local dev copy of the server data dir
 ignite-data/
+# Media library uploads (live on the server only; deploys never touch them)
+public/uploads/
 .DS_Store
 Thumbs.db
