@@ -80,6 +80,30 @@ if ($path === 'thank-you') {
     exit;
 }
 
+if ($path === 'blog') {
+    render('blog-index', [], $meta + [
+        'title'       => 'Orthodontic Tips & Advice | Ignite Orthodontics Blog',
+        'description' => 'Practical advice on braces, clear aligners and orthodontic care for kids, teens and adults from the Ignite Orthodontics team.',
+        'css' => ['home.css', 'page.css', 'blog.css'], 'js' => ['blog.js'],
+    ]);
+    exit;
+}
+
+if (preg_match('#^blog/([a-z0-9-]+)$#', $path, $m) && isset(posts()[$m[1]])) {
+    $post = posts()[$m[1]];
+    render('blog-post', ['post' => $post], $meta + [
+        'title'       => $post['title'] . ' | Ignite Orthodontics',
+        'description' => $post['description'],
+        'css' => ['home.css', 'page.css', 'blog.css'], 'js' => ['blog.js'],
+        'og_type'   => 'article',
+        'image'     => $post['image'],
+        'published' => $post['published'],
+        'modified'  => $post['updated'],
+        'schema'    => post_schema($post),
+    ]);
+    exit;
+}
+
 if (isset(pages()[$path])) {
     $p = pages()[$path];
     render('page', ['p' => $p, 'slug' => $path], $meta + [

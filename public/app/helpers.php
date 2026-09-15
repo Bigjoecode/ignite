@@ -41,6 +41,94 @@ function pages(): array
     return $pages ??= require APP . '/data/pages.php';
 }
 
+/**
+ * Blog posts keyed by slug (one file per post in app/data/posts/), newest first.
+ * Each post gains: slug, toc [[id, heading]], words, minutes (reading time).
+ */
+function posts(): array
+{
+    static $posts;
+    if ($posts === null) {
+        $posts = [];
+        foreach (glob(APP . '/data/posts/*.php') ?: [] as $file) {
+            $post = require $file;
+            $post['slug'] = basename($file, '.php');
+            [$post['body'], $post['toc']] = post_toc($post['body']);
+            $post['words']   = str_word_count(strip_tags($post['body']));
+            $post['minutes'] = max(1, (int) ceil($post['words'] / 200));
+            $posts[$post['slug']] = $post;
+        }
+        uasort($posts, static fn(array $a, array $b): int => strcmp($b['published'], $a['published']));
+    }
+    return $posts;
+}
+
+/** Gives each <h2> an id and returns [body, table of contents]. */
+function post_toc(string $html): array
+{
+    $toc = [];
+    $html = preg_replace_callback('#<h2>(.*?)</h2>#s', static function (array $m) use (&$toc): string {
+        $text = trim(html_entity_decode(strip_tags($m[1]), ENT_QUOTES, 'UTF-8'));
+        $id   = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($text)), '-');
+        $toc[] = [$id, $text];
+        return '<h2 id="' . $id . '">' . $m[1] . '</h2>';
+    }, $html);
+    return [$html, $toc];
+}
+
+function post_date(string $ymd, string $format = 'F j, Y'): string
+{
+    return date($format, strtotime($ymd));
+}
+
+/** URL-safe topic key, e.g. "Kids & Teens" -> "kids-teens" (used by /blog/?topic=). */
+function post_topic(string $category): string
+{
+    return trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($category)), '-');
+}
+
+/** Schema.org BlogPosting + BreadcrumbList (+ FAQPage) for a post page. */
+function post_schema(array $post): array
+{
+    $base = cfg('base_url');
+    $url  = $base . '/blog/' . $post['slug'] . '/';
+    $org  = ['@type' => 'Organization', 'name' => cfg('site_name'), 'url' => $base . '/',
+             'logo' => ['@type' => 'ImageObject', 'url' => $base . '/assets/img/ignitelogo.png']];
+    $graph = [
+        [
+            '@type'            => 'BlogPosting',
+            'headline'         => $post['title'],
+            'description'      => $post['description'],
+            'image'            => $base . $post['image'],
+            'datePublished'    => $post['published'],
+            'dateModified'     => $post['updated'],
+            'author'           => $org,
+            'publisher'        => $org,
+            'mainEntityOfPage' => $url,
+            'articleSection'   => $post['category'],
+            'wordCount'        => $post['words'],
+        ],
+        [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $base . '/'],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => $base . '/blog/'],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $post['title'], 'item' => $url],
+            ],
+        ],
+    ];
+    if (!empty($post['faq'])) {
+        $graph[] = [
+            '@type'      => 'FAQPage',
+            'mainEntity' => array_map(static fn(array $f): array => [
+                '@type' => 'Question', 'name' => $f[0],
+                'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f[1]],
+            ], $post['faq']),
+        ];
+    }
+    return ['@context' => 'https://schema.org', '@graph' => $graph];
+}
+
 /** Asset URL with a modification-time query so browsers pick up new deploys. */
 function asset(string $file): string
 {

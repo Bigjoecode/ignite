@@ -153,12 +153,6 @@ return [
         'lead' => 'Profiles of our orthodontists are coming soon. In the meantime, book a no-cost consultation to meet the team at your nearest office.',
         'draft' => true,
     ],
-    'blog' => [
-        'title' => 'Blog', 'description' => 'Orthodontic tips and news from Ignite Orthodontics.',
-        'kicker' => 'Ignite Orthodontics Blog', 'h1' => 'Orthodontic Tips <em>& News.</em>',
-        'lead' => 'Articles about braces, clear aligners and caring for your smile are coming soon.',
-        'draft' => true,
-    ],
     'privacy-policy' => [
         'title' => 'Privacy Policy', 'description' => 'Ignite Orthodontics privacy policy.',
         'kicker' => 'Legal', 'h1' => 'Privacy <em>Policy.</em>',
