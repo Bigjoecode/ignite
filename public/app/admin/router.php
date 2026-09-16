@@ -7,6 +7,8 @@ require_once APP . '/auth.php';
 require_once APP . '/sanitize.php';
 require_once APP . '/media.php';
 require_once APP . '/admin/functions.php';
+require_once APP . '/admin/fields.php';
+require_once APP . '/admin/pages.php';
 
 header('X-Robots-Tag: noindex, nofollow');
 header('Cache-Control: no-store, private');
@@ -78,6 +80,36 @@ if (preg_match('#^posts/(\d+)/preview$#', $route, $m) && $method === 'GET') {
 }
 if (preg_match('#^posts/(\d+)/(trash|restore|delete)$#', $route, $m) && $method === 'POST') {
     admin_post_status((int) $m[1], $m[2]);
+    exit;
+}
+
+// service and office pages
+if ($route === 'pages' && $method === 'GET') {
+    admin_pages_index($user);
+    exit;
+}
+if ($route === 'pages/new' && $method === 'GET') {
+    admin_page_new($user);
+    exit;
+}
+if ($route === 'pages/save' && $method === 'POST') {
+    admin_save_page($user);
+    exit;
+}
+if ($route === 'pages/preview' && $method === 'POST') {
+    admin_page_preview_post($user);
+    exit;
+}
+if (preg_match('#^pages/(\d+)$#', $route, $m) && $method === 'GET') {
+    admin_page_editor($user, (int) $m[1]);
+    exit;
+}
+if (preg_match('#^pages/(\d+)/preview$#', $route, $m) && $method === 'GET') {
+    admin_page_preview((int) $m[1]);
+    exit;
+}
+if (preg_match('#^pages/(\d+)/(trash|restore|delete|duplicate)$#', $route, $m) && $method === 'POST') {
+    admin_page_action((int) $m[1], $m[2]);
     exit;
 }
 

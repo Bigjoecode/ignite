@@ -9,13 +9,17 @@ PHP site for https://igniteorthodontics.com, hosted on Hostinger.
 | `*.html` (repo root) | Design source files (header, home, location template, kids page) |
 | `tools/extract.php` | Builds `public/assets/{css,js}` and the generated views from those source files |
 | `public/` | Everything that is deployed to `public_html` |
-| `public/index.php` | Router (`/`, `/locations/{slug}/`, `/braces-for-kids/`, `/blog/`, content pages, `/thank-you/`, `/book`, `/admin/`, `/sitemap.xml`) |
-| `public/app/data/` | Offices, page content and booking choices; `posts/*.php` only seed the blog database once |
+| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/blog/`, static pages, `/thank-you/`, `/book`, `/admin/`, `/sitemap.xml`) |
+| `public/app/templates.php` | Page layouts: the sections and fields each layout offers the dashboard |
+| `public/app/data/` | Booking choices and the remaining static pages; `seed-pages.php` and `posts/*.php` fill the database once |
 | `public/app/views/` | Public layout, pages and partials |
+| `public/app/views/templates/` | The three layouts that draw a page's sections (classic, spotlight, simple) |
 | `public/app/admin/` | Admin dashboard router, controllers and views |
 | `public/admin-assets/` | Dashboard CSS/JS and the self-hosted TinyMCE 7 editor (GPL-2.0-or-later) |
 
 After editing a design source file, run `php tools/extract.php` and commit the regenerated files.
+It rebuilds the header, the home page and the stylesheets. The office and kids-braces
+layouts are now CMS templates, so only their CSS and JS come from the source files.
 
 ## Run locally
 
@@ -36,10 +40,17 @@ ssh ignite '~/ignite-deploy/deploy.sh'
 The script pulls `main`, backs up `public_html` and the CMS database to `~/ignite-backups/`
 (last 10 of each kept) and syncs `public/`. It never touches `app/config.local.php` or `uploads/`.
 
-## Admin dashboard (blog + media)
+## Admin dashboard (pages, blog, media)
 
 Sign in at https://igniteorthodontics.com/admin/.
 
+- **Service Pages / Locations:** create a page, choose a layout, then fill in its sections.
+  Each layout (`app/templates.php`) decides which sections exist and which fields they have,
+  so the editor form, the saved content and the published page always match. Sections can be
+  switched off, repeating rows (cards, offers, questions) can be added and reordered, and
+  Preview opens the page as it looks right now, including unsaved changes. Renaming the
+  address of a live page leaves a redirect behind. Office pages also feed the locations menu,
+  the office list, the footer and the booking popup; `{office}` in any text becomes the office name.
 - **Posts:** WordPress-style editor with Save Draft, Preview, Publish or Schedule, topic,
   featured image, summary and FAQ. Content is cleaned on save: links and images that point
   to other websites are removed (the site never sends visitors off-site).

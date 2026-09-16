@@ -341,10 +341,14 @@
   if (!form) return;
 
   let dirty = false;
+  let keepDirty = false; // the preview opens in a new tab, so the page itself keeps its changes
   const markDirty = () => { dirty = true; };
   form.addEventListener('input', markDirty);
   form.addEventListener('change', markDirty);
-  form.addEventListener('submit', () => { dirty = false; });
+  form.addEventListener('submit', () => {
+    if (keepDirty) { keepDirty = false; return; }
+    dirty = false;
+  });
   window.addEventListener('beforeunload', (e) => {
     if (!dirty) return;
     e.preventDefault();
@@ -386,20 +390,22 @@
     update();
   });
 
-  /* FAQ rows */
+  /* FAQ rows (posts) */
   const faqList = $('[data-adm-faq-list]', form);
   const faqTemplate = $('[data-adm-faq-template]', form);
-  $('[data-adm-faq-add]', form).addEventListener('click', () => {
-    faqList.insertAdjacentHTML('beforeend', faqTemplate.innerHTML);
-    $('input', faqList.lastElementChild).focus();
-    markDirty();
-  });
-  faqList.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-adm-faq-remove]');
-    if (!btn) return;
-    btn.closest('.adm-faq-row').remove();
-    markDirty();
-  });
+  if (faqList && faqTemplate) {
+    $('[data-adm-faq-add]', form).addEventListener('click', () => {
+      faqList.insertAdjacentHTML('beforeend', faqTemplate.innerHTML);
+      $('input', faqList.lastElementChild).focus();
+      markDirty();
+    });
+    faqList.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-adm-faq-remove]');
+      if (!btn) return;
+      btn.closest('.adm-faq-row').remove();
+      markDirty();
+    });
+  }
 
   /* Publish becomes Schedule for a future date */
   const when = $('[data-adm-when]', form);
@@ -420,8 +426,9 @@
     });
   }
 
-  /* featured image */
+  /* featured image (posts) */
   const featured = $('[data-adm-featured]', form);
+  if (featured) {
   const setFeatured = (item) => {
     $('[data-adm-featured-input]', featured).value = item ? item.url : '';
     const img = $('[data-adm-featured-img]', featured);
@@ -437,19 +444,158 @@
     openMedia({ title: 'Featured image', button: 'Set featured image', onChoose: setFeatured });
   }));
   $('[data-adm-featured-remove]', featured).addEventListener('click', () => setFeatured(null));
+  }
+
+  /* photo fields (pages): picker, preview and alt text */
+  function bindImages(root) {
+    $$('[data-adm-img]', root).forEach((box) => {
+      if (box.dataset.bound) return;
+      box.dataset.bound = '1';
+      const input = $('[data-adm-img-input]', box);
+      const preview = $('[data-adm-img-preview]', box);
+      const empty = $('[data-adm-img-empty]', box);
+      const actions = $('[data-adm-img-actions]', box);
+      const alt = $('[data-adm-img-alt]', box);
+      const set = (item) => {
+        input.value = item ? item.url : '';
+        preview.src = item ? item.url : '';
+        preview.hidden = !item;
+        empty.hidden = !!item;
+        if (actions) actions.hidden = !item;
+        if (item && alt && !alt.value) alt.value = item.alt || '';
+        markDirty();
+      };
+      $$('[data-adm-img-pick]', box).forEach((btn) => btn.addEventListener('click', () => {
+        openMedia({ title: 'Choose a photo', button: 'Use this photo', onChoose: set });
+      }));
+      const remove = $('[data-adm-img-remove]', box);
+      if (remove) remove.addEventListener('click', () => set(null));
+    });
+  }
+  bindImages(form);
+
+  /* ---------- page editor: sections and repeating rows ---------- */
+  if (form.hasAttribute('data-adm-page')) {
+    $$('[data-adm-sec]', form).forEach((sec) => {
+      const toggle = $('[data-adm-sec-toggle]', sec);
+      const body = $('.adm-sec__body', sec);
+      toggle.addEventListener('click', () => {
+        const open = body.hidden;
+        body.hidden = !open;
+        sec.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+      const show = $('[data-adm-sec-show]', sec);
+      if (show) show.addEventListener('change', () => sec.classList.toggle('is-off', !show.checked));
+    });
+    // the first section starts open, so the editor never looks empty
+    const firstSection = $('[data-adm-sec]', form);
+    if (firstSection) $('[data-adm-sec-toggle]', firstSection).click();
+
+    const renumber = (list) => {
+      const rows = $$('[data-adm-item]', list);
+      rows.forEach((row, i) => { $('[data-adm-item-title]', row).textContent = `${list.dataset.label} ${i + 1}`; });
+      const count = $('[data-adm-list-count]', list);
+      const max = Number(list.dataset.max);
+      if (count) count.textContent = rows.length ? `${rows.length} of ${max}` : 'None yet';
+      $('[data-adm-list-add]', list).disabled = rows.length >= max;
+    };
+
+    $$('[data-adm-list]', form).forEach((list) => {
+      const rows = $('[data-adm-list-rows]', list);
+      const template = $('[data-adm-list-template]', list);
+      // names only have to be unique: the order comes from the order on the page
+      let next = 1000 + $$('[data-adm-item]', list).length;
+      $('[data-adm-list-add]', list).addEventListener('click', () => {
+        rows.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__i__/g, String(next++)));
+        const row = rows.lastElementChild;
+        bindImages(row);
+        renumber(list);
+        const first = $('input[type="text"], textarea', row);
+        if (first) first.focus();
+        markDirty();
+      });
+      list.addEventListener('click', (e) => {
+        const row = e.target.closest('[data-adm-item]');
+        if (!row) return;
+        if (e.target.closest('[data-adm-item-remove]')) {
+          row.remove();
+        } else if (e.target.closest('[data-adm-item-up]') && row.previousElementSibling) {
+          rows.insertBefore(row, row.previousElementSibling);
+        } else if (e.target.closest('[data-adm-item-down]') && row.nextElementSibling) {
+          rows.insertBefore(row.nextElementSibling, row);
+        } else {
+          return;
+        }
+        renumber(list);
+        markDirty();
+      });
+      renumber(list);
+    });
+
+    /* switching layout is a save-less round trip, so it needs its own button */
+    const templateSelect = $('[data-adm-template]', form);
+    if (templateSelect) {
+      const chosen = templateSelect.value;
+      const apply = $('[data-adm-template-apply]', form);
+      const note = $('[data-adm-template-note]', form);
+      templateSelect.addEventListener('change', () => {
+        const changed = templateSelect.value !== chosen;
+        if (apply) apply.hidden = !changed;
+        if (note) note.hidden = !changed;
+      });
+    }
+
+    /* preview what is on screen, including unsaved changes */
+    const previewBtn = $('[data-adm-preview-post]', form);
+    if (previewBtn) {
+      previewBtn.addEventListener('click', () => {
+        keepDirty = true;
+        if (window.tinymce) window.tinymce.triggerSave();
+      });
+    }
+
+    /* the address shown in the sidebar follows what is typed */
+    const urlSlugs = $$('[data-adm-url-slug]', form);
+    if (urlSlugs.length) {
+      const updateUrl = () => {
+        const value = slug.value.trim() || slugify(title.value) || '…';
+        urlSlugs.forEach((el) => { el.textContent = value; });
+      };
+      [title, slug].forEach((el) => el.addEventListener('input', updateUrl));
+      updateUrl();
+    }
+
+    /* live Google-result preview */
+    const seoTitle = $('[data-adm-seo-title]', form);
+    const seoDesc = $('[data-adm-seo-desc]', form);
+    if (seoTitle && seoDesc) {
+      const seoTitleInput = $('[data-adm-seo-title-input]', form);
+      const seoDescInput = $('[data-adm-seo-desc-input]', form);
+      const clip = (text, max) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
+      const updateSeo = () => {
+        const name = title.value.trim();
+        seoTitle.textContent = clip(seoTitleInput.value.trim() || (name ? `${name} | Ignite Orthodontics` : 'Page name | Ignite Orthodontics'), 60);
+        seoDesc.textContent = clip(seoDescInput.value.trim() || 'Add a summary so Google shows the right words here.', 160);
+      };
+      [title, seoTitleInput, seoDescInput].forEach((el) => el.addEventListener('input', updateSeo));
+      updateSeo();
+    }
+  }
 
   /* rich text editor */
   const insertImage = (editor, item) => {
     if (!editor) return;
     editor.insertContent(`<img src="${escapeAttr(item.url)}" alt="${escapeAttr(item.alt || '')}" width="${item.width}" height="${item.height}">`);
   };
-  const openAddMedia = () => openMedia({ onChoose: (item) => insertImage(window.tinymce && window.tinymce.get('adm-body'), item) });
-  $('[data-adm-add-media]', form).addEventListener('click', openAddMedia);
+  const openAddMedia = () => openMedia({ onChoose: (item) => insertImage(window.tinymce && window.tinymce.activeEditor, item) });
+  const addMediaBtn = $('[data-adm-add-media]', form);
+  if (addMediaBtn) addMediaBtn.addEventListener('click', openAddMedia);
 
   if (!window.tinymce) return; // plain textarea still works if the editor failed to load
 
-  window.tinymce.init({
-    selector: '#adm-body',
+  const editorConfig = (selector, height) => ({
+    selector,
     license_key: 'gpl',
     base_url: '/admin-assets/tinymce',
     suffix: '.min',
@@ -463,8 +609,8 @@
     quickbars_image_toolbar: 'image',
     // fixed-height editor that scrolls (drag the corner to make it taller); an auto-growing frame left
     // empty space below the text where clicks did not place a visible cursor
-    height: 700,
-    min_height: 420,
+    height,
+    min_height: 300,
     resize: true,
     relative_urls: false,
     remove_script_host: true,
@@ -521,4 +667,7 @@
       editor.on('init', () => { dirty = false; });
     },
   });
+
+  if ($('#adm-body')) window.tinymce.init(editorConfig('#adm-body', 700));
+  if ($('[data-adm-rte]')) window.tinymce.init(editorConfig('[data-adm-rte]', 460));
 })();

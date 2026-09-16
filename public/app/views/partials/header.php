@@ -100,12 +100,10 @@
             </button>
           </div>
           <div class="ig-sub">
-            <a href="/braces-for-kids/">Braces for Kids</a>
-            <a href="/braces-for-teens/">Braces for Teens</a>
-            <a href="/braces-for-adults/">Braces for Adults</a>
-            <a href="/types-of-braces/">Types of Braces</a>
-            <a href="/invisalign/">Invisalign</a>
-          </div>
+<?php foreach (service_menu() as [$href, $label]): ?>
+            <a href="<?= e($href) ?>"><?= e($label) ?></a>
+<?php endforeach; ?>
+</div>
         </li>
 
         <li>

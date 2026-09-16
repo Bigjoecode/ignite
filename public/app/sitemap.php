@@ -8,6 +8,9 @@ $urls = [['/', null], ['/locations/', null], ['/braces-for-kids/', null]];
 foreach (locations() as $l) {
     $urls[] = ['/locations/' . $l['slug'] . '/', null];
 }
+foreach (page_rows('service') as $row) {
+    $urls[] = ['/' . $row['slug'] . '/', substr((string) $row['updated_at'], 0, 10)];
+}
 foreach (pages() as $slug => $p) {
     if (empty($p['draft'])) $urls[] = ['/' . $slug . '/', null];
 }

@@ -115,6 +115,13 @@ $h = wrap_re($h, '#(<a class="ig-menu__link" href="/locations/">Our Locations</a
 <?php endforeach; ?>
 
 HTML);
+$h = wrap_re($h, '#(<a class="ig-menu__link" href="/treatments/">Our Treatments</a>.*?<div class="ig-sub">).*?(</div>)#s', <<<'HTML'
+
+<?php foreach (service_menu() as [$href, $label]): ?>
+            <a href="<?= e($href) ?>"><?= e($label) ?></a>
+<?php endforeach; ?>
+
+HTML);
 $h = rep($h, 'Our Locations (6)', 'Our Locations (<?= count(locations()) ?>)');
 $h = brand_phone($h);
 // no "Contact Us" item in the menu (desktop bar or mobile panel)
@@ -147,45 +154,11 @@ if (!$n) throw new RuntimeException('no card titles found');
 put('app/views/home.php', sprintf(VIEW_HEADER, 'home-preview.html') . $b);
 
 /* ---------------------------------------------------------------- location */
+// Only the stylesheet and script are generated. The page itself is now a CMS
+// template (app/views/templates/classic.php), so its markup is not rebuilt here.
 $s = src('location-preview.html');
 put('assets/css/location.css', "/* generated from location-preview.html */\n" . localize(block($s, '<style>', '</style>', true)));
 put('assets/js/location.js', "/* generated from location-preview.html */\n" . block($s, '<script>', '</script>', true));
-
-$b = localize(between($s, '<div class="ig-locpage">', '<script>'));
-// no "Over 10,000 Happy Patients" trust card (with its review-site ratings) under the hero
-$b = rep_re($b, '#\s*<!-- trust card[^>]*-->\s*<div class="ig-trustwrap">.*?(?=\s*</section>)#s', '');
-// placeholder doctors and reviews must not go live
-$b = rep_re($b, '#<!-- =+\s*5\. MEET YOUR ORTHODONTIST.*?(?=<!-- =+\s*6\. FAMILY)#s', '');
-$b = rep_re($b, '#<!-- =+\s*10\. REVIEWS.*?(?=<!-- =+\s*14\. CONTACT)#s', '');
-$b = rep_re($b, '#<table class="ig-hours">.*?</table>#s',
-    '<p class="ig-lead" style="margin-top:18px;">Call the office for current hours and appointment availability.</p>');
-$b = rep($b, '<br><b>24/7 emergency:</b> <a href="tel:+13135550100">(313) 555-0100</a>', '');
-// offers must match the pricing on the home page hero
-$b = rep($b, 'Braces for<br>$199<sup>*</sup>/Month', 'Braces from<br>$99<sup>*</sup>/Month');
-$b = rep($b, 'Braces for Just $199*/Month with No Down Payment', 'Braces from just $99* per month. Offer terms and eligibility apply.');
-$b = rep($b, 'Clear Aligners with<br>only $500* Down', 'Clear Aligners from<br>$185<sup>*</sup>/Month');
-$b = rep($b, 'Start Clear Aligners Today with a Low Down Payment of Just $500!', 'Clear aligners from $185* per month. Offer terms and eligibility apply.');
-// consultation form section -> shared call-to-action band, with this office's photo and phone
-$b = rep_re($b, '#<section class="ig-form-sec" id="ig-consult">.*?</section>#s',
-    "<?php \$ctaImage = '/assets/img/invisalign-braces-scaled.jpg'; \$ctaPhone = \$loc['phone']; \$ctaTel = \$loc['tel'];"
-    . " require APP . '/views/partials/consult-cta.php'; ?>");
-// per-office tokens (order matters: full address before the bare city name)
-// no Google map embed (it links off the site): a photo fills the map box instead
-$b = rep_re($b, '#<iframe src="https://maps\.google\.com/maps\?q=1010[^"]*"[^>]*></iframe>#s',
-    '<img src="/assets/img/02-image.webp" alt="Smiling patient at Ignite Orthodontics Arlington Heights" width="288" height="467" loading="lazy" decoding="async">');
-// the address is plain text: no links off the site
-$b = rep($b, '<a href="https://maps.google.com/?q=1010+S+Arlington+Heights+Rd" target="_blank" rel="noopener">1010 S Arlington Heights Rd, Arlington Heights, IL 60005</a>',
-    '1010 S Arlington Heights Rd, Arlington Heights, IL 60005');
-$b = rep($b, '1010 S Arlington Heights Rd, Arlington Heights, IL 60005', "<?= e(\$loc['address_full']) ?>");
-$b = str_replace('Arlington Heights, IL', "<?= e(\$loc['city']) ?>, MI", $b); // only in the reviews heading, removed above
-$b = rep($b, 'Arlington Heights', "<?= e(\$loc['name']) ?>");
-$b = rep($b, '(313) 555-0100', "<?= e(\$loc['phone']) ?>");
-$b = rep($b, '+13135550100', "<?= e(\$loc['tel']) ?>");
-$b = rep($b, 'arlington@igniteortho.com', "<?= e(\$loc['email']) ?>");
-if (preg_match('/Arlington|555-0100|igniteortho\.com|Doctor One|Reviewer/', $b, $left)) {
-    throw new RuntimeException("placeholder left in location template: {$left[0]}");
-}
-put('app/views/location.php', sprintf(VIEW_HEADER, 'location-preview.html') . $b);
 
 /* ------------------------------------------------------------ kids braces */
 $s = src('kids-braces-page-layout.html');
@@ -213,15 +186,7 @@ $js = block($s, '<script>', '</script>');
 $js = rep_re($js, '#// Modal Handlers\s*\(function\(\) \{.*?\}\)\(\);#s', '');
 put('assets/js/kids.js', "/* generated from kids-braces-page-layout.html */\n" . $js);
 
-$b = substr(between($s, '<body>', '<!-- Scripts -->'), strlen('<body>'));
-$b = localize(str_ireplace(array_keys($palette), array_values($palette), $b));
-$b = rep($b, 'href="tel:8559163956"', "href=\"tel:<?= e(cfg('phone_tel')) ?>\"");
-$b = rep($b, 'Call (855) 916-3956', "Call <?= e(cfg('phone')) ?>");
-$b = rep($b, 'href="#" data-popup="true"', 'href="/contact-us/" data-book');
-$b = rep_re($b, '#\s*<!-- =+\s*MODAL POPUP.*$#s', "\n");
-if (preg_match('/Ignite Clinics|855|Lansing|data-popup|modal-overlay/', $b, $left)) {
-    throw new RuntimeException("draft content left in kids page: {$left[0]}");
-}
-put('app/views/kids.php', sprintf(VIEW_HEADER, 'kids-braces-page-layout.html') . "<div class=\"kp\">\n" . $b . "</div>\n");
+// As with the office page, only the stylesheet and script are generated: the
+// layout itself is the "spotlight" CMS template (app/views/templates/).
 
 echo "done\n";

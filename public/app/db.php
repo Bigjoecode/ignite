@@ -75,11 +75,38 @@ CREATE TABLE IF NOT EXISTS login_attempts (
     ip_hash      TEXT NOT NULL,
     attempted_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS pages (
+    id          INTEGER PRIMARY KEY,
+    type        TEXT NOT NULL,                  -- service | location
+    slug        TEXT NOT NULL,
+    title       TEXT NOT NULL,
+    template    TEXT NOT NULL,                  -- key from app/templates.php
+    description TEXT NOT NULL DEFAULT '',
+    seo_title   TEXT NOT NULL DEFAULT '',
+    image       TEXT NOT NULL DEFAULT '',       -- share image
+    data        TEXT NOT NULL DEFAULT '{}',     -- section content as JSON
+    menu        INTEGER NOT NULL DEFAULT 0,     -- show in the Treatments menu
+    menu_order  INTEGER NOT NULL DEFAULT 0,
+    status      TEXT NOT NULL DEFAULT 'draft',  -- draft | published | trash
+    created_at  TEXT NOT NULL,
+    updated_at  TEXT NOT NULL,
+    author_id   INTEGER REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS pages_type_slug ON pages (type, slug);
+CREATE TABLE IF NOT EXISTS redirects (
+    from_path  TEXT PRIMARY KEY,                -- old address, e.g. /old-slug/
+    to_path    TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 SQL);
 
     if (db_setting($pdo, 'posts_seeded') === null) {
         db_seed_posts($pdo);
         db_set_setting($pdo, 'posts_seeded', date('c'));
+    }
+    if (db_setting($pdo, 'pages_seeded') === null) {
+        db_seed_pages($pdo);
+        db_set_setting($pdo, 'pages_seeded', date('c'));
     }
 }
 
@@ -95,6 +122,27 @@ function db_set_setting(PDO $pdo, string $key, string $value): void
 {
     $pdo->prepare('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value')
         ->execute([$key, $value]);
+}
+
+/** One-time import of the offices and treatment pages (app/data/seed-pages.php). */
+function db_seed_pages(PDO $pdo): void
+{
+    $seed   = require APP . '/data/seed-pages.php';
+    $now    = date('Y-m-d H:i:s');
+    $insert = $pdo->prepare(
+        'INSERT OR IGNORE INTO pages
+            (type, slug, title, template, description, seo_title, image, data, menu, menu_order, status, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+    foreach (['location' => $seed['locations'], 'service' => $seed['services']] as $type => $rows) {
+        foreach ($rows as $p) {
+            $insert->execute([
+                $type, $p['slug'], $p['title'], $p['template'], $p['description'] ?? '', $p['seo_title'] ?? '',
+                $p['image'] ?? '', json_encode($p['data'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                $p['menu'] ?? 0, $p['menu_order'] ?? 0, 'published', $now, $now,
+            ]);
+        }
+    }
 }
 
 /** One-time import of the original file-based articles (app/data/posts/*.php). */

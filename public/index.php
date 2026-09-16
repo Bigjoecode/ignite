@@ -54,23 +54,9 @@ if ($path === 'locations') {
     exit;
 }
 
-if (preg_match('#^locations/([a-z0-9-]+)$#', $path, $m) && isset(locations()[$m[1]])) {
-    $loc = locations()[$m[1]];
-    render('location', ['loc' => $loc], $meta + [
-        'title'       => "Orthodontist in {$loc['city']}, MI | Ignite Orthodontics {$loc['name']}",
-        'description' => "Braces and clear aligners at Ignite Orthodontics {$loc['name']}, {$loc['address_full']}. Book a no-cost consultation or call {$loc['phone']}.",
-        'css' => ['location.css'], 'js' => ['location.js'],
-        'book_office' => $loc['slug'], // booking popup preselects this office
-    ]);
-    exit;
-}
-
-if ($path === 'braces-for-kids') {
-    render('kids', [], $meta + [
-        'title'       => 'Braces for Kids & Early Orthodontics | Ignite Orthodontics',
-        'description' => 'Gentle, affordable braces for kids and teens. Early growth guidance, flexible payment plans and stress-free orthodontic care for children.',
-        'css' => ['kids.css'], 'js' => ['kids.js'],
-    ]);
+// office pages, managed in /admin/pages/
+if (preg_match('#^locations/([a-z0-9-]+)$#', $path, $m) && ($row = page_find('location', $m[1]))) {
+    page_render(page_prepare($row));
     exit;
 }
 
@@ -107,6 +93,12 @@ if (preg_match('#^blog/([a-z0-9-]+)$#', $path, $m) && isset(posts()[$m[1]])) {
     exit;
 }
 
+// service pages, managed in /admin/pages/
+if (preg_match('#^[a-z0-9-]+$#', $path) && ($row = page_find('service', $path))) {
+    page_render(page_prepare($row));
+    exit;
+}
+
 if (isset(pages()[$path])) {
     $p = pages()[$path];
     render('page', ['p' => $p, 'slug' => $path], $meta + [
@@ -116,6 +108,11 @@ if (isset(pages()[$path])) {
         'noindex' => !empty($p['draft']),
     ]);
     exit;
+}
+
+// a page that was published at a different address keeps its old links working
+if (($to = page_redirect('/' . $path . '/')) !== null) {
+    redirect($to);
 }
 
 http_response_code(404);

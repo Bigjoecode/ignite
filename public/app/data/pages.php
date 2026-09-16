@@ -1,11 +1,13 @@
 <?php
-// Starter content for the secondary pages. Source of truth until the admin CMS
-// moves pages into MySQL. 'draft' pages are live but noindex and left out of
-// the sitemap until real content replaces the starter copy.
+// Starter content for the remaining static pages (about, patient info, legal).
+// Treatment pages and office pages are no longer here: they live in the CMS and
+// are edited in /admin/pages/. 'draft' pages are live but noindex and left out
+// of the sitemap until real content replaces the starter copy.
 //
 // Fields: title, description, kicker, h1 (may contain <em>), lead,
 //         sections [[heading, paragraph], ...], links [[href, label, text], ...],
-//         note (highlighted notice), finder (show office list), draft
+//         links_auto (list the treatment pages from the CMS), note (highlighted
+//         notice), finder (show office list), draft
 return [
     'about-us' => [
         'title' => 'About Us', 'description' => 'Ignite Orthodontics provides braces and clear aligners for children, teens and adults across our Michigan offices.',
@@ -22,85 +24,7 @@ return [
         'title' => 'Our Treatments', 'description' => 'Metal braces, ceramic braces, gold braces and clear aligners for kids, teens and adults at Ignite Orthodontics.',
         'kicker' => 'Orthodontic Treatment Options', 'h1' => 'A Smile Is <em>Timeless.</em> Your Treatment Should Fit You.',
         'lead' => 'There is no one right way to straighten every smile. We offer proven treatment options for children, teens and adults.',
-        'links' => [
-            ['/braces-for-kids/', 'Braces for Kids', 'Early evaluations and gentle treatment that guides growing smiles.'],
-            ['/braces-for-teens/', 'Braces for Teens', 'Metal, ceramic or clear options that fit school, sports and social life.'],
-            ['/braces-for-adults/', 'Braces for Adults', 'Discreet treatment that fits around work and everyday life.'],
-            ['/types-of-braces/', 'Types of Braces', 'Compare metal, gold and ceramic braces side by side.'],
-            ['/clear-aligners/', 'Clear Aligners', 'Removable, virtually invisible trays that straighten teeth gradually.'],
-            ['/invisalign/', 'Invisalign', 'A well-known clear aligner system for teens and adults.'],
-        ],
-    ],
-    'braces-for-teens' => [
-        'title' => 'Braces for Teens', 'description' => 'Braces and clear aligners for teenagers at Ignite Orthodontics. Book a no-cost consultation at one of our Michigan offices.',
-        'kicker' => 'Teen Orthodontics', 'h1' => 'Braces That Fit <em>Teen Life.</em>',
-        'lead' => 'The teen years are a common time to start orthodontic treatment, once most permanent teeth have come in.',
-        'sections' => [
-            ['Options teens actually want', 'Choose metal braces in your own colors, tooth-colored ceramic braces, or clear aligners that are removable for meals and special events.'],
-            ['Sports and music', 'Teens with braces can keep playing sports and instruments. We recommend a mouthguard during contact sports to protect teeth and lips.'],
-            ['What to expect', 'Your consultation includes an exam and a personalized treatment plan with clear timelines and payment options, before you commit to anything.'],
-        ],
-    ],
-    'braces-for-adults' => [
-        'title' => 'Braces for Adults', 'description' => 'Adult braces and clear aligners at Ignite Orthodontics. Discreet options, flexible payments and no-cost consultations.',
-        'kicker' => 'Adult Orthodontics', 'h1' => 'It Is Never Too Late For <em>a Straighter Smile.</em>',
-        'lead' => 'Healthy teeth can be moved at any age. Many of our patients start treatment as adults.',
-        'sections' => [
-            ['Discreet treatment options', 'Ceramic braces and clear aligners are popular with adults who want treatment to be less noticeable at work and in everyday life.'],
-            ['More than appearance', 'Correcting crowding, gaps and bite problems can make teeth easier to clean and help them wear more evenly.'],
-            ['Planned around your life', 'We offer convenient appointment times and flexible payment options, and we will explain your insurance benefits before treatment begins.'],
-        ],
-    ],
-    'types-of-braces' => [
-        'title' => 'Types of Braces', 'description' => 'Compare traditional metal braces, gold braces and ceramic braces at Ignite Orthodontics.',
-        'kicker' => 'Choose Your Style', 'h1' => 'Types of <em>Braces.</em>',
-        'lead' => 'Every type of braces we offer is effective. The right choice depends on your goals, your bite and how you want your treatment to look.',
-        'links' => [
-            ['/types-of-braces/#metal', 'Traditional Metal Braces', 'A proven, cost-effective approach for a wide range of orthodontic concerns.'],
-            ['/gold-braces/', 'Gold Braces', 'The reliability of traditional braces with a polished gold finish.'],
-            ['/ceramic-braces/', 'Ceramic Braces', 'Tooth-colored brackets for a more subtle appearance.'],
-            ['/clear-aligners/', 'Clear Aligners', 'Removable trays that straighten teeth without brackets and wires.'],
-        ],
-        'sections' => [
-            ['Traditional metal braces', 'Metal braces use durable stainless steel brackets and archwires. They are the most cost-effective way to correct alignment and work well for complex cases.'],
-        ],
-    ],
-    'gold-braces' => [
-        'title' => 'Gold Braces', 'description' => 'Gold braces at Ignite Orthodontics: the reliability of traditional braces with a polished gold finish.',
-        'kicker' => 'Types of Braces', 'h1' => 'Gold <em>Braces.</em>',
-        'lead' => 'Gold braces offer the reliability of traditional braces with a polished gold finish, for patients who want their treatment to stand out.',
-        'sections' => [
-            ['How gold braces work', 'Gold braces work the same way as traditional metal braces: brackets and archwires apply gentle, steady pressure to move teeth into place over time.'],
-            ['Is it right for me?', 'Your orthodontist will review your bite and goals at your consultation and explain whether gold braces are a good fit.'],
-        ],
-    ],
-    'ceramic-braces' => [
-        'title' => 'Ceramic Braces', 'description' => 'Tooth-colored ceramic braces at Ignite Orthodontics for effective, more subtle orthodontic treatment.',
-        'kicker' => 'Types of Braces', 'h1' => 'Ceramic <em>Braces.</em>',
-        'lead' => 'Tooth-colored brackets offer effective orthodontic treatment with a more subtle appearance.',
-        'sections' => [
-            ['Blends in with your smile', 'Ceramic brackets are designed to match the color of your teeth, which makes them less noticeable than metal braces.'],
-            ['A popular choice for teens and adults', 'Ceramic braces are often chosen by patients who want the precision of braces with a more discreet look.'],
-        ],
-    ],
-    'clear-aligners' => [
-        'title' => 'Clear Aligners', 'description' => 'Clear aligners at Ignite Orthodontics: removable, discreet trays that straighten teeth without brackets and wires.',
-        'kicker' => 'Clear Aligner Treatment', 'h1' => 'Clear <em>Aligners.</em>',
-        'lead' => 'Removable, discreet trays that gradually straighten your teeth without traditional brackets and wires.',
-        'sections' => [
-            ['How aligners work', 'You wear a series of custom clear trays, each one moving your teeth a small step closer to their final position.'],
-            ['Removable for meals', 'Aligners come out to eat, brush and floss, so there are no food restrictions. They work best when worn as directed, most of the day.'],
-            ['Options we offer', 'We offer clear aligner systems including Invisalign® and 3M™ Clear Aligners. Your orthodontist will recommend the best option for your case.'],
-        ],
-    ],
-    'invisalign' => [
-        'title' => 'Invisalign', 'description' => 'Invisalign clear aligners for teens and adults at Ignite Orthodontics. Book a no-cost consultation.',
-        'kicker' => 'Clear Aligner Treatment', 'h1' => '<em>Invisalign®</em> Clear Aligners.',
-        'lead' => 'Invisalign® uses a series of custom clear aligners to straighten teeth discreetly, without brackets or wires.',
-        'sections' => [
-            ['Virtually invisible', 'The clear trays are hard to notice when you smile or talk, which makes Invisalign® popular with teens and adults.'],
-            ['Planned by an orthodontist', 'Your orthodontist designs and monitors your treatment plan and adjusts it as your teeth move.'],
-        ],
+        'links_auto' => true, // every treatment page that is set to show in the menu
     ],
     'patient-info' => [
         'title' => 'Patient Info', 'description' => 'What to expect at Ignite Orthodontics: your first visit, insurance, payment options and caring for braces.',

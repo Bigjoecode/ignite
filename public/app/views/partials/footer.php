@@ -14,12 +14,9 @@
       <nav aria-label="Treatments">
         <h3>Treatments</h3>
         <ul>
-          <li><a href="/braces-for-kids/">Braces for Kids</a></li>
-          <li><a href="/braces-for-teens/">Braces for Teens</a></li>
-          <li><a href="/braces-for-adults/">Braces for Adults</a></li>
-          <li><a href="/types-of-braces/">Types of Braces</a></li>
-          <li><a href="/clear-aligners/">Clear Aligners</a></li>
-          <li><a href="/invisalign/">Invisalign</a></li>
+<?php foreach (service_menu() as [$href, $label]): ?>
+          <li><a href="<?= e($href) ?>"><?= e($label) ?></a></li>
+<?php endforeach; ?>
         </ul>
       </nav>
 

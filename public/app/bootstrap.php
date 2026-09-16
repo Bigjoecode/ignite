@@ -19,3 +19,4 @@ $config = array_merge([
 
 require APP . '/helpers.php';
 require APP . '/db.php';
+require APP . '/templates.php';

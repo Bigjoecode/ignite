@@ -12,7 +12,7 @@
     </div>
   </section>
 
-<?php if (!empty($p['sections']) || !empty($p['links']) || !empty($p['note'])): ?>
+<?php if (!empty($p['sections']) || !empty($p['links']) || !empty($p['links_auto']) || !empty($p['note'])): ?>
   <section class="ig-sec">
     <div class="ig-wrap pg-body">
 <?php if (!empty($p['note'])): ?>
@@ -22,9 +22,10 @@
       <h2<?= $slug === 'types-of-braces' && $i === 0 ? ' id="metal"' : '' ?>><?= e($heading) ?></h2>
       <p><?= e($text) ?></p>
 <?php endforeach; ?>
-<?php if (!empty($p['links'])): ?>
+<?php $links = !empty($p['links_auto']) ? service_menu() : ($p['links'] ?? []); ?>
+<?php if ($links): ?>
       <div class="pg-links">
-<?php foreach ($p['links'] as [$href, $label, $text]): ?>
+<?php foreach ($links as [$href, $label, $text]): ?>
         <a class="pg-link" href="<?= e($href) ?>"><b><?= e($label) ?></b><span><?= e($text) ?></span></a>
 <?php endforeach; ?>
       </div>
