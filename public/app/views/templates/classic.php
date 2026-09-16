@@ -208,34 +208,44 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
   <section class="ig-sec ig-sec--tint">
     <div class="ig-wrap">
       <div class="ig-mapwrap">
-        <div>
+        <div class="ig-contact">
 <?php if (tpl_has($s, 'kicker')): ?>
           <span class="ig-kicker"><?= e($s['kicker']) ?></span>
 <?php endif; ?>
           <h2 class="ig-h2"><?= tpl_em($s['heading']) ?></h2>
 
-          <ul class="ig-info">
+          <div class="ig-contact__card">
+            <ul class="ig-info">
 <?php if ($office && $office['address_full'] !== ''): ?>
-            <li><?= $pin ?><span><?= e($office['address_full']) ?></span></li>
+              <li><?= $pin ?><span><?= e($office['address_full']) ?></span></li>
 <?php endif; ?>
 <?php if ($office && $office['phone'] !== ''): ?>
-            <li><?= $phoneIcon ?><span><a href="tel:<?= e($office['tel']) ?>"><?= e($office['phone']) ?></a></span></li>
+              <li><?= $phoneIcon ?><span><a href="tel:<?= e($office['tel']) ?>"><?= e($office['phone']) ?></a></span></li>
 <?php endif; ?>
 <?php if ($office && $office['email'] !== ''): ?>
-            <li><?= $mailIcon ?><span><a href="mailto:<?= e($office['email']) ?>"><?= e($office['email']) ?></a></span></li>
+              <li><?= $mailIcon ?><span><a href="mailto:<?= e($office['email']) ?>"><?= e($office['email']) ?></a></span></li>
 <?php endif; ?>
-          </ul>
+            </ul>
 
 <?php if ($office && $office['hours']): ?>
-          <ul class="ig-info" style="margin-top:14px;">
+            <div class="ig-contact__hours">
+              <b>Opening hours</b>
+              <ul>
 <?php foreach ($office['hours'] as $line): ?>
-            <li><span><?= e($line) ?></span></li>
+                <li><?= e($line) ?></li>
 <?php endforeach; ?>
-          </ul>
+              </ul>
+            </div>
 <?php endif; ?>
 <?php if (tpl_has($s, 'note')): ?>
-          <p class="ig-lead" style="margin-top:18px;"><?= e($s['note']) ?></p>
+            <p class="ig-contact__note"><?= e($s['note']) ?></p>
 <?php endif; ?>
+
+            <div class="ig-btns">
+              <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+              <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
+            </div>
+          </div>
         </div>
 
         <div class="ig-mapbox">
