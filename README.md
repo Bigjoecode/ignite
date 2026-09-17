@@ -51,6 +51,13 @@ Sign in at https://igniteorthodontics.com/admin/.
   Preview opens the page as it looks right now, including unsaved changes. Renaming the
   address of a live page leaves a redirect behind. Office pages also feed the locations menu,
   the office list, the footer and the booking popup; `{office}` in any text becomes the office name.
+- **Treatment Guide layout:** long-form service pages built from blocks (feature cards, steps,
+  side-by-side panels, comparison table, cost and payment, doctor, reviews, call-to-action, FAQ)
+  that can be added, reordered and removed. Blocks are defined in `app/guide-blocks.php`.
+  A service page can sit under another one (Parent page), for example `/types-of-braces/ceramic-braces/`.
+- **Importing written content:** `php app/cli/import-pages.php app/data/content/FILE.php [--dry-run]`
+  saves pages through the same cleaning as the editor. Pages edited in the dashboard are skipped
+  unless `--force` is given.
 - **Posts:** WordPress-style editor with Save Draft, Preview, Publish or Schedule, topic,
   featured image, summary and FAQ. Content is cleaned on save: links and images that point
   to other websites are removed (the site never sends visitors off-site).

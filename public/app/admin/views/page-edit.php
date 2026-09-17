@@ -1,11 +1,16 @@
 <?php
-// Vars: $row (pages row, or rejected input merged in), $tpl (template), $data, $paths
+// Vars: $row (pages row, or rejected input merged in), $tpl (template), $data, $paths, $parents, $hasChildren
 $id     = (int) $row['id'];
 $type   = $row['type'];
 $state  = $id ? admin_page_state($row) : 'Draft';
 $isLive = $id && $row['status'] === 'published';
 $url    = admin_page_url($row);
 $base   = $type === 'location' ? 'igniteorthodontics.com/locations/' : 'igniteorthodontics.com/';
+// a nested service page is stored as parent/page: the editor shows the two parts separately
+$slugParts  = explode('/', (string) $row['slug'], 2);
+$parentSlug = count($slugParts) === 2 ? $slugParts[0] : '';
+$leafSlug   = count($slugParts) === 2 ? $slugParts[1] : $slugParts[0];
+$prefix     = $parentSlug !== '' ? $parentSlug . '/' : '';
 // which sections are switched on: what was saved, or the template's own defaults
 $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : null;
 ?>
@@ -30,8 +35,8 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
 
       <div class="adm-permalink">
         <span class="adm-permalink__label">Web address:</span>
-        <span class="adm-permalink__base"><?= e($base) ?></span>
-        <input type="text" name="slug" value="<?= e($row['slug']) ?>" placeholder="created-from-the-title" aria-label="Page web address" maxlength="80" data-adm-slug data-locked="<?= $row['slug'] !== '' ? '1' : '0' ?>">
+        <span class="adm-permalink__base"><?= e($base) ?><span data-adm-parent-prefix><?= e($prefix) ?></span></span>
+        <input type="text" name="slug" value="<?= e($leafSlug) ?>" placeholder="created-from-the-title" aria-label="Page web address" maxlength="80" data-adm-slug data-locked="<?= $leafSlug !== '' ? '1' : '0' ?>">
         <span>/</span>
 <?php if ($isLive): ?>
         <a href="<?= e($url) ?>" target="_blank" rel="noopener">View page &nearr;</a>
@@ -90,7 +95,7 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
         <h2>Publish</h2>
         <dl class="adm-publish__meta">
           <div><dt>Status</dt><dd><span class="adm-status adm-status--<?= e(strtolower($state)) ?>"><?= e($state) ?></span></dd></div>
-          <div><dt>Address</dt><dd class="adm-publish__url"><?= e($type === 'location' ? '/locations/' : '/') ?><span data-adm-url-slug><?= e($row['slug'] !== '' ? $row['slug'] : '…') ?></span>/</dd></div>
+          <div><dt>Address</dt><dd class="adm-publish__url"><?= e($type === 'location' ? '/locations/' : '/') ?><span data-adm-parent-prefix><?= e($prefix) ?></span><span data-adm-url-slug><?= e($leafSlug !== '' ? $leafSlug : '…') ?></span>/</dd></div>
 <?php if ($id && $row['updated_at']): ?>
           <div><dt>Last saved</dt><dd><?= e(admin_datetime($row['updated_at'])) ?></dd></div>
 <?php endif; ?>
@@ -136,7 +141,7 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
         <p class="adm-help">How this page looks in Google. The summary is also used on treatment cards.</p>
         <div class="adm-seo" data-adm-seo>
           <p class="adm-seo__title" data-adm-seo-title></p>
-          <p class="adm-seo__url">igniteorthodontics.com<?= e($type === 'location' ? '/locations/' : '/') ?><span data-adm-url-slug><?= e($row['slug'] !== '' ? $row['slug'] : '…') ?></span>/</p>
+          <p class="adm-seo__url">igniteorthodontics.com<?= e($type === 'location' ? '/locations/' : '/') ?><span data-adm-parent-prefix><?= e($prefix) ?></span><span data-adm-url-slug><?= e($leafSlug !== '' ? $leafSlug : '…') ?></span>/</p>
           <p class="adm-seo__desc" data-adm-seo-desc></p>
         </div>
         <label class="adm-field">
@@ -157,6 +162,18 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
           <input type="checkbox" name="menu" value="1"<?= $row['menu'] ? ' checked' : '' ?>>
           <span>Show this page in the Treatments menu and in the footer</span>
         </label>
+<?php endif; ?>
+<?php if ($type === 'service'): ?>
+        <label class="adm-field">
+          <span>Parent page</span>
+          <select name="parent" data-adm-parent<?= $hasChildren ? ' disabled' : '' ?>>
+            <option value="">None &mdash; top level</option>
+<?php foreach ($parents as $parentKey => $parentTitle): ?>
+            <option value="<?= e($parentKey) ?>"<?= $parentKey === $parentSlug ? ' selected' : '' ?>><?= e($parentTitle) ?></option>
+<?php endforeach; ?>
+          </select>
+        </label>
+        <p class="adm-help"><?= $hasChildren ? 'Other pages sit under this one, so it stays at the top level.' : 'Puts this page under another, for example /types-of-braces/ceramic-braces/.' ?></p>
 <?php endif; ?>
         <label class="adm-field">
           <span>Order</span>

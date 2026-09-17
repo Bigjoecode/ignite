@@ -501,13 +501,15 @@
       $('[data-adm-list-add]', list).disabled = rows.length >= max;
     };
 
-    $$('[data-adm-list]', form).forEach((list) => {
+    // names only have to be unique: the order comes from the order on the page
+    let nextRow = 1000;
+    const bindList = (list) => {
+      if (list.dataset.bound) return;
+      list.dataset.bound = '1';
       const rows = $('[data-adm-list-rows]', list);
       const template = $('[data-adm-list-template]', list);
-      // names only have to be unique: the order comes from the order on the page
-      let next = 1000 + $$('[data-adm-item]', list).length;
       $('[data-adm-list-add]', list).addEventListener('click', () => {
-        rows.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__i__/g, String(next++)));
+        rows.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__i__/g, String(nextRow++)));
         const row = rows.lastElementChild;
         bindImages(row);
         renumber(list);
@@ -531,7 +533,71 @@
         markDirty();
       });
       renumber(list);
+    };
+    $$('[data-adm-list]', form).forEach(bindList);
+
+    /* page blocks (Treatment Guide): add by type, open, reorder, remove */
+    const setBlockOpen = (block, open) => {
+      $('.adm-block__body', block).hidden = !open;
+      block.classList.toggle('is-open', open);
+      $('[data-adm-block-toggle]', block).setAttribute('aria-expanded', String(open));
+    };
+    $$('[data-adm-blocks]', form).forEach((box) => {
+      const rows = $('[data-adm-blocks-rows]', box);
+      const picker = $('[data-adm-block-type]', box);
+      let nextBlock = 1000;
+
+      $('[data-adm-block-add]', box).addEventListener('click', () => {
+        const template = $(`template[data-adm-block-template="${picker.value}"]`, box);
+        if (!template) return;
+        rows.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__b__/g, String(nextBlock++)));
+        const block = rows.lastElementChild;
+        bindImages(block);
+        $$('[data-adm-list]', block).forEach(bindList);
+        setBlockOpen(block, true);
+        block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const first = $('input[type="text"]', block);
+        if (first) setTimeout(() => first.focus({ preventScroll: true }), 300);
+        markDirty();
+      });
+
+      rows.addEventListener('click', (e) => {
+        const block = e.target.closest('[data-adm-block]');
+        if (!block || block.parentElement !== rows) return;
+        if (e.target.closest('[data-adm-block-toggle]')) {
+          setBlockOpen(block, block.querySelector('.adm-block__body').hidden);
+          return;
+        }
+        if (e.target.closest('[data-adm-block-remove]')) {
+          if (!window.confirm('Remove this block from the page?')) return;
+          block.remove();
+        } else if (e.target.closest('[data-adm-block-up]') && block.previousElementSibling) {
+          rows.insertBefore(block, block.previousElementSibling);
+        } else if (e.target.closest('[data-adm-block-down]') && block.nextElementSibling) {
+          rows.insertBefore(block.nextElementSibling, block);
+        } else {
+          return;
+        }
+        markDirty();
+      });
+
+      // the collapsed header shows the block's heading
+      rows.addEventListener('input', (e) => {
+        if (!e.target.matches('input[name$="[heading]"]')) return;
+        const block = e.target.closest('[data-adm-block]');
+        if (block && e.target.closest('[data-adm-block]') === block && e.target.name.split('[').length === 5) {
+          $('[data-adm-block-title]', block).textContent = e.target.value.replace(/\*/g, '');
+        }
+      });
     });
+
+    /* parent page: the address prefix follows the choice */
+    const parentSelect = $('[data-adm-parent]', form);
+    if (parentSelect) {
+      parentSelect.addEventListener('change', () => {
+        $$('[data-adm-parent-prefix]', form).forEach((el) => { el.textContent = parentSelect.value ? `${parentSelect.value}/` : ''; });
+      });
+    }
 
     /* switching layout is a save-less round trip, so it needs its own button */
     const templateSelect = $('[data-adm-template]', form);

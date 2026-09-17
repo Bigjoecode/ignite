@@ -93,8 +93,8 @@ if (preg_match('#^blog/([a-z0-9-]+)$#', $path, $m) && isset(posts()[$m[1]])) {
     exit;
 }
 
-// service pages, managed in /admin/pages/
-if (preg_match('#^[a-z0-9-]+$#', $path) && ($row = page_find('service', $path))) {
+// service pages, managed in /admin/pages/ (one level of nesting: /types-of-braces/ceramic-braces/)
+if (preg_match('#^[a-z0-9-]+(?:/[a-z0-9-]+)?$#', $path) && ($row = page_find('service', $path))) {
     page_render(page_prepare($row));
     exit;
 }

@@ -97,7 +97,7 @@
       <!-- EDIT: point each card at its treatment page -->
       <div class="ig-treat__grid">
 
-        <a class="ig-card-t" href="/types-of-braces/">
+        <a class="ig-card-t" href="/types-of-braces/traditional-braces/">
           <img src="/assets/img/IMG_20260814_125055.jpg" alt="Teenager smiling with traditional metal braces" width="800" height="800" loading="lazy" decoding="async">
           <div class="ig-card-t__body">
             <h3 class="ig-card-t__title">Traditional <br>Metal Braces</h3>
@@ -124,7 +124,7 @@
           </div>
         </a>
 
-        <a class="ig-card-t" href="/ceramic-braces/">
+        <a class="ig-card-t" href="/types-of-braces/ceramic-braces/">
           <img src="/assets/img/IMG_20260814_125146.jpg" alt="Close-up smile with tooth-coloured ceramic braces" width="800" height="800" loading="lazy" decoding="async">
           <div class="ig-card-t__body">
             <h3 class="ig-card-t__title">Ceramic <br>Braces</h3>

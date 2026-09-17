@@ -36,6 +36,10 @@ function admin_field(string $name, array $field, array $values, array $paths): v
         admin_field_list($input, $field, is_array($value) ? array_values($value) : [], $paths);
         return;
     }
+    if ($field['type'] === 'blocks') {
+        admin_field_blocks($input, $field, is_array($value) ? array_values($value) : [], $paths);
+        return;
+    }
 
     echo '<div class="adm-f">';
     if ($field['type'] !== 'image') {
@@ -90,6 +94,8 @@ function admin_field_image(string $input, array $field, array $values): void
     $alt = array_key_exists($field['key'] . '_alt', $values)
         ? (string) $values[$field['key'] . '_alt']
         : (string) ($field['alt_default'] ?? '');
+    // f[hero][image] -> f[hero][image_alt]; appending after the bracket would make PHP read it as the photo itself
+    $altInput = substr($input, -1) === ']' ? substr($input, 0, -1) . '_alt]' : $input . '_alt';
     $icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z M4 15l4.5-4.5 4 4 3-3L20 16 M15.5 9.5h.01"/></svg>';
     ?>
     <span class="adm-f__label"><?= e($field['label']) ?></span>
@@ -99,7 +105,7 @@ function admin_field_image(string $input, array $field, array $values): void
         <img src="<?= e($src) ?>" alt="" data-adm-img-preview<?= $src === '' ? ' hidden' : '' ?>>
         <span data-adm-img-empty<?= $src !== '' ? ' hidden' : '' ?>><?= $icon ?>Choose a photo</span>
       </button>
-      <input type="text" name="<?= e($input . '_alt') ?>" value="<?= e($alt) ?>" maxlength="200" placeholder="Describe the photo" data-adm-img-alt>
+      <input type="text" name="<?= e($altInput) ?>" value="<?= e($alt) ?>" maxlength="200" placeholder="Describe the photo" data-adm-img-alt>
       <div class="adm-img__actions"<?= $src === '' ? ' hidden' : '' ?> data-adm-img-actions>
         <button type="button" class="adm-link" data-adm-img-pick>Replace</button>
         <button type="button" class="adm-link adm-link--danger" data-adm-img-remove>Remove</button>
@@ -147,6 +153,71 @@ function admin_field_row(string $input, array $field, array $item, string $index
           </div>
           <div class="adm-item__body">
 <?php admin_fields($input . '[' . $index . ']', $field['fields'], $item, $paths); ?>
+          </div>
+        </div>
+    <?php
+    return (string) ob_get_clean();
+}
+
+/**
+ * The body of a Treatment Guide page: blocks of different types in any order.
+ * Each type has a hidden <template>, so "Add block" can create one in the browser.
+ */
+function admin_field_blocks(string $input, array $field, array $blocks, array $paths): void
+{
+    $types = $field['types'];
+    ?>
+    <div class="adm-blocks" data-adm-blocks>
+      <div class="adm-blocks__rows" data-adm-blocks-rows>
+<?php foreach ($blocks as $i => $block): $block = (array) $block; $type = (string) ($block['_type'] ?? ''); ?>
+<?php if (isset($types[$type])) echo admin_block_row($input, $type, $types[$type], $block, (string) $i, $paths); ?>
+<?php endforeach; ?>
+      </div>
+      <div class="adm-blocks__add">
+        <label class="adm-f__label" for="adm-block-type">Add a block to the end of the page</label>
+        <div class="adm-blocks__picker">
+          <select id="adm-block-type" data-adm-block-type>
+<?php foreach ($types as $key => $def): ?>
+            <option value="<?= e($key) ?>"><?= e($def['label']) ?></option>
+<?php endforeach; ?>
+          </select>
+          <button type="button" class="adm-btn adm-btn--primary" data-adm-block-add>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add block
+          </button>
+        </div>
+      </div>
+<?php foreach ($types as $key => $def): ?>
+      <template data-adm-block-template="<?= e($key) ?>"><?= admin_block_row($input, $key, $def, [], '__b__', $paths) ?></template>
+<?php endforeach; ?>
+    </div>
+    <?php
+}
+
+function admin_block_row(string $input, string $type, array $def, array $values, string $index, array $paths): string
+{
+    $name  = $input . '[' . $index . ']';
+    $title = str_replace('*', '', (string) ($values['heading'] ?? ''));
+    ob_start();
+    ?>
+        <div class="adm-block adm-block--<?= e($type) ?>" data-adm-block>
+          <input type="hidden" name="<?= e($name . '[_type]') ?>" value="<?= e($type) ?>">
+          <div class="adm-block__head">
+            <button type="button" class="adm-block__toggle" data-adm-block-toggle aria-expanded="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+              <span class="adm-block__type"><?= e($def['label']) ?></span>
+              <span class="adm-block__title" data-adm-block-title><?= e($title) ?></span>
+            </button>
+            <div class="adm-item__tools">
+              <button type="button" class="adm-icon-btn" data-adm-block-up aria-label="Move block up"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+              <button type="button" class="adm-icon-btn" data-adm-block-down aria-label="Move block down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+              <button type="button" class="adm-icon-btn" data-adm-block-remove aria-label="Remove block"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+          </div>
+          <div class="adm-block__body" hidden>
+<?php if (!empty($def['help'])): ?>
+            <p class="adm-help"><?= e($def['help']) ?></p>
+<?php endif; ?>
+<?php admin_fields($name, $def['fields'], $values, $paths); ?>
           </div>
         </div>
     <?php

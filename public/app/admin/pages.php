@@ -134,6 +134,8 @@ function admin_page_editor(array $user, ?int $id, ?array $blank = null): void
         'tpl'   => $tpl,
         'data'  => json_decode((string) $row['data'], true) ?: [],
         'paths' => admin_internal_paths(),
+        'parents' => $row['type'] === 'service' ? admin_parent_options((int) $row['id']) : [],
+        'hasChildren' => admin_page_has_children($row),
     ], $id ? 'Edit page' : 'Add new page', $user);
 }
 
@@ -177,6 +179,18 @@ function admin_page_fields(array $fields, array $posted, array &$notes): array
         $value = $posted[$key] ?? null;
 
         switch ($field['type']) {
+            case 'blocks':
+                $blocks = [];
+                foreach ((array) $value as $block) {
+                    $block = (array) $block;
+                    $type  = (string) ($block['_type'] ?? '');
+                    if (isset($field['types'][$type])) {
+                        $blocks[] = ['_type' => $type] + admin_page_fields($field['types'][$type]['fields'], $block, $notes);
+                    }
+                }
+                $out[$key] = array_slice($blocks, 0, 60);
+                break;
+
             case 'list':
                 $items = [];
                 foreach ((array) $value as $item) {
@@ -236,20 +250,56 @@ function admin_page_fields(array $fields, array $posted, array &$notes): array
     return $out;
 }
 
-function admin_page_unique_slug(string $source, string $type, int $id): string
+/** A free address for a page; under $parent it becomes parent/slug. */
+function admin_page_unique_slug(string $source, string $type, int $id, string $parent = ''): string
 {
-    $base = trim((string) preg_replace('/[^a-z0-9]+/', '-', strtolower($source)), '-');
+    $leaf = strpos($source, '/') !== false ? substr((string) strrchr($source, '/'), 1) : $source;
+    $base = trim((string) preg_replace('/[^a-z0-9]+/', '-', strtolower($leaf)), '-');
     $base = substr($base, 0, 80) ?: 'page';
-    $reserved = $type === 'service' ? admin_reserved_slugs() : ['8-mile', 'lathrup-village'];
+    if ($type === 'service') {
+        $reserved = $parent === '' ? admin_reserved_slugs() : [];
+    } else {
+        $reserved = ['8-mile', 'lathrup-village'];
+    }
+    $prefix = $parent !== '' ? $parent . '/' : '';
     $slug = $base;
     $find = db()->prepare('SELECT 1 FROM pages WHERE type = ? AND slug = ? AND id != ?');
     for ($i = 2; ; $i++) {
-        $find->execute([$type, $slug, $id]);
+        $find->execute([$type, $prefix . $slug, $id]);
         if (!$find->fetchColumn() && !in_array($slug, $reserved, true)) {
-            return $slug;
+            return $prefix . $slug;
         }
         $slug = $base . '-' . $i;
     }
+}
+
+/** Top-level service pages another page can sit under, as slug => title. */
+function admin_parent_options(int $id): array
+{
+    $stmt = db()->prepare("SELECT slug, title FROM pages WHERE type = 'service' AND status != 'trash' AND id != ? AND instr(slug, '/') = 0 ORDER BY title");
+    $stmt->execute([$id]);
+    return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+}
+
+/** Whether other pages sit under this one (then it cannot move under a parent itself). */
+function admin_page_has_children(array $row): bool
+{
+    if ($row['type'] !== 'service' || $row['slug'] === '' || strpos($row['slug'], '/') !== false) {
+        return false;
+    }
+    $stmt = db()->prepare("SELECT 1 FROM pages WHERE type = 'service' AND slug LIKE ? LIMIT 1");
+    $stmt->execute([$row['slug'] . '/%']);
+    return (bool) $stmt->fetchColumn();
+}
+
+/** Keeps old links working: old address -> new address, and earlier redirects follow along. */
+function admin_add_redirect(string $from, string $to, string $now): void
+{
+    $pdo = db();
+    $pdo->prepare('INSERT INTO redirects (from_path, to_path, created_at) VALUES (?, ?, ?)
+                   ON CONFLICT(from_path) DO UPDATE SET to_path = excluded.to_path')->execute([$from, $to, $now]);
+    $pdo->prepare('UPDATE redirects SET to_path = ? WHERE to_path = ?')->execute([$to, $from]);
+    $pdo->prepare('DELETE FROM redirects WHERE from_path = to_path')->execute();
 }
 
 function admin_save_page(array $user): void
@@ -276,6 +326,18 @@ function admin_save_page(array $user): void
     $slugSource = trim((string) ($_POST['slug'] ?? ''));
 
     $notes = [];
+
+    // a service page can sit under a top-level service page: /types-of-braces/ceramic-braces/
+    $parent = $type === 'service' ? trim((string) ($_POST['parent'] ?? '')) : '';
+    if ($parent !== '' && !array_key_exists($parent, admin_parent_options($id))) {
+        $parent = '';
+    }
+    if ($parent !== '' && $existing && admin_page_has_children($existing)) {
+        $parent = '';
+        $notes[] = 'Other pages sit under this page, so it stays at the top level.';
+    }
+    $slugTyped = ($parent !== '' ? $parent . '/' : '') . $slugSource;
+
     $data  = admin_page_data($tpl, (array) ($_POST['f'] ?? []), $notes);
 
     // sections the editor left switched off
@@ -298,7 +360,7 @@ function admin_save_page(array $user): void
     if ($action === 'switch_template') {
         admin_session();
         $_SESSION['page_form'] = compact('id', 'type', 'title', 'seoTitle', 'descrip', 'menu', 'menuOrder', 'image') + [
-            'slug' => $slugSource, 'template' => $tpl['key'], 'description' => $descrip,
+            'slug' => $slugTyped, 'template' => $tpl['key'], 'description' => $descrip,
             'seo_title' => $seoTitle, 'menu_order' => $menuOrder, 'data' => json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         ];
         admin_flash('success', 'Layout switched to ' . $tpl['name'] . '. Nothing is live until you save.');
@@ -312,7 +374,7 @@ function admin_save_page(array $user): void
         $status = 'draft';
     }
 
-    $slug = admin_page_unique_slug($slugSource !== '' ? $slugSource : ($title !== '' ? $title : 'page-' . date('YmdHis')), $type, $id);
+    $slug = admin_page_unique_slug($slugSource !== '' ? $slugSource : ($title !== '' ? $title : 'page-' . date('YmdHis')), $type, $id, $parent);
 
     $errors = [];
     if ($title === '') {
@@ -324,7 +386,7 @@ function admin_save_page(array $user): void
     if ($errors) {
         admin_session();
         $_SESSION['page_form'] = [
-            'id' => $id, 'type' => $type, 'title' => $title, 'slug' => $slugSource, 'template' => $tpl['key'],
+            'id' => $id, 'type' => $type, 'title' => $title, 'slug' => $slugTyped, 'template' => $tpl['key'],
             'description' => $descrip, 'seo_title' => $seoTitle, 'image' => $image, 'menu' => $menu,
             'menu_order' => $menuOrder, 'data' => json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         ];
@@ -360,9 +422,20 @@ function admin_save_page(array $user): void
     $newUrl = admin_page_url(['type' => $type, 'slug' => $slug]);
     if ($wasPublished && $existing['slug'] !== $slug) {
         $oldUrl = admin_page_url(['type' => $type, 'slug' => $existing['slug']]);
-        $pdo->prepare('INSERT INTO redirects (from_path, to_path, created_at) VALUES (?, ?, ?)
-                       ON CONFLICT(from_path) DO UPDATE SET to_path = excluded.to_path')->execute([$oldUrl, $newUrl, $now]);
+        admin_add_redirect($oldUrl, $newUrl, $now);
         $notes[] = 'Visitors who follow the old address ' . $oldUrl . ' are now sent to the new one.';
+    }
+    // pages under this one move with it
+    if ($existing && $type === 'service' && $existing['slug'] !== $slug && strpos($existing['slug'], '/') === false) {
+        $children = $pdo->prepare("SELECT id, slug, status FROM pages WHERE type = 'service' AND slug LIKE ?");
+        $children->execute([$existing['slug'] . '/%']);
+        foreach ($children->fetchAll() as $child) {
+            $childSlug = $slug . substr($child['slug'], strlen($existing['slug']));
+            $pdo->prepare('UPDATE pages SET slug = ? WHERE id = ?')->execute([$childSlug, $child['id']]);
+            if ($child['status'] === 'published') {
+                admin_add_redirect('/' . $child['slug'] . '/', '/' . $childSlug . '/', $now);
+            }
+        }
     }
     $pdo->prepare('DELETE FROM redirects WHERE from_path = ?')->execute([$newUrl]);
 
@@ -414,7 +487,8 @@ function admin_page_preview_post(array $user): void
     $draft['type']     = $type;
     $draft['template'] = $tpl['key'];
     $draft['title']    = mb_substr(trim((string) ($_POST['title'] ?? '')), 0, 120) ?: 'Untitled page';
-    $draft['slug']     = $draft['slug'] ?: 'preview';
+    $previewParent    = $type === 'service' ? trim((string) ($_POST['parent'] ?? '')) : '';
+    $draft['slug']     = ($previewParent !== '' ? $previewParent . '/' : '') . (trim((string) ($_POST['slug'] ?? '')) ?: 'preview');
     $draft['description'] = mb_substr(trim((string) ($_POST['description'] ?? '')), 0, 320);
     $draft['seo_title']   = '';
     $draft['image']       = '';
@@ -448,7 +522,7 @@ function admin_page_action(int $id, string $action): void
         $copy = $row;
         unset($copy['id']);
         $copy['title']      = mb_substr($row['title'] . ' (copy)', 0, 120);
-        $copy['slug']       = admin_page_unique_slug($row['slug'] . '-copy', $type, 0);
+        $copy['slug']       = admin_page_unique_slug($row['slug'] . '-copy', $type, 0, strpos($row['slug'], '/') !== false ? (string) strstr($row['slug'], '/', true) : '');
         $copy['status']     = 'draft';
         $copy['menu']       = 0;
         $copy['created_at'] = $copy['updated_at'] = $now;

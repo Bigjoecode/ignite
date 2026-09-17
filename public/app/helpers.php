@@ -193,6 +193,21 @@ function tpl_section(array $section, array $stored, array $tokens): array
     $out = [];
     foreach ($section['fields'] ?? [] as $field) {
         $key = $field['key'];
+        if ($field['type'] === 'blocks') {
+            // a list where each entry picks its own set of fields by '_type'
+            $blocks = array_key_exists($key, $stored) && is_array($stored[$key])
+                ? array_values($stored[$key])
+                : ($field['default'] ?? []);
+            $out[$key] = [];
+            foreach ($blocks as $block) {
+                $block = (array) $block;
+                $type  = (string) ($block['_type'] ?? '');
+                if (isset($field['types'][$type])) {
+                    $out[$key][] = ['_type' => $type] + tpl_section(['fields' => $field['types'][$type]['fields']], $block, $tokens);
+                }
+            }
+            continue;
+        }
         if ($field['type'] === 'list') {
             $items = array_key_exists($key, $stored) && is_array($stored[$key])
                 ? array_values($stored[$key])
@@ -265,6 +280,8 @@ function page_schema(array $p): array
     $crumbs = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $base . '/']];
     if ($p['type'] === 'location') {
         $crumbs[] = ['@type' => 'ListItem', 'position' => 2, 'name' => 'Our Locations', 'item' => $base . '/locations/'];
+    } elseif (($parent = page_parent($p)) !== null) {
+        $crumbs[] = ['@type' => 'ListItem', 'position' => 2, 'name' => $parent['title'], 'item' => $base . '/' . $parent['slug'] . '/'];
     }
     $crumbs[] = ['@type' => 'ListItem', 'position' => count($crumbs) + 1, 'name' => $p['title'], 'item' => $url];
 
@@ -294,6 +311,12 @@ function page_schema(array $p): array
     $graph = [$main, ['@type' => 'BreadcrumbList', 'itemListElement' => $crumbs]];
 
     $faq = in_array('faq', $p['on'], true) ? ($p['d']['faq']['items'] ?? []) : [];
+    // guide pages keep their questions in FAQ blocks
+    foreach ($p['d']['content']['blocks'] ?? [] as $block) {
+        if ($block['_type'] === 'faq') {
+            $faq = array_merge($faq, $block['items']);
+        }
+    }
     $faq = array_values(array_filter($faq, static fn(array $f): bool => trim((string) ($f['q'] ?? '')) !== '' && trim((string) ($f['a'] ?? '')) !== ''));
     if ($faq) {
         $graph[] = [
@@ -305,6 +328,19 @@ function page_schema(array $p): array
         ];
     }
     return ['@context' => 'https://schema.org', '@graph' => $graph];
+}
+
+/** The published page a nested service page sits under (types-of-braces for types-of-braces/ceramic-braces). */
+function page_parent(array $p): ?array
+{
+    if ($p['type'] !== 'service' || strpos($p['slug'], '/') === false) {
+        return null;
+    }
+    try {
+        return page_find('service', strstr($p['slug'], '/', true));
+    } catch (Throwable $e) {
+        return null;
+    }
 }
 
 /** Renders a prepared page through its template's layout. */

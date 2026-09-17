@@ -49,10 +49,10 @@ function templates(): array
     ];
 
     $treatmentItems = [
-        ['title' => 'Metal Braces', 'text' => 'The most cost-effective way to correct alignment, using durable stainless steel brackets and archwires.', 'image' => '/assets/img/01-image.webp', 'link' => '/types-of-braces/'],
+        ['title' => 'Metal Braces', 'text' => 'The most cost-effective way to correct alignment, using durable stainless steel brackets and archwires.', 'image' => '/assets/img/01-image.webp', 'link' => '/types-of-braces/traditional-braces/'],
         ['title' => 'Gold Braces', 'text' => 'All the reliability of traditional braces, finished with gold-polished brackets for a warmer look.', 'image' => '/assets/img/02-image.webp', 'link' => '/gold-braces/'],
         ['title' => 'Clear Aligners', 'text' => 'Our best option for virtually invisible treatment, including Invisalign® and 3M clear aligners.', 'image' => '/assets/img/03-image.webp', 'link' => '/clear-aligners/'],
-        ['title' => 'Ceramic Braces', 'text' => 'Tooth-coloured brackets that reposition teeth discreetly, blending in with your natural smile.', 'image' => '/assets/img/img1-1.jpg', 'link' => '/ceramic-braces/'],
+        ['title' => 'Ceramic Braces', 'text' => 'Tooth-coloured brackets that reposition teeth discreetly, blending in with your natural smile.', 'image' => '/assets/img/img1-1.jpg', 'link' => '/types-of-braces/ceramic-braces/'],
     ];
 
     $treatmentsSection = static function (string $heading, array $items): array {
@@ -495,6 +495,60 @@ function templates(): array
             'consult'    => $consultSection + ['locked' => true],
             'contact'    => $contact,
             'faq'        => $templates['location-full']['sections']['faq'],
+        ],
+    ];
+
+    /* ============================================================
+       SERVICE — Treatment guide (long-form, built from blocks)
+       ============================================================ */
+    $templates['service-guide'] = [
+        'type'    => 'service',
+        'name'    => 'Treatment Guide',
+        'tagline' => 'A long-form treatment page built from blocks you add and reorder: feature cards, steps, comparison table, pricing, reviews and FAQ.',
+        'family'  => 'guide',
+        'wrap'    => 'gd',
+        'css'     => ['home.css', 'guide.css'],
+        'js'      => ['home.js'],
+        'shape'   => ['split', 'cards', 'text', 'dark', 'faq'],
+        'sections' => [
+            'hero' => [
+                'label'  => 'Header',
+                'locked' => true,
+                'fields' => [
+                    ['key' => 'eyebrow', 'type' => 'text', 'label' => 'Small label above the heading', 'default' => 'Orthodontic Treatment'],
+                    ['key' => 'heading', 'type' => 'text', 'em' => true, 'label' => 'Heading (H1)', 'default' => 'A Straighter Smile, *Planned Around You*'],
+                    ['key' => 'lead', 'type' => 'textarea', 'label' => 'Intro text', 'help' => 'Each line becomes its own paragraph.', 'default' => 'Tell visitors what this treatment is and who it is for.'],
+                    ['key' => 'price', 'type' => 'text', 'label' => 'Price badge (optional)', 'help' => 'For example: From $99/month*', 'default' => ''],
+                    ['key' => 'price_note', 'type' => 'text', 'label' => 'Price small print (optional)'],
+                    ['key' => 'button', 'type' => 'text', 'label' => 'Button', 'default' => 'Schedule Your Free Consultation'],
+                    ['key' => 'points', 'type' => 'lines', 'label' => 'Short points under the buttons', 'help' => 'One per line.', 'default' => "Insurance accepted\nFlexible financing\nNo referral required"],
+                    ['key' => 'image', 'type' => 'image', 'label' => 'Photo', 'default' => '/assets/img/IMG_20260814_125146.jpg'],
+                ],
+            ],
+            'content' => [
+                'label'  => 'Page blocks',
+                'help'   => 'The body of the page. Add blocks, open one to edit it, and use the arrows to change the order.',
+                'locked' => true,
+                'fields' => [
+                    ['key' => 'blocks', 'type' => 'blocks', 'label' => 'Blocks', 'types' => guide_block_types(), 'default' => [
+                        ['_type' => 'text', 'eyebrow' => 'About This Treatment', 'heading' => 'What Is *This Treatment?*', 'intro' => "Explain the treatment in plain words.\nKeep each paragraph to one or two sentences.", 'list' => '', 'image' => '', 'tone' => 'white'],
+                        ['_type' => 'steps', 'eyebrow' => 'How It Works', 'heading' => 'Your Treatment, *Step by Step*', 'items' => [
+                            ['title' => 'Free Consultation', 'text' => 'We evaluate your teeth and bite and talk about your goals.'],
+                            ['title' => 'Treatment Plan', 'text' => 'Your orthodontist explains your options, timeline and cost.'],
+                            ['title' => 'Your New Smile', 'text' => 'Retainers help keep your results in place.'],
+                        ], 'tone' => 'tint'],
+                        ['_type' => 'faq', 'eyebrow' => 'Questions', 'heading' => 'Frequently Asked *Questions*', 'items' => [
+                            ['q' => 'How long does treatment take?', 'a' => 'Treatment time varies. Your orthodontist will give you an estimate at your consultation.'],
+                        ], 'tone' => 'white'],
+                    ]],
+                ],
+            ],
+            'offices' => [
+                'label' => 'Office list',
+                'help'  => 'The searchable list of every office, as it appears on the Locations page.',
+                'fields' => [],
+            ],
+            'consult' => $consultSection,
         ],
     ];
 

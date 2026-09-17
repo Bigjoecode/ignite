@@ -151,6 +151,9 @@ $b = brand_phone($b);
 // phones hide the <br> in card titles ("Traditional<br>Metal"); keep a real space so words don't merge
 $b = preg_replace('#(class="ig-card-t__title">[^<]*)<br>#', '$1 <br>', $b, -1, $n);
 if (!$n) throw new RuntimeException('no card titles found');
+// treatment cards point at the pages under Types of Braces
+$b = rep($b, '<a class="ig-card-t" href="/types-of-braces/">', '<a class="ig-card-t" href="/types-of-braces/traditional-braces/">');
+$b = rep($b, '<a class="ig-card-t" href="/ceramic-braces/">', '<a class="ig-card-t" href="/types-of-braces/ceramic-braces/">');
 put('app/views/home.php', sprintf(VIEW_HEADER, 'home-preview.html') . $b);
 
 /* ---------------------------------------------------------------- location */
