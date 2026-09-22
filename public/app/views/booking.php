@@ -67,13 +67,29 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
         </fieldset>
 
 <?php if (!$office): ?>
-        <fieldset class="ig-bk__pane" data-step data-auto hidden>
+        <fieldset class="ig-bk__pane" data-step hidden>
           <legend class="ig-bk__q">Which office works best?</legend>
-          <p class="ig-bk__sub">Choose the Ignite Orthodontics office you would like to visit.</p>
-          <div class="ig-bk__opts ig-bk__opts--2">
-<?php foreach (locations() as $l): ?>
-            <label class="ig-bk__opt"><input type="radio" name="office" value="<?= e($l['slug']) ?>" data-label="<?= e($l['name']) ?> office" data-phone="<?= e($l['phone']) ?>" data-tel="<?= e($l['tel']) ?>" required><?= $icon($pin) ?><span><?= e($l['name']) ?><small><?= e($l['street']) ?>, <?= e($l['city']) ?></small></span></label>
-<?php endforeach; ?>
+          <p class="ig-bk__sub">Search by city, zip code or office name.</p>
+          <input type="hidden" name="office" value="" data-required data-label="" data-phone="" data-tel="">
+<?php
+    // what the search box matches against (assets/js/booking.js)
+    $offices = array_values(array_map(static fn(array $l): array => [
+        'slug' => $l['slug'], 'name' => $l['name'], 'street' => $l['street'], 'city' => $l['city'],
+        'state' => $l['state'], 'zip' => $l['zip'], 'address' => $l['address_full'], 'phone' => $l['phone'], 'tel' => $l['tel'],
+    ], locations()));
+?>
+          <div class="bk-find" data-bk-find data-offices="<?= e(json_encode($offices, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>">
+            <div class="bk-find__field">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 18a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15z M21 21l-5.2-5.2"/></svg>
+              <input type="text" id="bkFind" role="combobox" aria-label="Search for an office by city, zip code or name" aria-autocomplete="list" aria-expanded="false" aria-controls="bkFindList" autocomplete="off" spellcheck="false" placeholder="e.g. Sterling Heights or 48313" data-bk-find-input>
+            </div>
+            <ul class="bk-find__list" id="bkFindList" role="listbox" aria-label="Matching offices" hidden data-bk-find-list></ul>
+            <p class="bk-find__msg" data-bk-find-msg aria-live="polite"></p>
+          </div>
+          <div class="bk-picked" data-bk-picked hidden>
+            <?= $icon($pin) ?>
+            <div><b data-bk-picked-name></b><span data-bk-picked-addr></span></div>
+            <button type="button" class="bk-picked__change" data-bk-picked-change>Change</button>
           </div>
           <button class="ig-bk__next" type="button" data-bk-next disabled>Continue</button>
         </fieldset>

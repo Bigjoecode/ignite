@@ -41,8 +41,42 @@
 .bk-call__btn{display:flex;align-items:center;justify-content:center;height:50px;border-radius:12px;background:#FFFFFF;color:var(--bk-navy);font-weight:700;text-decoration:none;transition:background .2s ease,color .2s ease;}
 .bk-call__btn:hover{background:var(--bk-orange);color:#FFFFFF;}
 
+/* ---------- office search ---------- */
+.bk-find{position:relative;}
+.bk-find__field{position:relative;}
+.bk-find__field svg{position:absolute;top:50%;left:18px;width:22px;height:22px;transform:translateY(-50%);fill:none;stroke:#5B6B82;stroke-width:2;stroke-linecap:round;pointer-events:none;}
+.bk-find__field input{
+  width:100%;height:60px;padding:0 18px 0 52px;border:1.5px solid #D5DDE8;border-radius:14px;background:#FFFFFF;
+  font:inherit;font-size:17px;color:#0B2A55;transition:border-color .18s ease,box-shadow .18s ease;
+}
+.bk-find__field input::placeholder{color:#8A97AB;}
+.bk-find__field input:focus{outline:none;border-color:#F47421;box-shadow:0 0 0 4px rgba(244,116,33,.18);}
+.bk-find__field input[aria-expanded="true"]{border-radius:14px 14px 0 0;}
+.bk-find__list{
+  margin:0;padding:6px;list-style:none;max-height:320px;overflow-y:auto;
+  border:1.5px solid #F47421;border-top:0;border-radius:0 0 14px 14px;background:#FFFFFF;box-shadow:0 18px 36px rgba(11,42,85,.12);
+}
+.bk-find__opt{display:flex;align-items:center;gap:14px;padding:12px;border-radius:10px;cursor:pointer;}
+.bk-find__opt b{display:block;font-size:15.5px;font-weight:700;color:#0B2A55;}
+.bk-find__opt small{display:block;margin-top:2px;font-size:13px;color:#5B6B82;}
+.bk-find__opt.is-active,.bk-find__opt:hover{background:#FFF6EF;}
+.bk-find__opt.is-active .ig-bk__ico{background:#F47421;color:#FFFFFF;}
+.bk-find__msg{min-height:20px;margin:10px 2px 0;font-size:13.5px;line-height:1.5;color:#5B6B82;}
+.bk-find__all{margin-left:4px;padding:0;border:0;background:none;font:inherit;font-weight:700;color:#DA6210;text-decoration:underline;cursor:pointer;}
+.bk-picked{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid #F47421;border-radius:14px;background:#FFF6EF;
+  box-shadow:inset 0 0 0 1px #F47421;
+}
+.bk-picked[hidden]{display:none;}
+.bk-picked .ig-bk__ico{background:#F47421;color:#FFFFFF;}
+.bk-picked div{flex:1;min-width:0;}
+.bk-picked b{display:block;font-size:15.5px;font-weight:700;color:#0B2A55;}
+.bk-picked span{display:block;margin-top:2px;font-size:13px;color:#5B6B82;}
+.bk-picked__change{flex:none;padding:8px 14px;border:1.5px solid #D5DDE8;border-radius:10px;background:#FFFFFF;font:inherit;font-size:14px;font-weight:600;color:#0B2A55;cursor:pointer;}
+.bk-picked__change:hover{border-color:#F47421;color:#DA6210;}
+
 /* ---------- the form ---------- */
-/* header: back · progress · close */
+/* header: back · progress · step count */
 .ig-bk__head{
   flex:none;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:14px;
   padding:14px 16px;border-bottom:1px solid #E3E9F1;
@@ -52,9 +86,9 @@
   display:flex;align-items:center;justify-content:center;
   background:#F4F7FB;color:#0B2A55;transition:background .2s ease,color .2s ease,opacity .2s ease;
 }
-.ig-bk__back:hover:not(:disabled):hover{background:#F47421;color:#FFFFFF;}
+.ig-bk__back:hover:not(:disabled){background:#F47421;color:#FFFFFF;}
 .ig-bk__back:disabled{opacity:0;pointer-events:none;}
-.ig-bk__back svg svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+.ig-bk__back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
 .ig-bk__progress{height:6px;border-radius:3px;background:#E3E9F1;overflow:hidden;}
 .ig-bk__progress b{display:block;width:20%;height:100%;border-radius:3px;background:linear-gradient(90deg,#F47421,#FBA95C);transition:width .35s ease;}
 
