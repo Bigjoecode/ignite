@@ -14,6 +14,7 @@ $config = array_merge([
     'phone'      => '(xxx) xxx-xxxx',                    // placeholder until the real number is available
     'phone_tel'  => '',
     'lead_email' => '',                                  // set to email each new consultation request
+    'gtm_id'     => 'GTM-TPSXGSMG',                      // Google Tag Manager container; '' turns tracking off
     'data_dir'   => dirname(WEBROOT) . '/ignite-data',   // outside the web root
 ], is_file($local) ? (require $local) : []);
 

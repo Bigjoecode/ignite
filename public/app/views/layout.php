@@ -1,11 +1,23 @@
 <?php
 $canonical = cfg('base_url') . $meta['path'];
 $ogImage   = cfg('base_url') . ($meta['image'] ?? '/assets/img/home-page-hero-image-kids-ortho.jpg');
+// Google Tag Manager on every public page, but not on dashboard previews
+$gtmId = empty($meta['preview_id']) && empty($meta['preview_page']) && preg_match('/^GTM-[A-Z0-9]+$/', (string) cfg('gtm_id'))
+    ? (string) cfg('gtm_id') : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<?php if ($gtmId !== ''): ?>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','<?= e($gtmId) ?>');</script>
+<!-- End Google Tag Manager -->
+<?php endif; ?>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 <title><?= e($meta['title']) ?></title>
 <?php if ($meta['description'] !== ''): ?>
@@ -48,6 +60,12 @@ $ogImage   = cfg('base_url') . ($meta['image'] ?? '/assets/img/home-page-hero-im
 <?php endif; ?>
 </head>
 <body<?= !empty($meta['book_office']) ? ' data-book-office="' . e($meta['book_office']) . '"' : '' ?>>
+<?php if ($gtmId !== ''): ?>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?= e($gtmId) ?>"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<?php endif; ?>
 <a class="ig-skip" href="#main">Skip to content</a>
 <?php if (!empty($meta['preview_id'])): ?>
 <div style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:100001;display:flex;align-items:center;gap:14px;padding:10px 12px 10px 18px;border-radius:999px;background:#051A39;color:#fff;font:600 14px/1.2 Poppins,system-ui,sans-serif;box-shadow:0 12px 32px rgba(0,0,0,.35)">
