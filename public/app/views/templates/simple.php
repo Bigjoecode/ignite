@@ -21,7 +21,7 @@ $d = $page['d'];
       <p class="pg-hero__lead"><?= e($s['lead']) ?></p>
 <?php endif; ?>
       <div class="ig-btns">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule a Consultation</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a>
         <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call <?= e(cfg('phone')) ?></a>
       </div>
     </div>

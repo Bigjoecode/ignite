@@ -110,7 +110,7 @@ $copyIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0
           </nav>
 <?php endif; ?>
           <div class="bl-toc__actions">
-            <a class="bl-toc__cta" href="/contact-us/" data-book>Book a no-cost consultation</a>
+            <a class="bl-toc__cta" href="<?= e(booking_url()) ?>">Book a no-cost consultation</a>
             <button type="button" class="bl-copy" data-bl-copy data-url="<?= e($url) ?>"><?= $copyIcon ?><span>Copy link</span></button>
           </div>
         </div>

@@ -30,7 +30,7 @@
               <p class="ig-hero__terms">*Offer terms and eligibility apply.</p>
 
               <div class="ig-btns">
-                <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule Now</a>
+                <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
                 <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call Now</a>
               </div>
             </div>
@@ -59,7 +59,7 @@
               <p class="ig-hero__terms">*Offer terms and eligibility apply.</p>
 
               <div class="ig-btns">
-                <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule Now</a>
+                <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
                 <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call Now</a>
               </div>
             </div>
@@ -136,7 +136,7 @@
       </div>
 
       <div class="ig-treat__cta">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a>
       </div>
     </div>
   </section>
@@ -225,7 +225,7 @@
         <h2>Make the Most of Your <em>Dental Benefits.</em></h2>
         <p>Paying for orthodontic treatment shouldn&rsquo;t leave you guessing about what your insurance will cover. Ignite Orthodontics works with many major insurance plans and can help you understand your benefits before treatment begins.</p>
         <p style="margin-top:1.1em;">We&rsquo;ll help you look at your coverage, explain what it means for your treatment, and identify payment options for any remaining costs.</p>
-        <div class="ig-ins__cta"><a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a></div>
+        <div class="ig-ins__cta"><a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a></div>
         <p class="ig-ins__label">Accepted Insurance</p>
       </div>
     </div>
@@ -340,7 +340,7 @@
       <span class="ig-kicker">Ignite Orthodontics</span>
       <h2>Your Best Smile Starts With <em>a Conversation.</em></h2>
       <div class="ig-btns" style="justify-content:center;">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a>
         <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call <?= e(cfg('phone')) ?></a>
       </div>
     </div>

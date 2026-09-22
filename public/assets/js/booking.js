@@ -1,8 +1,8 @@
-/* Booking popup — multi-step consultation request (app/views/partials/booking.php).
-   Opens from [data-book] elements and links to #ig-consult, or /?book=1[&office=slug].
-   Posts to /book; on success keeps a short summary for the thank-you page and redirects. */
+/* Booking page (/booking/) — the consultation request, one question at a time (app/views/booking.php).
+   Posts to /book; on success keeps a short summary for the thank-you page and goes there.
+   On an office's booking link the office is a hidden field and its step is not shown. */
 (function () {
-  var root = document.getElementById('igBook');
+  var root = document.querySelector('[data-bk-root]');
   if (!root) return;
 
   var form     = root.querySelector('[data-bk-form]');
@@ -15,7 +15,6 @@
   var submit   = root.querySelector('[data-bk-submit]');
   var total    = panes.length;
   var step     = 1;
-  var trigger  = null;
   var lastPointer = 0;
   var FALLBACK = 'Something went wrong. Please try again in a moment.';
 
@@ -24,18 +23,22 @@
     window.dataLayer.push({ event: name, booking_step: step });
   }
 
-  function checked(name) { return form.querySelector('input[name="' + name + '"]:checked'); }
-  function labelOf(name) { var r = checked(name); return r ? r.getAttribute('data-label') : ''; }
+  // a chosen radio, or the office fixed by the page
+  function chosen(name) {
+    return form.querySelector('input[name="' + name + '"]:checked') ||
+      form.querySelector('input[type="hidden"][name="' + name + '"]');
+  }
+  function labelOf(name) { var r = chosen(name); return r ? r.getAttribute('data-label') : ''; }
 
   function whenLabel() {
-    var time = checked('time');
+    var time = chosen('time');
     return labelOf('date') + (time && time.value !== 'any' ? ', ' + labelOf('time') : '');
   }
 
   function stepValid(n) {
     var ok = true;
     panes[n - 1].querySelectorAll('input[type="radio"][required]').forEach(function (r) {
-      if (!checked(r.name)) ok = false;
+      if (!chosen(r.name)) ok = false;
     });
     return ok;
   }
@@ -74,40 +77,15 @@
     step = Math.max(1, Math.min(total, n));
     hideError();
     render();
-    form.scrollTop = 0;
+    // keep the question in view when the page has scrolled past the top of the form
+    var top = root.getBoundingClientRect().top;
+    if (top < 0 || top > window.innerHeight * 0.6) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
     var q = panes[step - 1].querySelector('.ig-bk__q');
     if (q) {
       q.setAttribute('tabindex', '-1');
       q.focus({ preventScroll: true });
     }
-  }
-
-  function open(office) {
-    if (!root.hidden) return;
-    // close the mobile menu first if the button was inside it
-    var panel = document.getElementById('igPanel');
-    if (panel && panel.classList.contains('is-open')) {
-      var closeMenu = document.getElementById('igClose');
-      if (closeMenu) closeMenu.click();
-    }
-    trigger = document.activeElement;
-    if (office && !checked('office')) {
-      var r = form.querySelector('input[name="office"][value="' + String(office).replace(/[^a-z0-9-]/gi, '') + '"]');
-      if (r) { r.checked = true; syncChecked(); }
-    }
-    root.hidden = false;
-    document.documentElement.classList.add('ig-bk-lock');
-    void root.offsetWidth; // start the fade from the hidden state
-    root.classList.add('is-open');
-    go(step); // reopening resumes where the visitor left off
-    track('booking_open');
-  }
-
-  function close() {
-    root.classList.remove('is-open');
-    document.documentElement.classList.remove('ig-bk-lock');
-    setTimeout(function () { if (!root.classList.contains('is-open')) root.hidden = true; }, 260);
-    if (trigger && trigger.focus) trigger.focus();
+    track('booking_step');
   }
 
   function invalidFields() {
@@ -132,24 +110,19 @@
     return bad;
   }
 
-  /* ---------- open triggers (capture phase, so page scripts don't also scroll) ---------- */
-  document.addEventListener('click', function (e) {
-    var el = e.target.closest ? e.target.closest('[data-book], a[href="#ig-consult"]') : null;
-    if (!el || root.contains(el)) return;
-    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    e.preventDefault();
-    e.stopPropagation();
-    open(el.getAttribute('data-book-office') || document.body.getAttribute('data-book-office'));
-  }, true);
+  // the step holding a field the server rejected
+  function stepOf(field) {
+    for (var i = 0; i < panes.length; i++) {
+      if (panes[i].querySelector('[name="' + field + '"]')) return i + 1;
+    }
+    return 0;
+  }
 
-  /* ---------- inside the popup ---------- */
-  root.addEventListener('click', function (e) { if (e.target === root) close(); });
-  root.querySelector('[data-bk-close]').addEventListener('click', close);
   backBtn.addEventListener('click', function () { go(step - 1); });
 
   panes.forEach(function (p) {
     var next = p.querySelector('[data-bk-next]');
-    if (next) next.addEventListener('click', function () { if (stepValid(step)) go(step + 1); });
+    if (next && next.type === 'button') next.addEventListener('click', function () { if (stepValid(step)) go(step + 1); });
   });
 
   // single-choice steps advance on a tap/click, but not while choosing with arrow keys
@@ -170,24 +143,6 @@
     if (e.target.name === 'consent') e.target.closest('.ig-bk__consent').classList.remove('is-invalid');
   });
 
-  document.addEventListener('keydown', function (e) {
-    if (root.hidden) return;
-    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-    if (e.key !== 'Tab') return;
-    var focusable = Array.prototype.filter.call(
-      root.querySelectorAll('button, input, textarea, a[href]'),
-      function (el) { return !el.disabled && el.tabIndex !== -1 && el.offsetParent !== null && !el.closest('[hidden]'); }
-    );
-    if (!focusable.length) return;
-    var first = focusable[0], last = focusable[focusable.length - 1];
-    if (e.shiftKey && (document.activeElement === first || !root.contains(document.activeElement))) {
-      e.preventDefault(); last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault(); first.focus();
-    }
-  });
-
-  /* ---------- submit ---------- */
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (step < total) {
@@ -210,7 +165,7 @@
     submit.textContent = 'Sending…';
 
     var data = new FormData(form);
-    data.append('source', window.location.pathname);
+    data.append('source', document.referrer ? new URL(document.referrer).pathname : window.location.pathname);
 
     fetch(form.getAttribute('action'), {
       method: 'POST',
@@ -221,7 +176,7 @@
       .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
       .then(function (res) {
         if (res && res.ok) {
-          var office = checked('office');
+          var office = chosen('office');
           try {
             sessionStorage.setItem('igBooking', JSON.stringify({
               first: form.elements.first_name.value.trim(),
@@ -238,7 +193,8 @@
         }
         submit.disabled = false;
         submit.textContent = idleLabel;
-        if (res && res.step && res.step < total) go(res.step);
+        var back = res && res.field ? stepOf(res.field) : 0;
+        if (back && back < total) go(back);
         showError((res && res.error) || FALLBACK);
       })
       .catch(function () {
@@ -250,9 +206,5 @@
 
   syncChecked();
   render();
-
-  var params = new URLSearchParams(window.location.search);
-  if (params.has('book')) open(params.get('office') || document.body.getAttribute('data-book-office'));
-
-  window.IgniteBooking = { open: open, close: close };
+  track('booking_view');
 })();

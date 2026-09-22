@@ -7,7 +7,7 @@
           <img src="/assets/img/ignitelogo.png" alt="Ignite Orthodontics" loading="lazy" decoding="async">
         </a>
         <p>Braces and clear aligners for kids, teens and adults across <?= count(locations()) ?> Michigan offices.</p>
-        <a class="ig-foot__cta" href="/contact-us/">Request a Consultation</a>
+        <a class="ig-foot__cta" href="<?= e(booking_url()) ?>">Request a Consultation</a>
         <a class="ig-foot__phone" href="tel:<?= e(cfg('phone_tel')) ?>"><?= e(cfg('phone')) ?></a>
       </div>
 

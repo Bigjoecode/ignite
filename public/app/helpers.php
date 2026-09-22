@@ -480,8 +480,20 @@ function asset(string $file): string
     return '/assets/' . $file . (is_file($path) ? '?v=' . filemtime($path) : '');
 }
 
+/**
+ * The booking page, with the office already chosen when the visitor is on an office page
+ * (or when one is passed): /booking/?office=sterling-heights.
+ */
+function booking_url(?string $office = null): string
+{
+    $office = $office ?? (string) ($GLOBALS['ig_book_office'] ?? '');
+    return '/booking/' . ($office !== '' && isset(locations()[$office]) ? '?office=' . rawurlencode($office) : '');
+}
+
 function render(string $view, array $vars = [], array $meta = []): void
 {
+    // every booking link on this page (header included) carries the page's office
+    $GLOBALS['ig_book_office'] = (string) ($meta['book_office'] ?? '');
     extract($vars);
     ob_start();
     require APP . '/views/' . $view . '.php';

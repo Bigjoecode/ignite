@@ -25,8 +25,8 @@ $check = '<span class="ig-cc__tick" aria-hidden="true"><svg viewBox="0 0 24 24">
       </ul>
 
       <div class="ig-cc__btns">
-        <a class="ig-cc__btn ig-cc__btn--call" href="tel:<?= e($ctaTel) ?>">Call <?= e($ctaPhone) ?></a>
-        <a class="ig-cc__btn ig-cc__btn--out" href="/locations/">Choose a Location</a>
+        <a class="ig-cc__btn ig-cc__btn--call" href="<?= e(booking_url()) ?>">Book Online</a>
+        <a class="ig-cc__btn ig-cc__btn--out" href="tel:<?= e($ctaTel) ?>">Call <?= e($ctaPhone) ?></a>
       </div>
 
       <p class="ig-cc__note">No referral needed. New patients are welcome.</p>

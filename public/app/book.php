@@ -4,9 +4,9 @@
 // and emailed to lead_email when it is configured. Responds with JSON.
 declare(strict_types=1);
 
-// a visit to /book in the browser just opens the popup on the home page
+// a visit to /book in the browser goes to the booking page
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    redirect('/?book=1', 303);
+    redirect('/booking/', 303);
 }
 
 header('Content-Type: application/json; charset=utf-8');
@@ -58,22 +58,22 @@ if (!$dateOk && preg_match('/^\d{4}-\d{2}-\d{2}$/', $req['date'])) {
 }
 $digits = strlen(preg_replace('/\D/', '', $req['phone']));
 
-// [popup step, what to fix] — the popup jumps back to the first problem
+// [field, what to fix] — the booking page goes back to the step holding the first problem
 $errors = [];
-if (!isset($opts['patients'][$req['patient']]))     $errors[] = [1, 'who the appointment is for'];
-if (!isset($opts['treatments'][$req['treatment']])) $errors[] = [2, 'treatment'];
-if (!isset(locations()[$req['office']]))            $errors[] = [3, 'office'];
-if (!$dateOk)                                        $errors[] = [4, 'preferred day'];
-if (!isset($opts['times'][$req['time']]))           $errors[] = [4, 'preferred time'];
-if ($req['first_name'] === '')                       $errors[] = [5, 'first name'];
-if ($req['last_name'] === '')                        $errors[] = [5, 'last name'];
-if ($digits < 10 || $digits > 15)                    $errors[] = [5, 'phone number'];
-if (!filter_var($req['email'], FILTER_VALIDATE_EMAIL)) $errors[] = [5, 'email'];
-if (!$req['consent'])                                $errors[] = [5, 'consent checkbox'];
+if (!isset($opts['patients'][$req['patient']]))     $errors[] = ['patient', 'who the appointment is for'];
+if (!isset($opts['treatments'][$req['treatment']])) $errors[] = ['treatment', 'treatment'];
+if (!isset(locations()[$req['office']]))            $errors[] = ['office', 'office'];
+if (!$dateOk)                                        $errors[] = ['date', 'preferred day'];
+if (!isset($opts['times'][$req['time']]))           $errors[] = ['time', 'preferred time'];
+if ($req['first_name'] === '')                       $errors[] = ['first_name', 'first name'];
+if ($req['last_name'] === '')                        $errors[] = ['last_name', 'last name'];
+if ($digits < 10 || $digits > 15)                    $errors[] = ['phone', 'phone number'];
+if (!filter_var($req['email'], FILTER_VALIDATE_EMAIL)) $errors[] = ['email', 'email'];
+if (!$req['consent'])                                $errors[] = ['consent', 'consent checkbox'];
 if ($errors) {
     reply(422, [
         'ok'    => false,
-        'step'  => $errors[0][0],
+        'field' => $errors[0][0],
         'error' => 'Please check your ' . implode(', ', array_unique(array_column($errors, 1))) . '.',
     ]);
 }

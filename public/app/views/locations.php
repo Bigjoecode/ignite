@@ -6,7 +6,7 @@
       <h1><?= count(locations()) ?> Offices Across <em>Michigan.</em></h1>
       <p class="pg-hero__lead">Find the Ignite Orthodontics office closest to home, work or school, then book your no-cost consultation.</p>
       <div class="ig-btns">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult">Schedule a Consultation</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a>
         <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call <?= e(cfg('phone')) ?></a>
       </div>
     </div>

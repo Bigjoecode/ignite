@@ -4,7 +4,7 @@ declare(strict_types=1);
 header('Content-Type: application/xml; charset=utf-8');
 
 // [path, lastmod or null]
-$urls = [['/', null], ['/locations/', null], ['/braces-for-kids/', null]];
+$urls = [['/', null], ['/booking/', null], ['/locations/', null]];
 foreach (locations() as $l) {
     $urls[] = ['/locations/' . $l['slug'] . '/', null];
 }

@@ -9,7 +9,7 @@ PHP site for https://igniteorthodontics.com, hosted on Hostinger.
 | `*.html` (repo root) | Design source files (header, home, location template, kids page) |
 | `tools/extract.php` | Builds `public/assets/{css,js}` and the generated views from those source files |
 | `public/` | Everything that is deployed to `public_html` |
-| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/blog/`, static pages, `/thank-you/`, `/book`, `/admin/`, `/sitemap.xml`) |
+| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/blog/`, static pages, `/booking/`, `/thank-you/`, `/book`, `/admin/`, `/sitemap.xml`) |
 | `public/app/templates.php` | Page layouts: the sections and fields each layout offers the dashboard |
 | `public/app/data/` | Booking choices and the remaining static pages; `seed-pages.php` and `posts/*.php` fill the database once |
 | `public/app/views/` | Public layout, pages and partials |
@@ -50,7 +50,7 @@ Sign in at https://igniteorthodontics.com/admin/.
   switched off, repeating rows (cards, offers, questions) can be added and reordered, and
   Preview opens the page as it looks right now, including unsaved changes. Renaming the
   address of a live page leaves a redirect behind. Office pages also feed the locations menu,
-  the office list, the footer and the booking popup; `{office}` in any text becomes the office name.
+  the office list, the footer and the booking page; `{office}` in any text becomes the office name.
 - **Treatment Guide layout:** long-form service pages built from blocks (feature cards, steps,
   side-by-side panels, comparison table, cost and payment, doctor, reviews, call-to-action, FAQ)
   that can be added, reordered and removed. Blocks are defined in `app/guide-blocks.php`.
@@ -74,8 +74,10 @@ ssh ignite 'cd ~/domains/igniteorthodontics.com/public_html && php app/cli/creat
 
 ## Booking requests
 
-Every "Schedule Now" / "Request a Consultation" button opens the booking popup
-(`app/views/partials/booking.php`, `assets/js/booking.js`). `POST /book` validates the
-request, appends it to `ignite-data/bookings.jsonl` and redirects to `/thank-you/`.
+Every "Schedule Now" / "Request a Consultation" button links to the booking page, `/booking/`
+(`app/views/booking.php`, `assets/js/booking.js`). On an office page the links are
+`/booking/?office=slug`: that office is fixed and its step is skipped (`booking_url()` builds
+the links). `POST /book` validates the request, appends it to `ignite-data/bookings.jsonl`
+(with the page the visitor came from as `source`) and the page moves on to `/thank-you/`.
 To also email each request, create `public_html/app/config.local.php` from
 `config.local.php.example` and set `lead_email`.

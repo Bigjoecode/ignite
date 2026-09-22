@@ -25,7 +25,7 @@ if ($path !== '' && substr($uri, -1) !== '/') {
 }
 
 $aliases = [
-    'home' => '', 'terms-of-service' => 'terms-and-conditions', 'contact' => 'contact-us', 'about' => 'about-us', 'thankyou' => 'thank-you',
+    'home' => '', 'terms-of-service' => 'terms-and-conditions', 'contact' => 'contact-us', 'about' => 'about-us', 'thankyou' => 'thank-you', 'book-now' => 'booking', 'appointment' => 'booking',
     // closed offices
     'locations/8-mile' => 'locations', 'locations/lathrup-village' => 'locations',
 ];
@@ -33,7 +33,25 @@ if (array_key_exists($path, $aliases)) {
     redirect($aliases[$path] === '' ? '/' : '/' . $aliases[$path] . '/');
 }
 
+// links from the old booking popup (/?book=1&office=slug) open the booking page
+if (isset($_GET['book'])) {
+    redirect(booking_url((string) ($_GET['office'] ?? '')));
+}
+
 $meta = ['path' => $path === '' ? '/' : '/' . $path . '/'];
+
+// consultation requests: /booking/, or /booking/?office=slug with that office fixed
+if ($path === 'booking') {
+    $office = locations()[(string) ($_GET['office'] ?? '')] ?? null;
+    render('booking', ['office' => $office], $meta + [
+        'title'       => $office ? 'Book a Consultation at Ignite Orthodontics ' . $office['name'] : 'Book a No-Cost Consultation | Ignite Orthodontics',
+        'description' => 'Request a no-cost orthodontic consultation at Ignite Orthodontics in about a minute. Choose a preferred day and time and we will confirm your visit.',
+        'css'         => ['booking.css'],
+        'js'          => ['booking.js'],
+        'book_office' => $office['slug'] ?? '',
+    ]);
+    exit;
+}
 
 if ($path === '') {
     render('home', [], $meta + [
@@ -63,7 +81,7 @@ if (preg_match('#^locations/([a-z0-9-]+)$#', $path, $m) && ($row = page_find('lo
 if ($path === 'thank-you') {
     render('thank-you', [], $meta + [
         'title' => 'Thank You | Ignite Orthodontics',
-        'css'   => ['home.css', 'page.css'],
+        'css'   => ['home.css', 'page.css', 'booking.css'],
         'noindex' => true,
     ]);
     exit;

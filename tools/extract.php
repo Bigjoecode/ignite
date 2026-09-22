@@ -127,8 +127,8 @@ $h = brand_phone($h);
 // no "Contact Us" item in the menu (desktop bar or mobile panel)
 $h = rep_re($h, '#\s*<!-- EDIT: email address -->\s*<div class="ig-util__item ig-util__item--contact">.*?</div>#s', '');
 $h = rep_re($h, '#\s*<li>\s*<div class="ig-menu__row">\s*<a class="ig-menu__link" href="/contact-us/">Contact Us</a>\s*</div>\s*</li>#s', '');
-// "Request a Consultation" opens the booking popup (contact page is the no-JS fallback)
-$h = rep($h, '<a class="ig-btn ig-btn--consult" href="/contact-us/">', '<a class="ig-btn ig-btn--consult" href="/contact-us/" data-book>');
+// "Request a Consultation" goes to the booking page (with the office chosen on office pages)
+$h = rep($h, '<a class="ig-btn ig-btn--consult" href="/contact-us/">', '<a class="ig-btn ig-btn--consult" href="<?= e(booking_url()) ?>">');
 put('app/views/partials/header.php', sprintf(VIEW_HEADER, 'menu.html') . $h);
 
 /* -------------------------------------------------------------------- home */
@@ -151,6 +151,8 @@ $b = brand_phone($b);
 // phones hide the <br> in card titles ("Traditional<br>Metal"); keep a real space so words don't merge
 $b = preg_replace('#(class="ig-card-t__title">[^<]*)<br>#', '$1 <br>', $b, -1, $n);
 if (!$n) throw new RuntimeException('no card titles found');
+// booking buttons go to the booking page
+$b = rep($b, 'href="#ig-consult"', 'href="<?= e(booking_url()) ?>"');
 // treatment cards point at the pages under Types of Braces
 $b = rep($b, '<a class="ig-card-t" href="/types-of-braces/">', '<a class="ig-card-t" href="/types-of-braces/traditional-braces/">');
 $b = rep($b, '<a class="ig-card-t" href="/ceramic-braces/">', '<a class="ig-card-t" href="/types-of-braces/ceramic-braces/">');

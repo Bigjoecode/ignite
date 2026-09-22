@@ -35,7 +35,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
           <p class="ig-lhero__addr"><?= e($s['lead']) ?></p>
 <?php endif; ?>
           <div class="ig-btns ig-btns--c">
-            <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+            <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
             <a class="ig-btn ig-btn--white" href="tel:<?= e($tel) ?>">Call Now</a>
           </div>
         </div>
@@ -68,7 +68,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
     <div class="ig-wrap">
       <div class="ig-standout__grid">
 <?php foreach ($s['items'] as $item): ?>
-        <a class="ig-so" href="#ig-consult" data-book>
+        <a class="ig-so" href="<?= e(booking_url()) ?>">
           <img src="<?= e($item['image']) ?>" alt="<?= e($item['image_alt'] ?? '') ?>" width="288" height="467" loading="lazy" decoding="async">
           <div class="ig-so__inner">
             <h3 class="ig-so__title"><?= e($item['title']) ?></h3>
@@ -109,7 +109,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
       </div>
 
       <div class="ig-btns ig-btns--c" style="margin-top:clamp(30px,3.6vw,64px);">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
         <a class="ig-btn ig-btn--navy" href="tel:<?= e($tel) ?>">Call Now</a>
       </div>
     </div>
@@ -144,7 +144,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
       </div>
 
       <div class="ig-btns ig-btns--c" style="margin-top:clamp(28px,3.2vw,44px);">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
         <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call Now</a>
       </div>
     </div>
@@ -172,7 +172,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
             <h3><?= e($item['title']) ?></h3>
             <p><?= e($item['text']) ?></p>
 <?php if (tpl_has($item, 'button')): ?>
-            <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book><?= e($item['button']) ?></a>
+            <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>"><?= e($item['button']) ?></a>
 <?php endif; ?>
           </div>
         </div>
@@ -190,7 +190,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
       <p><?= e($s['text']) ?></p>
 <?php endif; ?>
       <div class="ig-btns ig-btns--c">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
         <a class="ig-btn ig-btn--white" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
       </div>
     </div>
@@ -242,7 +242,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 <?php endif; ?>
 
             <div class="ig-btns">
-              <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+              <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
               <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
             </div>
           </div>
@@ -280,7 +280,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
       </div>
 
       <div class="ig-btns ig-btns--c" style="margin-top:clamp(28px,3.2vw,44px);">
-        <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Book A No-Cost Consultation</a>
+        <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Book A No-Cost Consultation</a>
         <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call Now</a>
       </div>
     </div>
@@ -300,7 +300,7 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
           <p><?= e($s['text']) ?></p>
 <?php endif; ?>
           <div class="ig-btns">
-            <a class="ig-btn ig-btn--primary" href="#ig-consult" data-book>Schedule Now</a>
+            <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
             <a class="ig-btn ig-btn--white" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
           </div>
         </div>

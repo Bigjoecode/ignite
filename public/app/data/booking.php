@@ -1,5 +1,5 @@
 <?php
-// Choices offered in the booking popup (views/partials/booking.php).
+// Choices offered on the booking page (views/booking.php).
 // app/book.php validates submissions against these same keys.
 // Icons are 24x24 stroke paths.
 return [

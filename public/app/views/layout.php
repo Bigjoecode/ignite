@@ -53,13 +53,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="stylesheet" href="<?= asset('css/' . $css) ?>">
 <?php endforeach; ?>
 <link rel="stylesheet" href="<?= asset('css/consult.css') ?>">
-<link rel="stylesheet" href="<?= asset('css/booking.css') ?>">
 <link rel="stylesheet" href="<?= asset('css/footer.css') ?>">
 <?php if (!empty($meta['schema'])): ?>
 <script type="application/ld+json"><?= json_encode($meta['schema'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?></script>
 <?php endif; ?>
 </head>
-<body<?= !empty($meta['book_office']) ? ' data-book-office="' . e($meta['book_office']) . '"' : '' ?>>
+<body>
 <?php if ($gtmId !== ''): ?>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?= e($gtmId) ?>"
@@ -78,11 +77,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <?= $content ?>
 </main>
 <?php require APP . '/views/partials/footer.php'; ?>
-<?php require APP . '/views/partials/booking.php'; ?>
 <script src="<?= asset('js/header.js') ?>" defer></script>
 <?php foreach ($meta['js'] as $js): ?>
 <script src="<?= asset('js/' . $js) ?>" defer></script>
 <?php endforeach; ?>
-<script src="<?= asset('js/booking.js') ?>" defer></script>
 </body>
 </html>

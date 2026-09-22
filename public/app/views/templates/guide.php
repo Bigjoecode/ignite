@@ -11,7 +11,7 @@ $arrow  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 
 $quote  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 7H6a2 2 0 0 0-2 2v4h5v5h1a4 4 0 0 0 4-4V9 M20 7h-4a2 2 0 0 0-2 2"/></svg>';
 
 $book = static function (string $label, string $class = 'gd-btn gd-btn--primary'): string {
-    return trim($label) === '' ? '' : '<a class="' . $class . '" href="#ig-consult" data-book>' . e($label) . '</a>';
+    return trim($label) === '' ? '' : '<a class="' . $class . '" href="' . e(booking_url()) . '">' . e($label) . '</a>';
 };
 $call = static function (string $class) use ($phone, $tel): string {
     return '<a class="' . $class . '" href="tel:' . e($tel) . '">Call ' . e($phone) . '</a>';

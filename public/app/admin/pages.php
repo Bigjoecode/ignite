@@ -37,7 +37,7 @@ function admin_reserved_slugs(): array
 {
     return array_merge(
         ['admin', 'blog', 'book', 'locations', 'assets', 'uploads', 'admin-assets', 'sitemap.xml', 'robots.txt',
-         'thank-you', 'thankyou', 'home', 'contact', 'about', 'terms-of-service'],
+         'thank-you', 'thankyou', 'booking', 'book-now', 'appointment', 'home', 'contact', 'about', 'terms-of-service'],
         array_keys(pages())
     );
 }
