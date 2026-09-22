@@ -30,7 +30,19 @@ function pages(): array
    SERVICE AND OFFICE PAGES (managed in /admin/pages/)
    ============================================================ */
 
-/** Rows of one page type ('service' or 'location'), in menu order. */
+/** Where a page type lives: /page/, /locations/office/, /lp/office/page/. */
+function page_url_prefix(string $type): string
+{
+    return ['location' => '/locations/', 'lp' => '/lp/'][$type] ?? '/';
+}
+
+/** Page types that can sit one level under another page of the same type. */
+function page_nests(string $type): bool
+{
+    return $type === 'service' || $type === 'lp';
+}
+
+/** Rows of one page type ('service', 'location' or 'lp'), in menu order. */
 function page_rows(string $type, string $status = 'published'): array
 {
     static $cache = [];
@@ -155,8 +167,14 @@ function page_prepare(array $row): array
 {
     $tpl    = template($row['template']) ?? template(template_default($row['type']));
     $data   = json_decode((string) $row['data'], true) ?: [];
-    $office = $row['type'] === 'location' ? page_office($row) : null;
-    $tokens = $office ? ['{office}' => $row['title'], '{city}' => $office['city']] : [];
+    $office = null;
+    if ($row['type'] === 'location') {
+        $office = page_office($row);
+    } elseif ($row['type'] === 'lp') {
+        // a landing page advertises one office, chosen in its settings
+        $office = locations()[(string) ($data['settings']['office'] ?? '')] ?? null;
+    }
+    $tokens = $office ? ['{office}' => $office['name'], '{city}' => $office['city']] : [];
     // a saved page lists the sections it hides; seeded pages use the template's own defaults
     $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : null;
 
@@ -181,7 +199,7 @@ function page_prepare(array $row): array
         'image'       => (string) $row['image'],
         'updated'     => substr((string) $row['updated_at'], 0, 10),
         'office'      => $office,
-        'path'        => $row['type'] === 'location' ? '/locations/' . $row['slug'] . '/' : '/' . $row['slug'] . '/',
+        'path'        => page_url_prefix($row['type']) . $row['slug'] . '/',
         'd'           => $d,
         'on'          => $on,
     ];
@@ -281,7 +299,7 @@ function page_schema(array $p): array
     if ($p['type'] === 'location') {
         $crumbs[] = ['@type' => 'ListItem', 'position' => 2, 'name' => 'Our Locations', 'item' => $base . '/locations/'];
     } elseif (($parent = page_parent($p)) !== null) {
-        $crumbs[] = ['@type' => 'ListItem', 'position' => 2, 'name' => $parent['title'], 'item' => $base . '/' . $parent['slug'] . '/'];
+        $crumbs[] = ['@type' => 'ListItem', 'position' => 2, 'name' => $parent['title'], 'item' => $base . page_url_prefix($parent['type']) . $parent['slug'] . '/'];
     }
     $crumbs[] = ['@type' => 'ListItem', 'position' => count($crumbs) + 1, 'name' => $p['title'], 'item' => $url];
 
@@ -333,11 +351,11 @@ function page_schema(array $p): array
 /** The published page a nested service page sits under (types-of-braces for types-of-braces/ceramic-braces). */
 function page_parent(array $p): ?array
 {
-    if ($p['type'] !== 'service' || strpos($p['slug'], '/') === false) {
+    if (!page_nests($p['type']) || strpos($p['slug'], '/') === false) {
         return null;
     }
     try {
-        return page_find('service', strstr($p['slug'], '/', true));
+        return page_find($p['type'], strstr($p['slug'], '/', true));
     } catch (Throwable $e) {
         return null;
     }
@@ -358,8 +376,12 @@ function page_render(array $p, array $meta = []): void
     if ($p['image'] !== '') {
         $meta += ['image' => $p['image']];
     }
-    if ($p['type'] === 'location') {
-        $meta += ['book_office' => $p['slug']]; // the booking popup preselects this office
+    if ($p['office']) {
+        $meta += ['book_office' => $p['office']['slug']]; // booking links on this page fix this office
+    }
+    if ($p['type'] === 'lp') {
+        // ad landing pages: slim header and footer, hidden from Google unless switched on
+        $meta += ['layout' => 'lp', 'noindex' => ($p['d']['settings']['index'] ?? 'no') !== 'yes', 'office' => $p['office']];
     }
     render('templates/' . $p['tpl']['family'], ['page' => $p], $meta);
 }

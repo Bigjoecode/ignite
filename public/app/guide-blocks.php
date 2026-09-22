@@ -185,6 +185,31 @@ function guide_block_types(): array
                 ['key' => 'tone', 'type' => 'select', 'label' => 'Background', 'options' => ['orange' => 'Orange', 'navy' => 'Navy']],
             ],
         ],
+        'stats' => [
+            'label' => 'Highlights strip',
+            'help'  => 'Three or four short highlights in a row. Only use numbers the practice can stand behind.',
+            'fields' => [
+                ['key' => 'items', 'type' => 'list', 'label' => 'Highlights', 'item' => 'Highlight', 'max' => 4, 'fields' => [
+                    ['key' => 'value', 'type' => 'text', 'label' => 'Big text', 'help' => 'For example: Free, $99, Board'],
+                    ['key' => 'label', 'type' => 'text', 'label' => 'Label'],
+                    ['key' => 'text', 'type' => 'textarea', 'label' => 'Text (optional)'],
+                ]],
+                $tone('white'),
+            ],
+        ],
+        'beforeafter' => [
+            'label' => 'Before and after',
+            'help'  => 'Two photos side by side. Only use real photos of Ignite patients, with their permission.',
+            'fields' => [
+                ['key' => 'eyebrow', 'type' => 'text', 'label' => 'Small label'],
+                ['key' => 'heading', 'type' => 'text', 'em' => true, 'label' => 'Heading'],
+                ['key' => 'before', 'type' => 'image', 'label' => 'Before photo'],
+                ['key' => 'after', 'type' => 'image', 'label' => 'After photo'],
+                ['key' => 'note', 'type' => 'text', 'label' => 'Caption', 'default' => 'Real patient. Individual results may vary.'],
+                $button,
+                $tone('tint'),
+            ],
+        ],
         'faq' => [
             'label' => 'Questions and answers',
             'help'  => 'Shown as an accordion, and offered to Google as FAQ results.',

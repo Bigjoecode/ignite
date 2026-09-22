@@ -11,6 +11,10 @@ foreach (locations() as $l) {
 foreach (page_rows('service') as $row) {
     $urls[] = ['/' . $row['slug'] . '/', substr((string) $row['updated_at'], 0, 10)];
 }
+foreach (page_rows('lp') as $row) {
+    $data = json_decode((string) $row['data'], true) ?: [];
+    if (($data['settings']['index'] ?? 'no') === 'yes') $urls[] = ['/lp/' . $row['slug'] . '/', substr((string) $row['updated_at'], 0, 10)];
+}
 foreach (pages() as $slug => $p) {
     if (empty($p['draft'])) $urls[] = ['/' . $slug . '/', null];
 }

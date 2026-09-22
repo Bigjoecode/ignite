@@ -5,7 +5,7 @@ $type   = $row['type'];
 $state  = $id ? admin_page_state($row) : 'Draft';
 $isLive = $id && $row['status'] === 'published';
 $url    = admin_page_url($row);
-$base   = $type === 'location' ? 'igniteorthodontics.com/locations/' : 'igniteorthodontics.com/';
+$base   = 'igniteorthodontics.com' . page_url_prefix($type);
 // a nested service page is stored as parent/page: the editor shows the two parts separately
 $slugParts  = explode('/', (string) $row['slug'], 2);
 $parentSlug = count($slugParts) === 2 ? $slugParts[0] : '';
@@ -48,7 +48,7 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
 
       <p class="adm-help adm-sections__intro">
         This page is built from the sections below. Open a section to edit it, and switch off any you do not want.
-<?php if ($type === 'location'): ?>
+<?php if ($type === 'location' || $type === 'lp'): ?>
         Type <code>{office}</code> in any text to drop in the office name.
 <?php endif; ?>
       </p>
@@ -95,7 +95,7 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
         <h2>Publish</h2>
         <dl class="adm-publish__meta">
           <div><dt>Status</dt><dd><span class="adm-status adm-status--<?= e(strtolower($state)) ?>"><?= e($state) ?></span></dd></div>
-          <div><dt>Address</dt><dd class="adm-publish__url"><?= e($type === 'location' ? '/locations/' : '/') ?><span data-adm-parent-prefix><?= e($prefix) ?></span><span data-adm-url-slug><?= e($leafSlug !== '' ? $leafSlug : '…') ?></span>/</dd></div>
+          <div><dt>Address</dt><dd class="adm-publish__url"><?= e(page_url_prefix($type)) ?><span data-adm-parent-prefix><?= e($prefix) ?></span><span data-adm-url-slug><?= e($leafSlug !== '' ? $leafSlug : '…') ?></span>/</dd></div>
 <?php if ($id && $row['updated_at']): ?>
           <div><dt>Last saved</dt><dd><?= e(admin_datetime($row['updated_at'])) ?></dd></div>
 <?php endif; ?>
@@ -141,7 +141,7 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
         <p class="adm-help">How this page looks in Google. The summary is also used on treatment cards.</p>
         <div class="adm-seo" data-adm-seo>
           <p class="adm-seo__title" data-adm-seo-title></p>
-          <p class="adm-seo__url">igniteorthodontics.com<?= e($type === 'location' ? '/locations/' : '/') ?><span data-adm-parent-prefix><?= e($prefix) ?></span><span data-adm-url-slug><?= e($leafSlug !== '' ? $leafSlug : '…') ?></span>/</p>
+          <p class="adm-seo__url">igniteorthodontics.com<?= e(page_url_prefix($type)) ?><span data-adm-parent-prefix><?= e($prefix) ?></span><span data-adm-url-slug><?= e($leafSlug !== '' ? $leafSlug : '…') ?></span>/</p>
           <p class="adm-seo__desc" data-adm-seo-desc></p>
         </div>
         <label class="adm-field">
@@ -156,14 +156,14 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
       </section>
 
       <section class="adm-card adm-box">
-        <h2><?= $type === 'location' ? 'Menu order' : 'Menu' ?></h2>
+        <h2><?= $type === 'service' ? 'Menu' : ($type === 'lp' ? 'Placement' : 'Menu order') ?></h2>
 <?php if ($type === 'service'): ?>
         <label class="adm-check">
           <input type="checkbox" name="menu" value="1"<?= $row['menu'] ? ' checked' : '' ?>>
           <span>Show this page in the Treatments menu and in the footer</span>
         </label>
 <?php endif; ?>
-<?php if ($type === 'service'): ?>
+<?php if (page_nests($type)): ?>
         <label class="adm-field">
           <span>Parent page</span>
           <select name="parent" data-adm-parent<?= $hasChildren ? ' disabled' : '' ?>>
@@ -173,7 +173,7 @@ $hidden = array_key_exists('_off', $data) ? array_flip((array) $data['_off']) : 
 <?php endforeach; ?>
           </select>
         </label>
-        <p class="adm-help"><?= $hasChildren ? 'Other pages sit under this one, so it stays at the top level.' : 'Puts this page under another, for example /types-of-braces/ceramic-braces/.' ?></p>
+        <p class="adm-help"><?= $hasChildren ? 'Other pages sit under this one, so it stays at the top level.' : ($type === 'lp' ? 'Puts this page under another, for example /lp/farmingtonhills/braces-kids/.' : 'Puts this page under another, for example /types-of-braces/ceramic-braces/.') ?></p>
 <?php endif; ?>
         <label class="adm-field">
           <span>Order</span>

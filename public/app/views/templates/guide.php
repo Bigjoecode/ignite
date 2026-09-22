@@ -3,8 +3,9 @@
 // then the blocks the admin arranged (app/guide-blocks.php), then the office
 // list and the booking band. Vars: $page from page_prepare().
 $d      = $page['d'];
-$phone  = (string) cfg('phone');
-$tel    = (string) cfg('phone_tel');
+// an office's own page or landing page calls that office
+$phone  = (string) ($page['office']['phone'] ?? cfg('phone'));
+$tel    = (string) ($page['office']['tel'] ?? cfg('phone_tel'));
 $parent = page_parent($page);
 $check  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
 $arrow  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -39,6 +40,7 @@ $cols = static function (int $n, int $max = 4): int {
   <section class="gd-hero">
     <div class="gd-wrap gd-hero__grid">
       <div class="gd-hero__copy">
+<?php if ($page['type'] !== 'lp'): // landing pages keep visitors on the page ?>
         <nav class="gd-crumbs" aria-label="Breadcrumb">
           <ol>
             <li><a href="/">Home</a></li>
@@ -48,12 +50,20 @@ $cols = static function (int $n, int $max = 4): int {
             <li aria-current="page"><?= e($page['title']) ?></li>
           </ol>
         </nav>
+<?php endif; ?>
 <?php if (tpl_has($s, 'eyebrow')): ?>
         <span class="gd-pill"><?= e($s['eyebrow']) ?></span>
 <?php endif; ?>
         <h1><?= tpl_em($s['heading']) ?></h1>
 <?php if (tpl_has($s, 'lead')): ?>
         <div class="gd-hero__lead"><?= guide_paragraphs($s['lead']) ?></div>
+<?php endif; ?>
+<?php if (!empty($s['benefits'])): ?>
+        <ul class="gd-benefits">
+<?php foreach ($s['benefits'] as $benefit): ?>
+          <li><span class="gd-tick"><?= $check ?></span><?= tpl_em($benefit) ?></li>
+<?php endforeach; ?>
+        </ul>
 <?php endif; ?>
         <div class="gd-actions">
           <?= $book($s['button']) ?>
@@ -339,6 +349,43 @@ $cols = static function (int $n, int $max = 4): int {
 <?php endif; ?>
         </div>
       </div>
+    </div>
+  </section>
+<?php break;
+
+    case 'stats': ?>
+  <section class="<?= $tone($b) ?> gd-stats-sec">
+    <div class="gd-wrap">
+      <div class="gd-stats gd-stats--<?= max(1, min(4, count($b['items']))) ?>">
+<?php foreach ($b['items'] as $item): ?>
+        <div class="gd-stat">
+          <b><?= e($item['value']) ?></b>
+          <span><?= e($item['label']) ?></span>
+<?php if (tpl_has($item, 'text')): ?>
+          <p><?= e($item['text']) ?></p>
+<?php endif; ?>
+        </div>
+<?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+<?php break;
+
+    case 'beforeafter':
+    if (!tpl_has($b, 'before') || !tpl_has($b, 'after')) break; ?>
+  <section class="<?= $tone($b) ?>">
+    <div class="gd-wrap">
+      <?= $head($b) ?>
+      <div class="gd-ba">
+        <figure><img src="<?= e($b['before']) ?>" alt="<?= e($b['before_alt'] ?: 'Before treatment') ?>" loading="lazy" decoding="async"><figcaption>Before</figcaption></figure>
+        <figure><img src="<?= e($b['after']) ?>" alt="<?= e($b['after_alt'] ?: 'After treatment') ?>" loading="lazy" decoding="async"><figcaption>After</figcaption></figure>
+      </div>
+<?php if (tpl_has($b, 'note')): ?>
+      <div class="gd-note"><p><?= e($b['note']) ?></p></div>
+<?php endif; ?>
+<?php if (tpl_has($b, 'button')): ?>
+      <div class="gd-actions gd-actions--center"><?= $book($b['button']) ?></div>
+<?php endif; ?>
     </div>
   </section>
 <?php break;

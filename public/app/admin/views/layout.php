@@ -3,6 +3,7 @@
 // [url, label, icon path, route keys, page type for the two Pages entries]
 $nav = [
     ['/admin/pages/?type=service',  'Service Pages', 'M6 3h9l5 5v13H6z M14 3v6h6', ['pages'], 'service'],
+    ['/admin/pages/?type=lp',       'Landing Pages', 'M4 4h16v6H4z M4 14h7v6H4z M15 14h5 M15 18h5', ['pages'], 'lp'],
     ['/admin/pages/?type=location', 'Locations',     'M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z', ['pages'], 'location'],
     ['/admin/posts/',     'Posts',         'M4 5h16M4 10h16M4 15h10M4 20h7', ['posts']],
     ['/admin/posts/new/', 'Add New Post',  'M12 5v14M5 12h14', ['posts/new']],

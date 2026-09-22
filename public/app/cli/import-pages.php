@@ -1,6 +1,7 @@
 <?php
 /**
- * Imports service pages written for the "Treatment Guide" layout.
+ * Imports written pages: service pages ("Treatment Guide" layout) or, when the
+ * content file says 'type' => 'lp', ad landing pages ("Landing Page" layout).
  *
  *   php app/cli/import-pages.php app/data/content/treatment-pages-2026-09.php [--dry-run] [--force]
  *
@@ -30,10 +31,15 @@ if ($file === '' || !is_file($file)) {
 }
 
 $content = require $file;
-$tpl     = template('service-guide');
+$type    = (string) ($content['type'] ?? 'service');
+$tpl     = template((string) ($content['template'] ?? 'service-guide'));
+if (!$tpl || $tpl['type'] !== $type) {
+    fwrite(STDERR, "the content file's template does not fit page type {$type}\n");
+    exit(1);
+}
 $pdo     = db();
 $now     = date('Y-m-d H:i:s');
-$find    = $pdo->prepare("SELECT * FROM pages WHERE type = 'service' AND slug = ?");
+$find    = $pdo->prepare('SELECT * FROM pages WHERE type = ? AND slug = ?');
 $failed  = false;
 
 echo $dryRun ? "DRY RUN — nothing will be saved\n" : '';
@@ -42,24 +48,24 @@ $pdo->beginTransaction();
 foreach ($content['pages'] as $page) {
     $parent = (string) ($page['parent'] ?? '');
     $slug   = ($parent !== '' ? $parent . '/' : '') . $page['slug'];
-    $url    = '/' . $slug . '/';
+    $url    = page_url_prefix($type) . $slug . '/';
 
     if ($parent !== '') {
-        $find->execute([$parent]);
+        $find->execute([$type, $parent]);
         if (!$find->fetch()) {
-            echo "SKIP  {$url}  parent page /{$parent}/ does not exist\n";
+            echo "SKIP  {$url}  parent page " . page_url_prefix($type) . "{$parent}/ does not exist\n";
             $failed = true;
             continue;
         }
     }
 
-    $find->execute([$slug]);
+    $find->execute([$type, $slug]);
     $existing = $find->fetch() ?: null;
     $movedFrom = null;
     if (!$existing && !empty($page['from'])) {
-        $find->execute([$page['from']]);
+        $find->execute([$type, $page['from']]);
         $existing  = $find->fetch() ?: null;
-        $movedFrom = $existing ? '/' . $page['from'] . '/' : null;
+        $movedFrom = $existing ? page_url_prefix($type) . $page['from'] . '/' : null;
     }
 
     if ($existing && !$force && $existing['updated_at'] > $existing['created_at']) {
@@ -71,16 +77,18 @@ foreach ($content['pages'] as $page) {
     // exactly what the editor would post
     $notes  = [];
     $posted = [
-        'hero'    => $page['hero'],
-        'content' => ['blocks' => $page['blocks']],
-        'offices' => [],
-        'consult' => ['image' => '/assets/img/IMG_20260814_125716.jpg'],
+        'settings' => $page['settings'] ?? ($content['settings'] ?? []),
+        'hero'     => $page['hero'],
+        'content'  => ['blocks' => $page['blocks']],
+        'offices'  => [],
+        'consult'  => ['image' => '/assets/img/IMG_20260814_125716.jpg'],
     ];
     $data = admin_page_data($tpl, $posted, $notes);
-    $data['_off'] = ['consult']; // each page ends with its own call to action, then the office list
+    // guide pages end with their own call to action, then the office list
+    $data['_off'] = $page['off'] ?? ($content['off'] ?? ['consult']);
 
     $row = [
-        'type'        => 'service',
+        'type'        => $type,
         'slug'        => $slug,
         'title'       => $page['title'],
         'template'    => $tpl['key'],

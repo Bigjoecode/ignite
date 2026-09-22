@@ -552,6 +552,73 @@ function templates(): array
         ],
     ];
 
+    /* ============================================================
+       LANDING PAGE — for ads: one office, slim header, blocks
+       ============================================================ */
+    $officeOptions = [];
+    try {
+        foreach (locations() as $slug => $l) {
+            $officeOptions[$slug] = $l['name'];
+        }
+    } catch (Throwable $e) {
+        $officeOptions = [];
+    }
+    $templates['lp-landing'] = [
+        'type'    => 'lp',
+        'name'    => 'Landing Page',
+        'tagline' => 'A focused ad landing page for one office: slim header, blocks you arrange, and every button books that office.',
+        'family'  => 'guide',
+        'wrap'    => 'gd',
+        'layout'  => 'lp',
+        'css'     => ['guide.css', 'lp.css'],
+        'js'      => [],
+        'shape'   => ['split', 'cards', 'text', 'dark', 'faq'],
+        'sections' => [
+            'settings' => [
+                'label'  => 'Landing page settings',
+                'help'   => 'The office this page advertises. Its booking buttons, phone number and address all follow it, and {office} in any text becomes its name.',
+                'locked' => true,
+                'fields' => [
+                    ['key' => 'office', 'type' => 'select', 'label' => 'Office', 'options' => $officeOptions],
+                    ['key' => 'index', 'type' => 'select', 'label' => 'Google', 'options' => [
+                        'no'  => 'Hidden from Google (recommended for ad pages)',
+                        'yes' => 'Show in Google search results',
+                    ]],
+                ],
+            ],
+            'hero' => [
+                'label'  => 'Header',
+                'locked' => true,
+                'fields' => [
+                    ['key' => 'eyebrow', 'type' => 'text', 'label' => 'Small label above the heading', 'default' => 'Orthodontist in {office}, MI'],
+                    ['key' => 'heading', 'type' => 'text', 'em' => true, 'label' => 'Heading (H1)', 'default' => 'Get Braces for *a Confident Smile*'],
+                    ['key' => 'lead', 'type' => 'textarea', 'label' => 'Intro text', 'help' => 'Each line becomes its own paragraph.'],
+                    ['key' => 'benefits', 'type' => 'lines', 'label' => 'Checklist under the intro', 'help' => 'One benefit per line.'],
+                    ['key' => 'price', 'type' => 'text', 'label' => 'Price badge on the photo (optional)', 'help' => 'For example: Braces from $99/month*'],
+                    ['key' => 'price_note', 'type' => 'text', 'label' => 'Price small print (optional)'],
+                    ['key' => 'button', 'type' => 'text', 'label' => 'Button', 'default' => 'Book Your Free Consultation'],
+                    ['key' => 'points', 'type' => 'lines', 'label' => 'Short points under the buttons', 'help' => 'One per line.', 'default' => "No-cost consultation\nFlexible payment plans\nNo referral needed"],
+                    ['key' => 'image', 'type' => 'image', 'label' => 'Photo', 'default' => '/assets/img/IMG_20260814_125055.jpg'],
+                ],
+            ],
+            'content' => [
+                'label'  => 'Page blocks',
+                'help'   => 'The body of the page. Add blocks, open one to edit it, and use the arrows to change the order.',
+                'locked' => true,
+                'fields' => [
+                    ['key' => 'blocks', 'type' => 'blocks', 'label' => 'Blocks', 'types' => guide_block_types(), 'default' => [
+                        ['_type' => 'stats', 'tone' => 'white', 'items' => [
+                            ['value' => 'Free', 'label' => 'Consultation', 'text' => 'Meet the team and get a treatment plan at no cost.'],
+                            ['value' => '$99', 'label' => 'Braces from, per month', 'text' => 'Flexible payment plans. Subject to approval.'],
+                            ['value' => 'Board', 'label' => 'Certified orthodontists', 'text' => 'Every plan designed and monitored by a specialist.'],
+                        ]],
+                        ['_type' => 'cta', 'tone' => 'orange', 'heading' => 'Your Confident Smile *Starts Here*', 'button' => 'Book Your Free Consultation', 'call' => 'yes'],
+                    ]],
+                ],
+            ],
+        ],
+    ];
+
     foreach ($templates as $key => &$template) {
         $template['key']   = $key;
         $template['icons'] = $conditionIcons;

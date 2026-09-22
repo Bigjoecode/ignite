@@ -7,7 +7,7 @@ $tabs = [
     'trash'     => ['Trash', 'trash'],
 ];
 [$heading, $intro] = PAGE_TYPES[$type];
-$newLabel = $type === 'location' ? 'Add New Office' : 'Add New Page';
+$newLabel = ['location' => 'Add New Office', 'lp' => 'Add New Landing Page'][$type] ?? 'Add New Page';
 ?>
 <div class="adm-head">
   <h1><?= e($heading) ?></h1>

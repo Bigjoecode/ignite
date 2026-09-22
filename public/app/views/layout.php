@@ -2,6 +2,7 @@
 $canonical = cfg('base_url') . $meta['path'];
 $ogImage   = cfg('base_url') . ($meta['image'] ?? '/assets/img/home-page-hero-image-kids-ortho.jpg');
 // Google Tag Manager on every public page, but not on dashboard previews
+$lp    = ($meta['layout'] ?? '') === 'lp'; // ad landing page: slim header and footer
 $gtmId = empty($meta['preview_id']) && empty($meta['preview_page']) && preg_match('/^GTM-[A-Z0-9]+$/', (string) cfg('gtm_id'))
     ? (string) cfg('gtm_id') : '';
 ?>
@@ -48,12 +49,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="<?= asset('css/site.css') ?>">
+<?php if (!$lp): ?>
 <link rel="stylesheet" href="<?= asset('css/header.css') ?>">
+<?php endif; ?>
 <?php foreach ($meta['css'] as $css): ?>
 <link rel="stylesheet" href="<?= asset('css/' . $css) ?>">
 <?php endforeach; ?>
 <link rel="stylesheet" href="<?= asset('css/consult.css') ?>">
+<?php if (!$lp): ?>
 <link rel="stylesheet" href="<?= asset('css/footer.css') ?>">
+<?php endif; ?>
 <?php if (!empty($meta['schema'])): ?>
 <script type="application/ld+json"><?= json_encode($meta['schema'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?></script>
 <?php endif; ?>
@@ -72,12 +77,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="/admin/posts/<?= (int) $meta['preview_id'] ?>/" style="padding:8px 14px;border-radius:999px;background:#F47421;color:#fff;text-decoration:none">Back to editor</a>
 </div>
 <?php endif; ?>
-<?php require APP . '/views/partials/header.php'; ?>
+<?php require APP . ($lp ? '/views/partials/lp-header.php' : '/views/partials/header.php'); ?>
 <main id="main">
 <?= $content ?>
 </main>
-<?php require APP . '/views/partials/footer.php'; ?>
+<?php require APP . ($lp ? '/views/partials/lp-footer.php' : '/views/partials/footer.php'); ?>
+<?php if (!$lp): ?>
 <script src="<?= asset('js/header.js') ?>" defer></script>
+<?php endif; ?>
 <?php foreach ($meta['js'] as $js): ?>
 <script src="<?= asset('js/' . $js) ?>" defer></script>
 <?php endforeach; ?>

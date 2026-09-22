@@ -8,6 +8,7 @@ declare(strict_types=1);
 const PAGE_TYPES = [
     'service'  => ['Service Pages', 'Treatment and information pages, at igniteorthodontics.com/page-name/'],
     'location' => ['Locations', 'One page per office, at igniteorthodontics.com/locations/office/'],
+    'lp'       => ['Landing Pages', 'Ad landing pages for one office, at igniteorthodontics.com/lp/office/page/'],
 ];
 
 function admin_page_type(string $value): string
@@ -17,7 +18,7 @@ function admin_page_type(string $value): string
 
 function admin_page_url(array $row): string
 {
-    return $row['type'] === 'location' ? '/locations/' . $row['slug'] . '/' : '/' . $row['slug'] . '/';
+    return page_url_prefix($row['type']) . $row['slug'] . '/';
 }
 
 function admin_page_state(array $row): string
@@ -36,7 +37,7 @@ function admin_find_page(int $id): ?array
 function admin_reserved_slugs(): array
 {
     return array_merge(
-        ['admin', 'blog', 'book', 'locations', 'assets', 'uploads', 'admin-assets', 'sitemap.xml', 'robots.txt',
+        ['admin', 'blog', 'book', 'locations', 'lp', 'assets', 'uploads', 'admin-assets', 'sitemap.xml', 'robots.txt',
          'thank-you', 'thankyou', 'booking', 'book-now', 'appointment', 'home', 'contact', 'about', 'terms-of-service'],
         array_keys(pages())
     );
@@ -134,7 +135,7 @@ function admin_page_editor(array $user, ?int $id, ?array $blank = null): void
         'tpl'   => $tpl,
         'data'  => json_decode((string) $row['data'], true) ?: [],
         'paths' => admin_internal_paths(),
-        'parents' => $row['type'] === 'service' ? admin_parent_options((int) $row['id']) : [],
+        'parents' => page_nests($row['type']) ? admin_parent_options((int) $row['id'], $row['type']) : [],
         'hasChildren' => admin_page_has_children($row),
     ], $id ? 'Edit page' : 'Add new page', $user);
 }
@@ -258,8 +259,10 @@ function admin_page_unique_slug(string $source, string $type, int $id, string $p
     $base = substr($base, 0, 80) ?: 'page';
     if ($type === 'service') {
         $reserved = $parent === '' ? admin_reserved_slugs() : [];
-    } else {
+    } elseif ($type === 'location') {
         $reserved = ['8-mile', 'lathrup-village'];
+    } else {
+        $reserved = [];
     }
     $prefix = $parent !== '' ? $parent . '/' : '';
     $slug = $base;
@@ -273,22 +276,22 @@ function admin_page_unique_slug(string $source, string $type, int $id, string $p
     }
 }
 
-/** Top-level service pages another page can sit under, as slug => title. */
-function admin_parent_options(int $id): array
+/** Top-level pages of the same type another page can sit under, as slug => title. */
+function admin_parent_options(int $id, string $type = 'service'): array
 {
-    $stmt = db()->prepare("SELECT slug, title FROM pages WHERE type = 'service' AND status != 'trash' AND id != ? AND instr(slug, '/') = 0 ORDER BY title");
-    $stmt->execute([$id]);
+    $stmt = db()->prepare("SELECT slug, title FROM pages WHERE type = ? AND status != 'trash' AND id != ? AND instr(slug, '/') = 0 ORDER BY title");
+    $stmt->execute([$type, $id]);
     return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 }
 
 /** Whether other pages sit under this one (then it cannot move under a parent itself). */
 function admin_page_has_children(array $row): bool
 {
-    if ($row['type'] !== 'service' || $row['slug'] === '' || strpos($row['slug'], '/') !== false) {
+    if (!page_nests($row['type']) || $row['slug'] === '' || strpos($row['slug'], '/') !== false) {
         return false;
     }
-    $stmt = db()->prepare("SELECT 1 FROM pages WHERE type = 'service' AND slug LIKE ? LIMIT 1");
-    $stmt->execute([$row['slug'] . '/%']);
+    $stmt = db()->prepare('SELECT 1 FROM pages WHERE type = ? AND slug LIKE ? LIMIT 1');
+    $stmt->execute([$row['type'], $row['slug'] . '/%']);
     return (bool) $stmt->fetchColumn();
 }
 
@@ -328,8 +331,8 @@ function admin_save_page(array $user): void
     $notes = [];
 
     // a service page can sit under a top-level service page: /types-of-braces/ceramic-braces/
-    $parent = $type === 'service' ? trim((string) ($_POST['parent'] ?? '')) : '';
-    if ($parent !== '' && !array_key_exists($parent, admin_parent_options($id))) {
+    $parent = page_nests($type) ? trim((string) ($_POST['parent'] ?? '')) : '';
+    if ($parent !== '' && !array_key_exists($parent, admin_parent_options($id, $type))) {
         $parent = '';
     }
     if ($parent !== '' && $existing && admin_page_has_children($existing)) {
@@ -426,14 +429,14 @@ function admin_save_page(array $user): void
         $notes[] = 'Visitors who follow the old address ' . $oldUrl . ' are now sent to the new one.';
     }
     // pages under this one move with it
-    if ($existing && $type === 'service' && $existing['slug'] !== $slug && strpos($existing['slug'], '/') === false) {
-        $children = $pdo->prepare("SELECT id, slug, status FROM pages WHERE type = 'service' AND slug LIKE ?");
-        $children->execute([$existing['slug'] . '/%']);
+    if ($existing && page_nests($type) && $existing['slug'] !== $slug && strpos($existing['slug'], '/') === false) {
+        $children = $pdo->prepare('SELECT id, slug, status FROM pages WHERE type = ? AND slug LIKE ?');
+        $children->execute([$type, $existing['slug'] . '/%']);
         foreach ($children->fetchAll() as $child) {
             $childSlug = $slug . substr($child['slug'], strlen($existing['slug']));
             $pdo->prepare('UPDATE pages SET slug = ? WHERE id = ?')->execute([$childSlug, $child['id']]);
             if ($child['status'] === 'published') {
-                admin_add_redirect('/' . $child['slug'] . '/', '/' . $childSlug . '/', $now);
+                admin_add_redirect(admin_page_url(['type' => $type, 'slug' => $child['slug']]), admin_page_url(['type' => $type, 'slug' => $childSlug]), $now);
             }
         }
     }
@@ -487,7 +490,7 @@ function admin_page_preview_post(array $user): void
     $draft['type']     = $type;
     $draft['template'] = $tpl['key'];
     $draft['title']    = mb_substr(trim((string) ($_POST['title'] ?? '')), 0, 120) ?: 'Untitled page';
-    $previewParent    = $type === 'service' ? trim((string) ($_POST['parent'] ?? '')) : '';
+    $previewParent    = page_nests($type) ? trim((string) ($_POST['parent'] ?? '')) : '';
     $draft['slug']     = ($previewParent !== '' ? $previewParent . '/' : '') . (trim((string) ($_POST['slug'] ?? '')) ?: 'preview');
     $draft['description'] = mb_substr(trim((string) ($_POST['description'] ?? '')), 0, 320);
     $draft['seo_title']   = '';

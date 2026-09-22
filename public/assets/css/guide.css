@@ -265,3 +265,37 @@
 @media (prefers-reduced-motion:reduce){
   .gd *{transition:none;}
 }
+
+/* ---------- header checklist (landing pages) ---------- */
+.gd-benefits{display:grid;gap:10px;margin:0 0 30px;}
+.gd-benefits li{display:flex;align-items:center;gap:12px;color:#FFFFFF;font-size:16px;font-weight:500;line-height:1.45;}
+.gd-benefits .gd-tick{background:rgba(244,116,33,.18);color:#FFB27A;}
+
+/* ---------- highlights strip ---------- */
+.gd-stats-sec{padding:clamp(32px,4vw,56px) 0;}
+.gd-stats{display:grid;gap:clamp(14px,1.6vw,22px);}
+.gd-stats--2{grid-template-columns:repeat(2,minmax(0,1fr));}
+.gd-stats--3{grid-template-columns:repeat(3,minmax(0,1fr));}
+.gd-stats--4{grid-template-columns:repeat(4,minmax(0,1fr));}
+.gd-stat{padding:clamp(22px,2.2vw,30px);border-radius:var(--gd-radius);background:var(--gd-tint);border-top:4px solid var(--gd-orange);}
+.gd-sec--tint .gd-stat{background:#FFFFFF;}
+.gd-stat b{display:block;color:var(--gd-navy);font-size:clamp(28px,2.6vw,38px);font-weight:800;line-height:1.1;letter-spacing:-.02em;}
+.gd-stat span{display:block;margin-top:4px;color:var(--gd-orange-600);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.gd-stat p{margin-top:10px;color:var(--gd-muted);font-size:15px;line-height:1.6;}
+.gd-sec--navy .gd-stat{background:rgba(255,255,255,.06);}
+.gd-sec--navy .gd-stat b{color:#FFFFFF;}
+.gd-sec--navy .gd-stat p{color:rgba(255,255,255,.72);}
+
+/* ---------- before and after ---------- */
+.gd-ba{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,1.8vw,24px);max-width:960px;margin:0 auto;}
+.gd-ba figure{position:relative;overflow:hidden;border-radius:24px;}
+.gd-ba img{width:100%;aspect-ratio:4/3;object-fit:cover;}
+.gd-ba figcaption{position:absolute;left:16px;top:16px;padding:6px 14px;border-radius:999px;background:var(--gd-navy);color:#FFFFFF;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.gd-ba figure + figure figcaption{background:var(--gd-orange);}
+
+@media (max-width:900px){
+  .gd-stats--3,.gd-stats--4{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:640px){
+  .gd-stats--2,.gd-stats--3,.gd-stats--4,.gd-ba{grid-template-columns:minmax(0,1fr);}
+}

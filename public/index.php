@@ -111,6 +111,12 @@ if (preg_match('#^blog/([a-z0-9-]+)$#', $path, $m) && isset(posts()[$m[1]])) {
     exit;
 }
 
+// ad landing pages, managed in /admin/pages/?type=lp: /lp/farmingtonhills/ and /lp/farmingtonhills/braces-kids/
+if (preg_match('#^lp/([a-z0-9-]+(?:/[a-z0-9-]+)?)$#', $path, $m) && ($row = page_find('lp', $m[1]))) {
+    page_render(page_prepare($row));
+    exit;
+}
+
 // service pages, managed in /admin/pages/ (one level of nesting: /types-of-braces/ceramic-braces/)
 if (preg_match('#^[a-z0-9-]+(?:/[a-z0-9-]+)?$#', $path) && ($row = page_find('service', $path))) {
     page_render(page_prepare($row));

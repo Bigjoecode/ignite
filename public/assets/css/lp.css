@@ -1,0 +1,38 @@
+/* Ad landing pages (/lp/...): slim header and footer (views/partials/lp-header.php, lp-footer.php). */
+.lp-top{position:sticky;top:0;z-index:900;background:#0B2A55;box-shadow:0 6px 24px rgba(5,26,57,.25);border-top:3px solid #F47421;}
+.lp-top__bar{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.lp-top__brand{display:flex;align-items:center;gap:14px;min-width:0;}
+.lp-top__brand img{width:auto;height:34px;}
+.lp-top__office{padding:5px 12px;border-radius:999px;background:rgba(244,116,33,.16);color:#FFB27A;font:700 12.5px/1.2 "Poppins",system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.lp-top__actions{display:flex;align-items:center;gap:10px;}
+.lp-top__call{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 16px;border:2px solid rgba(255,255,255,.3);border-radius:999px;color:#FFFFFF;font:600 15px "Poppins",system-ui,sans-serif;text-decoration:none;white-space:nowrap;}
+.lp-top__call:hover{border-color:#FFFFFF;color:#FFFFFF;}
+.lp-top__call svg{width:18px;height:18px;fill:#F47421;}
+.lp-top__book{display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 22px;border-radius:999px;background:#F47421;color:#FFFFFF;font:700 15px "Poppins",system-ui,sans-serif;text-decoration:none;white-space:nowrap;box-shadow:0 10px 24px rgba(244,116,33,.35);transition:background .2s ease;}
+.lp-top__book:hover{background:#DA6210;color:#FFFFFF;}
+
+.lp-foot{background:#051A39;color:rgba(255,255,255,.72);font-family:"Poppins",system-ui,sans-serif;}
+.lp-foot__wrap{max-width:1240px;margin:0 auto;padding:44px 24px 34px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px;}
+.lp-foot__office img{width:auto;height:34px;margin-bottom:14px;}
+.lp-foot__office p{margin:0 0 6px;font-size:14.5px;line-height:1.6;}
+.lp-foot__name{color:#FFFFFF;font-weight:700;font-size:16px !important;}
+.lp-foot a{color:#FFB27A;text-decoration:none;}
+.lp-foot a:hover{color:#FFFFFF;}
+.lp-foot__cta{display:grid;justify-items:start;gap:12px;}
+.lp-foot__cta p{margin:0;color:#FFFFFF;font-weight:600;}
+.lp-foot__cta .lp-top__book{color:#FFFFFF;}
+.lp-foot__bar{max-width:1240px;margin:0 auto;padding:18px 24px 26px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;}
+.lp-foot__bar p{margin:0;}
+
+/* the page's first section sits right under the slim bar */
+.gd .gd-hero{padding-top:clamp(36px,4.5vw,64px);}
+
+@media (max-width:640px){
+  .lp-top__bar{padding:10px 14px;gap:10px;}
+  .lp-top__brand img{height:26px;}
+  .lp-top__office{display:none;}
+  .lp-top__call{width:46px;padding:0;justify-content:center;}
+  .lp-top__call span{display:none;}
+  .lp-top__book{height:42px;padding:0 16px;font-size:14px;}
+  .lp-foot__wrap{padding:34px 18px 26px;}
+}

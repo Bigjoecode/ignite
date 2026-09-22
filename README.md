@@ -55,9 +55,15 @@ Sign in at https://igniteorthodontics.com/admin/.
   side-by-side panels, comparison table, cost and payment, doctor, reviews, call-to-action, FAQ)
   that can be added, reordered and removed. Blocks are defined in `app/guide-blocks.php`.
   A service page can sit under another one (Parent page), for example `/types-of-braces/ceramic-braces/`.
+- **Landing Pages (`/lp/...`):** ad landing pages, for example `/lp/farmingtonhills/braces-99/`.
+  They use the Landing Page layout: a slim header and footer with no site menu, one chosen office
+  (its phone, address and a booking link that pre-selects it) and the same blocks as the Treatment
+  Guide. They are hidden from Google and left out of the sitemap unless the "Google" setting says to show them.
+  A landing page can sit under another one (Parent page), one level deep.
 - **Importing written content:** `php app/cli/import-pages.php app/data/content/FILE.php [--dry-run]`
   saves pages through the same cleaning as the editor. Pages edited in the dashboard are skipped
-  unless `--force` is given.
+  unless `--force` is given. The content file's `type` and `template` decide the kind of page
+  (`lp-farmington-hills.php` holds the Farmington Hills landing pages).
 - **Posts:** WordPress-style editor with Save Draft, Preview, Publish or Schedule, topic,
   featured image, summary and FAQ. Content is cleaned on save: links and images that point
   to other websites are removed (the site never sends visitors off-site).
