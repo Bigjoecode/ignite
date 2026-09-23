@@ -69,6 +69,10 @@ Sign in at https://igniteorthodontics.com/admin/.
   to other websites are removed (the site never sends visitors off-site).
 - **Media Library:** drag-and-drop upload or import from a URL (the image is downloaded,
   never hotlinked). Images are validated, re-encoded and stored in `public_html/uploads/`.
+- **Settings → Booking notifications:** who is emailed when a consultation request comes in —
+  one list that receives every booking plus extra addresses per office (`app/notify.php`,
+  settings key `booking_emails`). "Save and send a test" mails a sample request, marked as a test.
+  `lead_email` in `app/config.local.php` still works and is added to the everything list.
 
 Data lives outside the web root in `~/domains/igniteorthodontics.com/ignite-data/cms.sqlite`.
 
@@ -85,5 +89,15 @@ Every "Schedule Now" / "Request a Consultation" button links to the booking page
 `/booking/?office=slug`: that office is fixed and its step is skipped (`booking_url()` builds
 the links). `POST /book` validates the request, appends it to `ignite-data/bookings.jsonl`
 (with the page the visitor came from as `source`) and the page moves on to `/thank-you/`.
-To also email each request, create `public_html/app/config.local.php` from
-`config.local.php.example` and set `lead_email`.
+Each request is then emailed to the addresses in **Settings → Booking notifications** (the
+everything list plus that office's own addresses); each recipient gets their own copy, so they
+never see each other. A mail failure never fails the booking — the request is already saved.
+`lead_email` in `public_html/app/config.local.php` still works and is added to the everything list.
+
+Requests that were saved before the addresses were set up can be emailed afterwards:
+
+```
+ssh ignite 'cd ~/domains/igniteorthodontics.com/public_html && php app/cli/resend-bookings.php --dry-run'
+```
+
+(`--since=YYYY-MM-DD`, `--id=`, `--to=` narrow it; each email is marked as an earlier request.)

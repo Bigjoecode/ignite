@@ -8,6 +8,7 @@ $nav = [
     ['/admin/posts/',     'Posts',         'M4 5h16M4 10h16M4 15h10M4 20h7', ['posts']],
     ['/admin/posts/new/', 'Add New Post',  'M12 5v14M5 12h14', ['posts/new']],
     ['/admin/media/',     'Media Library', 'M4 5h16v14H4z M4 15l4.5-4.5 4 4 3-3L20 16 M15.5 9.5h.01', ['media']],
+    ['/admin/settings/',  'Settings',      'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M4 12l-1.6-1.2 1.3-3.1 2 .3 1.7-1.7-.3-2 3.1-1.3L11.4 4h2.4l1.2-1.6 3.1 1.3-.3 2 1.7 1.7 2-.3 1.3 3.1L20.4 12l1.6 1.2-1.3 3.1-2-.3-1.7 1.7.3 2-3.1 1.3-1.2-1.6h-2.4l-1.2 1.6-3.1-1.3.3-2-1.7-1.7-2 .3-1.3-3.1z', ['settings']],
     ['/admin/account/',   'Your Account',  'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0', ['account']],
 ];
 $currentRoute = $GLOBALS['route'] ?? '';

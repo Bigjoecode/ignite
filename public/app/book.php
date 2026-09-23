@@ -1,7 +1,7 @@
 <?php
-// POST /book — consultation request from the booking popup (assets/js/booking.js).
+// POST /book — consultation request from the booking page (assets/js/booking.js).
 // Requests are appended to bookings.jsonl in the data dir (outside the web root)
-// and emailed to lead_email when it is configured. Responds with JSON.
+// and emailed to the addresses set in the dashboard (app/notify.php). Responds with JSON.
 declare(strict_types=1);
 
 // a visit to /book in the browser goes to the booking page
@@ -106,9 +106,7 @@ if ($rl && flock($rl, LOCK_EX)) {
     }
 }
 
-$office    = locations()[$req['office']];
-$dateLabel = $req['date'] === 'first' ? 'First available' : DateTimeImmutable::createFromFormat('!Y-m-d', $req['date'])->format('l, F j');
-$record    = ['id' => bin2hex(random_bytes(8)), 'created_at' => gmdate('c'), 'status' => 'new'] + $req + [
+$record = ['id' => bin2hex(random_bytes(8)), 'created_at' => gmdate('c'), 'status' => 'new'] + $req + [
     'source'     => $field('source', 200),
     'ip'         => $ip,
     'user_agent' => mb_substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 300),
@@ -121,18 +119,8 @@ if (file_put_contents($file, $line, FILE_APPEND | LOCK_EX) === false) {
 }
 @chmod($file, 0600);
 
-if ($to = cfg('lead_email')) {
-    $name    = preg_replace('/[\r\n]+/', ' ', $req['first_name'] . ' ' . $req['last_name']);
-    $subject = "Consultation request: {$name} ({$office['name']})";
-    $body    = "New consultation request\n\n"
-        . "Name: {$name}\nPhone: {$req['phone']}\nEmail: {$req['email']}\n\n"
-        . "For: {$opts['patients'][$req['patient']][0]}\n"
-        . "Treatment: {$opts['treatments'][$req['treatment']][0]}\n"
-        . "Office: {$office['name']} ({$office['address_full']})\n"
-        . "Preferred: {$dateLabel}, {$opts['times'][$req['time']]}\n\n"
-        . "Notes:\n" . ($req['notes'] !== '' ? $req['notes'] : '-') . "\n\n"
-        . "Request ID: {$record['id']}\n";
-    @mail($to, $subject, $body, "From: Ignite Orthodontics <no-reply@igniteorthodontics.com>\r\nReply-To: {$req['email']}");
-}
+// the request is safely stored by now, so a mail problem must not fail the booking
+require_once APP . '/notify.php';
+booking_notify($record);
 
 reply(200, ['ok' => true, 'redirect' => '/thank-you/']);

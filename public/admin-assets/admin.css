@@ -230,7 +230,12 @@ a.adm-post-title:hover{color:var(--orange-600);}
 .adm-modal .adm-lib{flex:1;min-height:0;}
 
 /* ---------- account ---------- */
-.adm-account{max-width:560px;}
+.adm-account,.adm-settings{max-width:560px;}
+.adm-settings h2{margin-top:26px;}
+.adm-settings h2:first-of-type{margin-top:0;}
+.adm-settings__actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px;}
+.adm-settings__test{display:flex;align-items:center;gap:8px;}
+.adm-settings__test select{width:auto;}
 .adm-account h2{margin-top:18px;}
 .adm-account h2:first-of-type{margin-top:0;}
 .adm-account > .adm-btn{margin-top:20px;}

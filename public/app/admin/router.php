@@ -135,6 +135,13 @@ if (preg_match('#^media/(\d+)/delete$#', $route, $m) && $method === 'POST') {
     admin_json(200, ['ok' => true]);
 }
 
+// settings (booking notification emails)
+if ($route === 'settings') {
+    require_once APP . '/admin/settings.php';
+    admin_settings($user, $method);
+    exit;
+}
+
 // account
 if ($route === 'account') {
     admin_account($user, $method);
