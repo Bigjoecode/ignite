@@ -59,6 +59,17 @@
   <p class="adm-help">
     The Google Workspace person the appointments are organised by. The key file is read from
     <code><?= e($keyPath) ?></code><?= $hasKey ? ' and is in place.' : ', which is not there yet.' ?>
+    Leave these two empty to take bookings without Google: the times still come from the hours below,
+    and each patient gets the meeting room link underneath.
+  </p>
+
+  <label class="adm-field">
+    <span>Meeting room link</span>
+    <input type="url" name="consult[meeting_link]" value="<?= e($consult['meeting_link']) ?>" maxlength="300" spellcheck="false" placeholder="https://meet.google.com/abc-defg-hij">
+  </label>
+  <p class="adm-help">
+    Your own permanent Google Meet or Zoom room. It is sent to the patient when Google Calendar is not
+    connected; once it is, every appointment gets its own Meet link instead and this is only a fallback.
   </p>
 
   <div class="adm-grid-2">

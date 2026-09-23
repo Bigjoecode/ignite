@@ -139,6 +139,9 @@ SQL);
             $pdo->exec("ALTER TABLE bookings ADD COLUMN {$column} {$type}");
         }
     }
+    // two people cannot hold the same video consultation time
+    $pdo->exec("CREATE UNIQUE INDEX IF NOT EXISTS bookings_virtual_slot ON bookings (start_at)
+                WHERE kind = 'virtual' AND start_at IS NOT NULL AND trashed_at IS NULL");
 
     if (db_setting($pdo, 'posts_seeded') === null) {
         db_seed_posts($pdo);

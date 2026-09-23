@@ -1,24 +1,23 @@
 <?php
-// Virtual consultation page (/virtual-consultation/). Two modes:
-//  - the calendar is connected: real 15-minute slots, booked on the spot with a Meet link
-//  - it is not, or Google could not be reached: the visitor asks for a time and we confirm
+// Virtual consultation page (/virtual-consultation/): pick a real time, confirm it,
+// leave your details, done — the appointment is booked and the video link is sent.
 // Posts to /book-virtual (app/book-virtual.php). Vars: $slots (day => slots, or null), $office.
 $bk     = require APP . '/data/booking.php';
-$icon   = static fn(string $d): string => '<span class="ig-bk__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="' . $d . '"/></svg></span>';
 $check  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4 4L18.5 7.5"/></svg>';
-$live   = is_array($slots) && $slots !== [];
-$days   = $live ? array_keys($slots) : [];
+$s      = consult_settings();
+$mins   = (int) $s['slot_minutes'];
+$live   = is_array($slots) && array_filter($slots) !== [];
 $phone  = $office['phone'] ?? cfg('phone');
 $tel    = $office['tel'] ?? cfg('phone_tel');
-$mins   = consult_settings()['slot_minutes'];
+$shown  = 8;    // times per day before "show all"
 ?>
 <div class="bk vc">
 
   <section class="bk-hero">
     <div class="bk-wrap">
-      <span class="bk-kicker">Virtual Consultation</span>
+      <span class="bk-kicker">Free Virtual Consultation</span>
       <h1>Meet Your Orthodontist <em>From Home</em></h1>
-      <p>A <?= (int) $mins ?>-minute video call with our team, at no cost. Show us your smile, ask your questions and find out what treatment would involve&mdash;before you come in.</p>
+      <p>A <?= $mins ?>-minute video call with our team, at no cost. Show us your smile, ask your questions and find out what treatment would involve&mdash;before you come in.</p>
     </div>
   </section>
 
@@ -26,45 +25,56 @@ $mins   = consult_settings()['slot_minutes'];
     <div class="bk-card" data-vc-root>
 
 <?php if ($live): ?>
+      <ol class="vc-steps__bar" data-vc-bar>
+        <li class="is-on"><span>1</span>Choose a time</li>
+        <li><span>2</span>Your details</li>
+      </ol>
+
       <form class="ig-bk__body" action="/book-virtual" method="post" novalidate data-vc-form>
         <input type="text" name="website" value="" class="ig-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="source" value="/virtual-consultation/">
 
         <fieldset class="ig-bk__pane" data-vc-step>
-          <legend class="ig-bk__q">Pick a time that suits you</legend>
-          <p class="ig-bk__sub">These are the times our team is free. Eastern time.</p>
+          <legend class="ig-bk__q">Choose a date &amp; time</legend>
+          <p class="ig-bk__sub">Showing availability for a free video consultation. All times are Eastern.</p>
 
-          <div class="vc-days" role="tablist" aria-label="Days with free times">
-<?php foreach ($days as $i => $ymd): $d = new DateTimeImmutable($ymd); ?>
-            <button type="button" class="vc-day<?= $i === 0 ? ' is-on' : '' ?>" role="tab" aria-selected="<?= $i === 0 ? 'true' : 'false' ?>" data-vc-day="<?= e($ymd) ?>">
-              <span><?= e(consult_day_label($ymd) === 'Today' || consult_day_label($ymd) === 'Tomorrow' ? consult_day_label($ymd) : $d->format('D')) ?></span>
-              <b><?= e($d->format('M j')) ?></b>
-              <i><?= count($slots[$ymd]) ?> free</i>
-            </button>
-<?php endforeach; ?>
-          </div>
-
-<?php foreach ($slots as $ymd => $times): ?>
-          <div class="vc-times" data-vc-times="<?= e($ymd) ?>"<?= $ymd === $days[0] ? '' : ' hidden' ?>>
-            <p class="ig-bk__label"><?= e(consult_day_label($ymd)) ?></p>
-            <div class="vc-times__grid" role="radiogroup" aria-label="Free times on <?= e(consult_day_label($ymd)) ?>">
-<?php foreach ($times as $slot): ?>
-              <label class="vc-slot">
-                <input type="radio" name="slot" value="<?= e($slot['start']) ?>" data-label="<?= e(consult_day_label($ymd) . ', ' . $slot['label']) ?>" required>
+<?php foreach ($slots as $ymd => $times): $day = new DateTimeImmutable($ymd); ?>
+          <div class="vc-day">
+            <h3 class="vc-day__name"><?= e(consult_day_short($ymd)) ?><span><?= e($day->format('j F')) ?></span></h3>
+<?php if (!$times): ?>
+            <p class="vc-day__none">No times left on this day</p>
+<?php else: ?>
+            <div class="vc-day__times" role="radiogroup" aria-label="Times on <?= e(consult_day_label($ymd)) ?>">
+<?php foreach ($times as $i => $slot): ?>
+              <label class="vc-slot<?= $i >= $shown ? ' vc-slot--more' : '' ?>"<?= $i >= $shown ? ' hidden' : '' ?>>
+                <input type="radio" name="slot" value="<?= e($slot['start']) ?>" data-label="<?= e(consult_day_label($ymd) . ', ' . $slot['label']) ?>" data-day="<?= e($day->format('l jS F Y')) ?>" data-time="<?= e($slot['label']) ?>" required>
                 <b><?= e($slot['label']) ?></b>
               </label>
 <?php endforeach; ?>
+<?php if (count($times) > $shown): ?>
+              <button type="button" class="vc-more" data-vc-more>+ show all <?= count($times) ?></button>
+<?php endif; ?>
             </div>
+<?php endif; ?>
           </div>
 <?php endforeach; ?>
 
-          <button class="ig-bk__next" type="button" data-vc-next disabled>Continue</button>
+          <button class="ig-bk__next vc-continue" type="button" data-vc-next disabled>Continue</button>
         </fieldset>
 
         <fieldset class="ig-bk__pane" data-vc-step hidden>
-          <legend class="ig-bk__q">Where should we send the link?</legend>
-          <p class="ig-bk__sub">You will get a calendar invite with a Google Meet link straight away.</p>
-          <div class="ig-bk__summary" data-vc-summary></div>
+          <legend class="ig-bk__q">Your details</legend>
+          <p class="ig-bk__sub">We will email you the video link and a calendar invite as soon as you are booked.</p>
+
+          <div class="vc-picked" data-vc-picked>
+            <span class="vc-picked__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></span>
+            <div>
+              <b data-vc-picked-time></b>
+              <span data-vc-picked-day></span>
+              <span><?= $mins ?>-minute video consultation</span>
+            </div>
+            <button type="button" class="vc-picked__change" data-vc-back>Change</button>
+          </div>
 
           <div class="ig-bk__grid">
             <label class="ig-bk__field"><span>First name <i aria-hidden="true">*</i></span><input type="text" name="first_name" autocomplete="given-name" maxlength="60" required></label>
@@ -104,7 +114,7 @@ $mins   = consult_settings()['slot_minutes'];
         <h2 class="ig-bk__q">Ask for a video visit</h2>
         <p class="ig-bk__sub">Tell us when suits you and we will confirm your video visit and send the link.</p>
         <ul class="bk-checks vc-ask__list">
-          <li><?= $check ?>A <?= (int) $mins ?>-minute call with our orthodontic team</li>
+          <li><?= $check ?>A <?= $mins ?>-minute call with our orthodontic team</li>
           <li><?= $check ?>No cost and no obligation</li>
           <li><?= $check ?>Nothing to install&mdash;the link opens in your browser</li>
         </ul>
@@ -118,9 +128,9 @@ $mins   = consult_settings()['slot_minutes'];
     <aside class="bk-side">
       <div class="bk-box">
         <span class="bk-box__label">How it works</span>
-        <ol class="vc-steps">
-          <li><b>Pick a time</b><span>Choose any free <?= (int) $mins ?>-minute slot.</span></li>
-          <li><b>Get the link</b><span>A calendar invite with a Google Meet link arrives by email.</span></li>
+        <ol class="vc-how">
+          <li><b>Pick a time</b><span>Any free <?= $mins ?>-minute slot that suits you.</span></li>
+          <li><b>Get the link</b><span>Your video link and calendar invite arrive by email straight away.</span></li>
           <li><b>Join from anywhere</b><span>Open the link on your phone or computer at that time.</span></li>
         </ol>
       </div>
@@ -142,3 +152,27 @@ $mins   = consult_settings()['slot_minutes'];
     </aside>
   </div>
 </div>
+
+<?php if ($live): ?>
+<div class="vc-modal" data-vc-modal hidden>
+  <div class="vc-modal__box" role="dialog" aria-modal="true" aria-labelledby="vcModalTitle">
+    <button type="button" class="vc-modal__close" data-vc-modal-close aria-label="Close">&times;</button>
+    <h2 id="vcModalTitle" class="vc-modal__day" data-vc-modal-day></h2>
+    <ul class="vc-modal__rows">
+      <li>
+        <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></span>
+        <div><b data-vc-modal-time></b><span>Video consultation (<?= $mins ?> mins)</span></div>
+      </li>
+      <li>
+        <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0"/></svg></span>
+        <div><b>Ignite Orthodontics team</b><span>Board-certified orthodontic care</span></div>
+      </li>
+      <li>
+        <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 10l4.5-2.5v9L15 14z M3 7h12v10H3z"/></svg></span>
+        <div><b>Online, by video</b><span>Free consultation &mdash; no cost, no obligation</span></div>
+      </li>
+    </ul>
+    <button type="button" class="vc-modal__book" data-vc-modal-book>Book this time &rarr;</button>
+  </div>
+</div>
+<?php endif; ?>

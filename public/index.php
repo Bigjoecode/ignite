@@ -72,6 +72,16 @@ if ($path === 'virtual-consultation/booked') {
     require_once APP . '/consult.php';
     require_once APP . '/bookings.php';
     $booking = booking_find((string) ($_GET['ref'] ?? ''));
+
+    // "Add to my calendar" hands over the appointment as a calendar file
+    if ($booking && ($booking['kind'] ?? '') === 'virtual' && isset($_GET['add'])) {
+        require_once APP . '/notify.php';
+        header('Content-Type: text/calendar; charset=utf-8');
+        header('Content-Disposition: attachment; filename="ignite-consultation.ics"');
+        header('Cache-Control: no-store');
+        echo booking_ics($booking);
+        exit;
+    }
     render('virtual-booked', ['booking' => $booking && $booking['kind'] === 'virtual' ? $booking : null], $meta + [
         'title'   => 'Your Video Visit Is Booked | Ignite Orthodontics',
         'css'     => ['booking.css', 'virtual.css'],

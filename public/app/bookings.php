@@ -34,6 +34,40 @@ function booking_store(array $record): bool
 }
 
 /**
+ * Takes a video consultation time for this patient. Returns false when someone
+ * else got it first: the database index, not a check-then-write, decides, so two
+ * people clicking the same slot at the same moment cannot both be booked.
+ */
+function booking_reserve_slot(array $record): bool
+{
+    $row = ['status' => 'booked'];
+    foreach (BOOKING_FIELDS as $field) {
+        $row[$field] = (string) ($record[$field] ?? $row[$field] ?? '');
+    }
+    $cols = implode(', ', array_keys($row));
+    $vals = ':' . implode(', :', array_keys($row));
+    try {
+        db()->prepare("INSERT INTO bookings ({$cols}) VALUES ({$vals})")->execute($row);
+        return true;
+    } catch (PDOException $e) {
+        if (str_contains($e->getMessage(), 'UNIQUE')) {
+            return false;
+        }
+        throw $e;
+    }
+}
+
+/** Gives a held time back, when the appointment could not be completed. */
+function booking_release_slot(string $id): void
+{
+    try {
+        db()->prepare('DELETE FROM bookings WHERE id = ?')->execute([$id]);
+    } catch (Throwable $e) {
+        error_log('booking_release_slot: ' . $e->getMessage());
+    }
+}
+
+/**
  * Brings requests that are only in bookings.jsonl into the table, for the ones
  * taken before the table existed. Only requests newer than the last import are
  * looked at, so a request deleted in the dashboard does not come back.

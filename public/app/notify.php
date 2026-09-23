@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// Who gets told about a booking request, and the email itself.
+// Who gets told about a booking request, and the emails themselves.
 //
 // The addresses are set in the dashboard (Settings → Booking notifications) and
 // kept in the settings table as JSON: one list that gets every request, plus an
@@ -117,6 +117,94 @@ function booking_email(array $r): array
             . ($name !== '' ? $name : 'new patient') . ' (' . ($office['name'] ?? $r['office'] ?? '') . ')',
         'body'    => implode("\n", $lines) . "\n",
     ];
+}
+
+/**
+ * Confirms a video consultation to the patient, with the appointment attached so
+ * it can be added to their own calendar in one tap. Sent by us, so it arrives even
+ * when Google is not connected and no calendar invite goes out.
+ */
+function booking_confirm_patient(array $r): bool
+{
+    require_once APP . '/consult.php';          // for the appointment length
+    $email = trim((string) ($r['email'] ?? ''));
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($r['start_at'])) {
+        return false;
+    }
+    $zone   = new DateTimeZone('America/Detroit');
+    $start  = (new DateTimeImmutable($r['start_at']))->setTimezone($zone);
+    $office = locations()[$r['office']] ?? null;
+    $when   = $start->format('l, F j') . ' at ' . ltrim($start->format('g:ia'), '0') . ' (Eastern time)';
+    $link   = (string) ($r['meet_url'] ?? '');
+
+    $lines = [
+        'Hi ' . trim((string) ($r['first_name'] ?? '')) . ',',
+        '',
+        'Your free video consultation with Ignite Orthodontics is booked.',
+        '',
+        'When: ' . $when,
+        'How long: about ' . consult_settings()['slot_minutes'] . ' minutes',
+    ];
+    $lines[] = $link !== ''
+        ? 'Join here: ' . $link
+        : 'We will send you the video link before your appointment.';
+    $lines = array_merge($lines, [
+        '',
+        'There is nothing to install — the link opens in your browser, on a phone or a computer.',
+        'It helps to be somewhere with decent light so we can see your smile.',
+        '',
+        'Need to change or cancel it? Call us on ' . cfg('phone') . ' and we will sort it out.',
+        '',
+        $office ? 'Ignite Orthodontics ' . $office['name'] : 'Ignite Orthodontics',
+        $office['address_full'] ?? '',
+        'igniteorthodontics.com',
+    ]);
+
+    $boundary = 'ig' . bin2hex(random_bytes(8));
+    $body = "--{$boundary}\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n"
+        . implode("\n", $lines) . "\r\n"
+        . "--{$boundary}\r\nContent-Type: text/calendar; charset=utf-8; method=REQUEST; name=\"appointment.ics\"\r\n"
+        . "Content-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=\"appointment.ics\"\r\n\r\n"
+        . chunk_split(base64_encode(booking_ics($r))) . "\r\n--{$boundary}--";
+
+    return @mail(
+        $email,
+        'Your video consultation: ' . $start->format('D, M j') . ' at ' . ltrim($start->format('g:ia'), '0'),
+        $body,
+        "From: Ignite Orthodontics <no-reply@igniteorthodontics.com>\r\n"
+            . 'Reply-To: ' . (booking_emails()['all'][0] ?? 'no-reply@igniteorthodontics.com') . "\r\n"
+            . "MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"{$boundary}\""
+    );
+}
+
+/** The appointment as a calendar file, for the patient's own calendar app. */
+function booking_ics(array $r): string
+{
+    require_once APP . '/consult.php';
+    $utc    = new DateTimeZone('UTC');
+    $start  = (new DateTimeImmutable($r['start_at']))->setTimezone($utc);
+    $end    = $start->modify('+' . consult_settings()['slot_minutes'] . ' minutes');
+    $link   = (string) ($r['meet_url'] ?? '');
+    $office = locations()[$r['office']] ?? null;
+    $escape = static fn(string $text): string => str_replace(["\\", "\n", ',', ';'], ['\\\\', '\\n', '\\,', '\\;'], $text);
+
+    return implode("\r\n", [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Ignite Orthodontics//Booking//EN',
+        'METHOD:REQUEST',
+        'BEGIN:VEVENT',
+        'UID:' . ($r['id'] ?? bin2hex(random_bytes(8))) . '@igniteorthodontics.com',
+        'DTSTAMP:' . gmdate('Ymd\THis\Z'),
+        'DTSTART:' . $start->format('Ymd\THis\Z'),
+        'DTEND:' . $end->format('Ymd\THis\Z'),
+        'SUMMARY:' . $escape('Video consultation with Ignite Orthodontics' . ($office ? ' ' . $office['name'] : '')),
+        'DESCRIPTION:' . $escape($link !== '' ? 'Join here: ' . $link : 'We will send you the video link before your appointment.'),
+        'LOCATION:' . $escape($link !== '' ? $link : 'Online'),
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR',
+    ]) . "\r\n";
 }
 
 /**

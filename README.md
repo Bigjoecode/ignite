@@ -81,7 +81,10 @@ Sign in at https://igniteorthodontics.com/admin/.
   (`app/consult.php`, `app/google-calendar.php`, `app/book-virtual.php`). Set the calendar, the
   Workspace user to book as, the call length, how far ahead and the hours offered; the screen says
   whether Google is actually answering. Connecting it is described in `docs/google-calendar-setup.md`.
-  Until it is connected the page asks the visitor to request a time instead, so it never errors.
+  Google is optional: with just the hours set, the page books times into the site's own diary and
+  sends the meeting room link; connecting Google adds a per-appointment Meet link and keeps the
+  practice calendar as the source of truth. Either way the patient gets a confirmation email with
+  the appointment attached, and two people cannot take the same time.
 - **Settings → Booking notifications:** who is emailed when a consultation request comes in —
   one list that receives every booking plus extra addresses per office (`app/notify.php`,
   settings key `booking_emails`). "Save and send a test" mails a sample request, marked as a test.

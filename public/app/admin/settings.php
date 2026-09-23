@@ -74,23 +74,24 @@ function admin_consult_check(): array
     if (!$s['enabled']) {
         return [false, 'Switched off. The page asks visitors to request a time instead.'];
     }
-    if (gcal_key() === null) {
-        return [false, 'The Google key file has not been installed on the server yet.'];
-    }
-    if ($s['calendar_id'] === '' || $s['book_as'] === '') {
-        return [false, 'Fill in the calendar ID and the Google account to book as.'];
-    }
     if (!array_filter($s['hours'])) {
-        return [false, 'Set the hours you are available on at least one day.'];
+        return [false, 'Set the hours you are available on at least one day, otherwise there is nothing to offer.'];
     }
     $slots = consult_slots();
     if ($slots === null) {
         return [false, 'Google would not answer. Check the calendar is shared with the service account.'];
     }
+
     $count = array_sum(array_map('count', $slots));
+    $how   = consult_uses_google()
+        ? 'Booking into Google Calendar, with a Meet link for each appointment.'
+        : ($s['meeting_link'] !== ''
+            ? 'Taking bookings without Google: patients get your meeting room link.'
+            : 'Taking bookings, but no meeting link is set, so patients are told you will send one.');
+
     return $count > 0
-        ? [true, 'Connected. ' . $count . ' free ' . ($count === 1 ? 'time' : 'times') . ' over the next ' . $s['days_ahead'] . ' days.']
-        : [true, 'Connected, but every time in the next ' . $s['days_ahead'] . ' days is busy, so the page has nothing to offer.'];
+        ? [true, $how . ' ' . $count . ' free ' . ($count === 1 ? 'time' : 'times') . ' over the next ' . $s['days_ahead'] . ' days.']
+        : [true, $how . ' Every time in the next ' . $s['days_ahead'] . ' days is taken, so the page has nothing to offer.'];
 }
 
 /** The saved lists, read fresh (booking_emails() caches for the request). */

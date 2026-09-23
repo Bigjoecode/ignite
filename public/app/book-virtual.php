@@ -74,23 +74,6 @@ if (!$times) {
 $name   = trim($req['first_name'] . ' ' . $req['last_name']);
 $office = locations()[$req['office']];
 $s      = consult_settings();
-$event  = gcal_create_event($s['calendar_id'], $s['book_as'], [
-    'summary'     => 'Virtual consultation: ' . $name,
-    'description' => "Video consultation booked on igniteorthodontics.com\n\n"
-        . "Patient: {$name}\nPhone: {$req['phone']}\nEmail: {$req['email']}\n"
-        . 'For: ' . (booking_choice('patient', $req['patient']) ?: 'not said') . "\n"
-        . 'Interested in: ' . (booking_choice('treatment', $req['treatment']) ?: 'not said') . "\n"
-        . "Nearest office: {$office['name']}\n\n"
-        . 'Notes: ' . ($req['notes'] !== '' ? $req['notes'] : '-'),
-    'start'         => $start->format('c'),
-    'end'           => $end->format('c'),
-    'timezone'      => CONSULT_ZONE,
-    'patient_email' => $req['email'],
-    'patient_name'  => $name,
-]);
-if (!$event) {
-    vc_reply(502, ['ok' => false, 'error' => 'We could not confirm that time just now. ' . $again]);
-}
 
 $record = [
     'id'         => bin2hex(random_bytes(8)),
@@ -109,15 +92,46 @@ $record = [
     'notes'      => $req['notes'],
     'source'     => mb_substr((string) ($_POST['source'] ?? '/virtual-consultation/'), 0, 200),
     'start_at'   => $start->format('c'),
-    'meet_url'   => $event['meet'],
-    'event_id'   => $event['id'],
+    'meet_url'   => $s['meeting_link'],
+    'event_id'   => '',
 ];
 
-// the appointment is already in the calendar; a storage or mail problem must not lose it
+// hold the time before doing anything slow, so two people cannot take it at once
+if (!booking_reserve_slot($record)) {
+    vc_reply(409, ['ok' => false, 'field' => 'slot', 'error' => 'Sorry, that time has just been taken. Please pick another one.']);
+}
+
+// with Google connected the appointment goes in the practice calendar and gets its own Meet link
+if (consult_uses_google()) {
+    $event = gcal_create_event($s['calendar_id'], $s['book_as'], [
+        'summary'     => 'Virtual consultation: ' . $name,
+        'description' => "Video consultation booked on igniteorthodontics.com\n\n"
+            . "Patient: {$name}\nPhone: {$req['phone']}\nEmail: {$req['email']}\n"
+            . 'For: ' . (booking_choice('patient', $req['patient']) ?: 'not said') . "\n"
+            . 'Interested in: ' . (booking_choice('treatment', $req['treatment']) ?: 'not said') . "\n"
+            . "Nearest office: {$office['name']}\n\n"
+            . 'Notes: ' . ($req['notes'] !== '' ? $req['notes'] : '-'),
+        'start'         => $start->format('c'),
+        'end'           => $end->format('c'),
+        'timezone'      => CONSULT_ZONE,
+        'patient_email' => $req['email'],
+        'patient_name'  => $name,
+    ]);
+    if (!$event) {
+        booking_release_slot($record['id']);
+        vc_reply(502, ['ok' => false, 'error' => 'We could not confirm that time just now. ' . $again]);
+    }
+    $record['meet_url'] = $event['meet'] !== '' ? $event['meet'] : $s['meeting_link'];
+    $record['event_id'] = $event['id'];
+    db()->prepare('UPDATE bookings SET meet_url = ?, event_id = ? WHERE id = ?')
+        ->execute([$record['meet_url'], $record['event_id'], $record['id']]);
+}
+
+// the appointment is confirmed by now; a storage or mail problem must not lose it
 $file = cfg('data_dir') . '/bookings.jsonl';
 @file_put_contents($file, json_encode($record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n", FILE_APPEND | LOCK_EX);
 @chmod($file, 0600);
-booking_store($record);
-booking_notify($record);
+booking_confirm_patient($record);   // the patient's confirmation, with the appointment attached
+booking_notify($record);            // and the practice's own notification
 
 vc_reply(200, ['ok' => true, 'redirect' => '/virtual-consultation/booked/?ref=' . $record['id']]);

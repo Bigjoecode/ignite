@@ -27,6 +27,9 @@ function consult_settings(): array
         'slot_minutes' => max(5, min(120, (int) ($saved['slot_minutes'] ?? 15))),
         'days_ahead'   => max(1, min(60, (int) ($saved['days_ahead'] ?? 14))),
         'lead_hours'   => max(0, min(72, (int) ($saved['lead_hours'] ?? 2))),
+        // used for the video link until Google Calendar is connected: the practice's own
+        // meeting room (a Google Meet or Zoom link that is always the same)
+        'meeting_link' => trim((string) ($saved['meeting_link'] ?? '')),
         'hours'        => array_map(
             static fn(string $day): string => trim((string) ($saved['hours'][$day] ?? '')),
             array_combine(array_keys(CONSULT_DAYS), array_keys(CONSULT_DAYS))
@@ -47,6 +50,7 @@ function consult_save_settings(array $input): void
         'slot_minutes' => (int) ($input['slot_minutes'] ?? 15),
         'days_ahead'   => (int) ($input['days_ahead'] ?? 14),
         'lead_hours'   => (int) ($input['lead_hours'] ?? 2),
+        'meeting_link' => filter_var(trim((string) ($input['meeting_link'] ?? '')), FILTER_VALIDATE_URL) ?: '',
         'hours'        => $hours,
     ], JSON_UNESCAPED_SLASHES));
 }
@@ -72,7 +76,14 @@ function consult_clean_hours(string $text): string
 function consult_live(): bool
 {
     $s = consult_settings();
-    return $s['enabled'] && $s['calendar_id'] !== '' && $s['book_as'] !== '' && gcal_key() !== null;
+    return $s['enabled'] && array_filter($s['hours']) !== [];
+}
+
+/** True when appointments are written to the practice's Google Calendar with a Meet link. */
+function consult_uses_google(): bool
+{
+    $s = consult_settings();
+    return $s['calendar_id'] !== '' && $s['book_as'] !== '' && gcal_key() !== null;
 }
 
 /**
@@ -91,9 +102,15 @@ function consult_slots(): ?array
     $first = $now->modify('+' . $s['lead_hours'] . ' hours');
     $last  = $now->setTime(23, 59)->modify('+' . $s['days_ahead'] . ' days');
 
-    $busy = gcal_busy($s['calendar_id'], $s['book_as'], $now, $last);
-    if ($busy === null) {
-        return null;
+    // times we have already given away, and — once Google is connected — whatever
+    // else is in the practice's calendar
+    $busy = consult_booked($now, $last);
+    if (consult_uses_google()) {
+        $calendar = gcal_busy($s['calendar_id'], $s['book_as'], $now, $last);
+        if ($calendar === null) {
+            return null;    // the calendar decides, so do not guess while it is unreachable
+        }
+        $busy = array_merge($busy, $calendar);
     }
 
     $days = [];
@@ -113,11 +130,35 @@ function consult_slots(): ?array
                 $slots[] = ['start' => $start->format('c'), 'label' => ltrim($start->format('g:i a'), '0')];
             }
         }
-        if ($slots) {
-            $days[$day->format('Y-m-d')] = $slots;
-        }
+        // every day in the window is listed, so the page can show "no times" days too
+        $days[$day->format('Y-m-d')] = $slots;
     }
     return $days;
+}
+
+/** Video visits already booked in the window, as [[start, end], ...]. */
+function consult_booked(DateTimeImmutable $from, DateTimeImmutable $to): array
+{
+    $minutes = consult_settings()['slot_minutes'];
+    // a day either side, because the stored times carry an offset that shifts with
+    // daylight saving; the overlap check below is what decides exactly
+    $stmt = db()->prepare(
+        "SELECT start_at FROM bookings
+          WHERE kind = 'virtual' AND trashed_at IS NULL AND start_at IS NOT NULL
+            AND start_at >= ? AND start_at <= ?"
+    );
+    $stmt->execute([$from->modify('-1 day')->format('c'), $to->modify('+1 day')->format('c')]);
+
+    $busy = [];
+    foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $start) {
+        try {
+            $taken  = new DateTimeImmutable((string) $start);
+            $busy[] = [$taken, $taken->modify('+' . $minutes . ' minutes')];
+        } catch (Throwable $e) {
+            // a time we cannot read cannot block anything
+        }
+    }
+    return $busy;
 }
 
 function consult_overlaps(DateTimeImmutable $start, DateTimeImmutable $end, array $busy): bool
@@ -146,6 +187,17 @@ function consult_slot_times(string $isoStart): ?array
         }
     }
     return null;
+}
+
+/** "Today", "Tomorrow" or "Friday" — the date itself is printed beside it. */
+function consult_day_short(string $ymd): string
+{
+    $label = consult_day_label($ymd);
+    if ($label === 'Today' || $label === 'Tomorrow') {
+        return $label;
+    }
+    $day = DateTimeImmutable::createFromFormat('!Y-m-d', $ymd, new DateTimeZone(CONSULT_ZONE));
+    return $day ? $day->format('l') : $ymd;
 }
 
 /** "Thursday, September 24" and "9:00 am", for headings and emails. */
