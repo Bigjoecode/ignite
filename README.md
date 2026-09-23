@@ -1,3 +1,5 @@
+| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/lp/{slug}/`, `/blog/`, static pages, `/booking/`, `/virtual-consultation/`, `/thank-you/`, `/book`, `/book-virtual`, `/admin/`, `/sitemap.xml`) |
+| `docs/` | Setup notes for things that need an account elsewhere (Google Calendar) |
 # Ignite Orthodontics website
 
 PHP site for https://igniteorthodontics.com, hosted on Hostinger.
@@ -75,6 +77,12 @@ Sign in at https://igniteorthodontics.com/admin/.
   be added by hand (phone and walk-in enquiries), edited, trashed, restored and deleted.
   They live in the `bookings` table (`app/bookings.php`); anything that only reached
   `bookings.jsonl` is imported when the screen is opened, and a deleted one is not brought back.
+- **Settings → Virtual consultations:** the video consultation page (`/virtual-consultation/`)
+  offers the times that are free on a Google Calendar and books them with a Google Meet link
+  (`app/consult.php`, `app/google-calendar.php`, `app/book-virtual.php`). Set the calendar, the
+  Workspace user to book as, the call length, how far ahead and the hours offered; the screen says
+  whether Google is actually answering. Connecting it is described in `docs/google-calendar-setup.md`.
+  Until it is connected the page asks the visitor to request a time instead, so it never errors.
 - **Settings → Booking notifications:** who is emailed when a consultation request comes in —
   one list that receives every booking plus extra addresses per office (`app/notify.php`,
   settings key `booking_emails`). "Save and send a test" mails a sample request, marked as a test.

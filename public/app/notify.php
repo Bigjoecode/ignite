@@ -80,8 +80,14 @@ function booking_email(array $r): array
         : $d->format('l, F j');
     $sent   = isset($r['created_at']) ? (new DateTimeImmutable($r['created_at']))->setTimezone(new DateTimeZone('America/Detroit'))->format('D, M j Y, g:ia') : '';
 
+    $virtual = ($r['kind'] ?? '') === 'virtual';
+    if ($virtual && !empty($r['start_at'])) {
+        $when = (new DateTimeImmutable($r['start_at']))->setTimezone(new DateTimeZone('America/Detroit'));
+        $day  = $when->format('l, F j') . ' at ' . ltrim($when->format('g:ia'), '0');
+    }
+
     $lines = [
-        'New consultation request',
+        $virtual ? 'New video consultation booked' : 'New consultation request',
         '',
         'Name: ' . $name,
         'Phone: ' . ($r['phone'] ?? ''),
@@ -89,8 +95,14 @@ function booking_email(array $r): array
         '',
         'For: ' . $label($opts['patients'][$r['patient'] ?? ''] ?? null),
         'Treatment: ' . $label($opts['treatments'][$r['treatment'] ?? ''] ?? null),
-        'Office: ' . ($office ? $office['name'] . ' (' . $office['address_full'] . ')' : ($r['office'] ?? '')),
-        'Preferred: ' . $day . ', ' . ($opts['times'][$r['time'] ?? ''] ?? ''),
+        ($virtual ? 'Nearest office: ' : 'Office: ') . ($office ? $office['name'] . ' (' . $office['address_full'] . ')' : ($r['office'] ?? '')),
+        ($virtual ? 'Appointment: ' : 'Preferred: ') . $day . ($virtual ? ' (Eastern)' : ', ' . ($opts['times'][$r['time'] ?? ''] ?? '')),
+    ];
+    if ($virtual && !empty($r['meet_url'])) {
+        $lines[] = 'Join: ' . $r['meet_url'];
+        $lines[] = 'The patient has the invite and the same link by email.';
+    }
+    $lines = array_merge($lines, [
         '',
         'Notes:',
         ($r['notes'] ?? '') !== '' ? $r['notes'] : '-',
@@ -98,10 +110,11 @@ function booking_email(array $r): array
         'Came from: ' . (($r['source'] ?? '') !== '' ? 'igniteorthodontics.com' . $r['source'] : 'the booking page'),
         'Sent: ' . $sent,
         'Request ID: ' . ($r['id'] ?? ''),
-    ];
+    ]);
 
     return [
-        'subject' => 'Consultation request: ' . ($name !== '' ? $name : 'new patient') . ' (' . ($office['name'] ?? $r['office'] ?? '') . ')',
+        'subject' => ($virtual ? 'Video consultation booked: ' : 'Consultation request: ')
+            . ($name !== '' ? $name : 'new patient') . ' (' . ($office['name'] ?? $r['office'] ?? '') . ')',
         'body'    => implode("\n", $lines) . "\n",
     ];
 }

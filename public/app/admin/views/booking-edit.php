@@ -31,6 +31,17 @@ $value   = static fn(string $key): string => (string) ($row[$key] ?? '');
 <form method="post" action="<?= e($action) ?>" class="adm-booking" novalidate>
   <?= csrf_field() ?>
   <div class="adm-card adm-box">
+<?php if (!$isNew && $value('kind') === 'virtual'): ?>
+    <h2>Video visit</h2>
+    <p class="adm-booking__meet">
+      <b><?= e(booking_when($row)) ?></b> (Eastern)<br>
+<?php if ($value('meet_url') !== ''): ?>
+      <a href="<?= e($value('meet_url')) ?>" target="_blank" rel="noopener">Join on Google Meet</a> &mdash;
+<?php endif; ?>
+      it is in the practice calendar, and the patient has the invite.
+      To move or cancel it, change the event in Google Calendar.
+    </p>
+<?php endif; ?>
     <h2>The patient</h2>
     <div class="adm-grid-2">
       <label class="adm-field">

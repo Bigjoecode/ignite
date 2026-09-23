@@ -16,6 +16,7 @@ if ($path === 'admin' || strncmp($path, 'admin/', 6) === 0) { require APP . '/ad
 
 // endpoints without the trailing-slash convention
 if ($path === 'book') { require APP . '/book.php'; exit; }
+if ($path === 'book-virtual') { require APP . '/book-virtual.php'; exit; }
 if ($path === 'sitemap.xml') { require APP . '/sitemap.php'; exit; }
 
 // one canonical URL per page: always a trailing slash
@@ -49,6 +50,32 @@ if ($path === 'booking') {
         'css'         => ['booking.css'],
         'js'          => ['booking.js'],
         'book_office' => $office['slug'] ?? '',
+    ]);
+    exit;
+}
+
+// video consultations: the free times come from the practice's Google Calendar
+if ($path === 'virtual-consultation') {
+    require_once APP . '/consult.php';
+    $office = locations()[(string) ($_GET['office'] ?? '')] ?? null;
+    render('virtual-consultation', ['slots' => consult_slots(), 'office' => $office], $meta + [
+        'title'       => 'Virtual Consultation | Ignite Orthodontics',
+        'description' => 'Meet an Ignite Orthodontics orthodontist by video, at no cost. Pick a time that suits you and we will send a Google Meet link.',
+        'css'         => ['booking.css', 'virtual.css'],
+        'js'          => ['virtual.js'],
+        'book_office' => $office['slug'] ?? '',
+    ]);
+    exit;
+}
+
+if ($path === 'virtual-consultation/booked') {
+    require_once APP . '/consult.php';
+    require_once APP . '/bookings.php';
+    $booking = booking_find((string) ($_GET['ref'] ?? ''));
+    render('virtual-booked', ['booking' => $booking && $booking['kind'] === 'virtual' ? $booking : null], $meta + [
+        'title'   => 'Your Video Visit Is Booked | Ignite Orthodontics',
+        'css'     => ['booking.css', 'virtual.css'],
+        'noindex' => true,
     ]);
     exit;
 }

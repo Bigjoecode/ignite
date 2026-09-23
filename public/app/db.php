@@ -115,6 +115,10 @@ CREATE TABLE IF NOT EXISTS bookings (
     source      TEXT NOT NULL DEFAULT '',       -- the page the visitor came from
     staff_note  TEXT NOT NULL DEFAULT '',       -- what the practice wrote about it
     trashed_at  TEXT,                           -- in the trash, still recoverable
+    kind        TEXT NOT NULL DEFAULT 'office', -- office | virtual (a video consultation)
+    start_at    TEXT,                           -- a virtual consultation's agreed time
+    meet_url    TEXT,                           -- its Google Meet link
+    event_id    TEXT,                           -- its Google Calendar event
     updated_at  TEXT,
     updated_by  INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
@@ -123,8 +127,17 @@ SQL);
 
     // columns added after a table first shipped
     $bookingCols = $pdo->query('PRAGMA table_info(bookings)')->fetchAll(PDO::FETCH_COLUMN, 1);
-    if (!in_array('trashed_at', $bookingCols, true)) {
-        $pdo->exec('ALTER TABLE bookings ADD COLUMN trashed_at TEXT');
+    $laterCols   = [
+        'trashed_at' => 'TEXT',                          // in the trash, still recoverable
+        'kind'       => "TEXT NOT NULL DEFAULT 'office'", // office | virtual (a video consultation)
+        'start_at'   => 'TEXT',                          // a virtual consultation's agreed time
+        'meet_url'   => 'TEXT',                          // its Google Meet link
+        'event_id'   => 'TEXT',                          // its Google Calendar event
+    ];
+    foreach ($laterCols as $column => $type) {
+        if (!in_array($column, $bookingCols, true)) {
+            $pdo->exec("ALTER TABLE bookings ADD COLUMN {$column} {$type}");
+        }
     }
 
     if (db_setting($pdo, 'posts_seeded') === null) {

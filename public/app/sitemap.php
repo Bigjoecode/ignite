@@ -5,6 +5,12 @@ header('Content-Type: application/xml; charset=utf-8');
 
 // [path, lastmod or null]
 $urls = [['/', null], ['/booking/', null], ['/locations/', null]];
+
+// the video consultation page is only worth listing once it can offer real times
+require_once APP . '/consult.php';
+if (consult_settings()['enabled']) {
+    $urls[] = ['/virtual-consultation/', null];
+}
 foreach (locations() as $l) {
     $urls[] = ['/locations/' . $l['slug'] . '/', null];
 }

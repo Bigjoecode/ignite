@@ -4,11 +4,13 @@ declare(strict_types=1);
 // Settings screen: who is emailed when a consultation request comes in.
 
 require_once APP . '/notify.php';
+require_once APP . '/consult.php';
 
 /** GET shows the form; POST saves it and can send a test email. */
 function admin_settings(array $user, string $method): void
 {
     if ($method === 'POST') {
+        consult_save_settings((array) ($_POST['consult'] ?? []));
         $all     = (string) ($_POST['all'] ?? '');
         $offices = [];
         foreach (locations() as $slug => $office) {
@@ -52,10 +54,43 @@ function admin_settings(array $user, string $method): void
 
     $saved = admin_settings_emails();
     admin_render('settings', [
-        'all'     => implode("\n", $saved['all']),
-        'offices' => array_map(static fn(array $list): string => implode("\n", $list), $saved['offices']),
-        'locked'  => booking_clean_emails((string) cfg('lead_email')),   // set in config.local.php, not editable here
+        'all'      => implode("\n", $saved['all']),
+        'offices'  => array_map(static fn(array $list): string => implode("\n", $list), $saved['offices']),
+        'locked'   => booking_clean_emails((string) cfg('lead_email')),   // set in config.local.php, not editable here
+        'consult'  => consult_settings(),
+        'hasKey'   => gcal_key() !== null,
+        'keyPath'  => cfg('data_dir') . '/' . GCAL_KEY_FILE,
+        'slotCheck' => admin_consult_check(),
     ], 'Settings', $user);
+}
+
+/**
+ * Whether the virtual consultation page can offer real times right now, as
+ * [ok, what to say]. It actually asks Google, so the practice sees the truth.
+ */
+function admin_consult_check(): array
+{
+    $s = consult_settings();
+    if (!$s['enabled']) {
+        return [false, 'Switched off. The page asks visitors to request a time instead.'];
+    }
+    if (gcal_key() === null) {
+        return [false, 'The Google key file has not been installed on the server yet.'];
+    }
+    if ($s['calendar_id'] === '' || $s['book_as'] === '') {
+        return [false, 'Fill in the calendar ID and the Google account to book as.'];
+    }
+    if (!array_filter($s['hours'])) {
+        return [false, 'Set the hours you are available on at least one day.'];
+    }
+    $slots = consult_slots();
+    if ($slots === null) {
+        return [false, 'Google would not answer. Check the calendar is shared with the service account.'];
+    }
+    $count = array_sum(array_map('count', $slots));
+    return $count > 0
+        ? [true, 'Connected. ' . $count . ' free ' . ($count === 1 ? 'time' : 'times') . ' over the next ' . $s['days_ahead'] . ' days.']
+        : [true, 'Connected, but every time in the next ' . $s['days_ahead'] . ' days is busy, so the page has nothing to offer.'];
 }
 
 /** The saved lists, read fresh (booking_emails() caches for the request). */

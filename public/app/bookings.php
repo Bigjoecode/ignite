@@ -13,7 +13,7 @@ const BOOKING_STATUSES = [
 ];
 
 const BOOKING_FIELDS = ['id', 'created_at', 'status', 'office', 'patient', 'treatment', 'date', 'time',
-    'first_name', 'last_name', 'phone', 'email', 'notes', 'source'];
+    'first_name', 'last_name', 'phone', 'email', 'notes', 'source', 'kind', 'start_at', 'meet_url', 'event_id'];
 
 /** Saves one request. Never throws: the request is already safe in bookings.jsonl. */
 function booking_store(array $record): bool
@@ -223,6 +223,21 @@ function booking_local_time(string $utc): string
     } catch (Throwable $e) {
         return $utc;
     }
+}
+
+/** When it is: the agreed time for a video visit, or what the visitor asked for. */
+function booking_when(array $row): string
+{
+    if (($row['kind'] ?? '') === 'virtual' && !empty($row['start_at'])) {
+        try {
+            $start = (new DateTimeImmutable($row['start_at']))->setTimezone(new DateTimeZone('America/Detroit'));
+            return $start->format('D, M j') . ' at ' . ltrim($start->format('g:ia'), '0');
+        } catch (Throwable $e) {
+            // fall through to the preferred day below
+        }
+    }
+    $time = booking_choice('time', (string) ($row['time'] ?? ''));
+    return booking_day((string) ($row['date'] ?? '')) . ($time !== '' ? ', ' . $time : '');
 }
 
 /** The day the visitor asked for, as written on the booking page. */

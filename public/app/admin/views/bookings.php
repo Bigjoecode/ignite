@@ -92,8 +92,11 @@ $inTrash = $filters['status'] === 'trash';
         </td>
         <td><?= e(locations()[$row['office']]['name'] ?? $row['office']) ?></td>
         <td>
-          <?= e(booking_choice('treatment', $row['treatment'])) ?>
-          <div class="adm-muted"><?= e(booking_choice('patient', $row['patient'])) ?> &middot; <?= e(booking_day($row['date'])) ?>, <?= e(booking_choice('time', $row['time'])) ?></div>
+          <?= e(booking_choice('treatment', $row['treatment']) ?: 'Not said') ?><?= $row['kind'] === 'virtual' ? ' <span class="adm-badge">Video</span>' : '' ?>
+          <div class="adm-muted">
+            <?= e(booking_choice('patient', $row['patient'])) ?><?= $row['patient'] !== '' ? ' &middot; ' : '' ?>
+            <?= e(booking_when($row)) ?>
+          </div>
         </td>
         <td><span class="adm-status adm-status--<?= e($row['status']) ?>"><?= e(BOOKING_STATUSES[$row['status']] ?? $row['status']) ?></span></td>
         <td class="adm-date"><?= e(booking_local_time($row['created_at'])) ?></td>
