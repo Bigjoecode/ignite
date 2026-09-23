@@ -1,5 +1,3 @@
-| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/lp/{slug}/`, `/blog/`, static pages, `/booking/`, `/virtual-consultation/`, `/thank-you/`, `/book`, `/book-virtual`, `/admin/`, `/sitemap.xml`) |
-| `docs/` | Setup notes for things that need an account elsewhere (Google Calendar) |
 # Ignite Orthodontics website
 
 PHP site for https://igniteorthodontics.com, hosted on Hostinger.
@@ -11,7 +9,8 @@ PHP site for https://igniteorthodontics.com, hosted on Hostinger.
 | `*.html` (repo root) | Design source files (header, home, location template, kids page) |
 | `tools/extract.php` | Builds `public/assets/{css,js}` and the generated views from those source files |
 | `public/` | Everything that is deployed to `public_html` |
-| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/blog/`, static pages, `/booking/`, `/thank-you/`, `/book`, `/admin/`, `/sitemap.xml`) |
+| `public/index.php` | Router (`/`, service pages, `/locations/{slug}/`, `/lp/{slug}/`, `/blog/`, static pages, `/booking/`, `/virtual-consultation/`, `/thank-you/`, `/book`, `/book-virtual`, `/admin/`, `/sitemap.xml`) |
+| `docs/` | Setup notes for the parts that need an account elsewhere (Google Calendar) |
 | `public/app/templates.php` | Page layouts: the sections and fields each layout offers the dashboard |
 | `public/app/data/` | Booking choices and the remaining static pages; `seed-pages.php` and `posts/*.php` fill the database once |
 | `public/app/views/` | Public layout, pages and partials |
