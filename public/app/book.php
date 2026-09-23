@@ -119,8 +119,10 @@ if (file_put_contents($file, $line, FILE_APPEND | LOCK_EX) === false) {
 }
 @chmod($file, 0600);
 
-// the request is safely stored by now, so a mail problem must not fail the booking
+// the request is safely stored by now, so the dashboard copy and the emails must not fail it
+require_once APP . '/bookings.php';
 require_once APP . '/notify.php';
+booking_store($record);
 booking_notify($record);
 
 reply(200, ['ok' => true, 'redirect' => '/thank-you/']);

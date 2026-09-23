@@ -135,6 +135,25 @@ if (preg_match('#^media/(\d+)/delete$#', $route, $m) && $method === 'POST') {
     admin_json(200, ['ok' => true]);
 }
 
+// bookings (consultation requests from the website)
+if ($route === 'bookings' && $method === 'GET') {
+    require_once APP . '/admin/bookings.php';
+    admin_bookings_index($user);
+    exit;
+}
+if ($route === 'bookings/export.csv' && $method === 'GET') {
+    require_once APP . '/admin/bookings.php';
+    admin_bookings_export();
+    exit;
+}
+if (preg_match('#^bookings/([A-Za-z0-9._-]{1,64})$#', $route, $m)) {
+    require_once APP . '/admin/bookings.php';
+    $method === 'POST'
+        ? admin_booking_save($user, rawurldecode($m[1]))
+        : admin_booking_view($user, rawurldecode($m[1]));
+    exit;
+}
+
 // settings (booking notification emails)
 if ($route === 'settings') {
     require_once APP . '/admin/settings.php';

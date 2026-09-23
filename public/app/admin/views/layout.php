@@ -2,6 +2,7 @@
 // Admin shell. Vars: $title, $content, $flash, $user (null on the sign-in page), $route.
 // [url, label, icon path, route keys, page type for the two Pages entries]
 $nav = [
+    ['/admin/bookings/',  'Bookings',      'M7 3v3M17 3v3M4 8h16M5 6h14v15H5z M9 13h6M9 17h4', ['bookings']],
     ['/admin/pages/?type=service',  'Service Pages', 'M6 3h9l5 5v13H6z M14 3v6h6', ['pages'], 'service'],
     ['/admin/pages/?type=lp',       'Landing Pages', 'M4 4h16v6H4z M4 14h7v6H4z M15 14h5 M15 18h5', ['pages'], 'lp'],
     ['/admin/pages/?type=location', 'Locations',     'M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z', ['pages'], 'location'],
@@ -54,8 +55,9 @@ $isActive = static function (array $keys, string $type) use ($currentRoute, $nav
 
 <nav class="adm-side" data-adm-side aria-label="Admin">
   <ul>
+<?php require_once APP . '/bookings.php'; $newBookings = booking_new_count(); ?>
 <?php foreach ($nav as $item): [$href, $label, $icon, $keys] = $item; $navItemType = $item[4] ?? ''; ?>
-    <li><a href="<?= e($href) ?>"<?= $isActive($keys, $navItemType) ? ' class="is-active" aria-current="page"' : '' ?>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="<?= e($icon) ?>"/></svg><?= e($label) ?></a></li>
+    <li><a href="<?= e($href) ?>"<?= $isActive($keys, $navItemType) ? ' class="is-active" aria-current="page"' : '' ?>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="<?= e($icon) ?>"/></svg><?= e($label) ?><?php if ($keys === ['bookings'] && $newBookings): ?><span class="adm-side__count" aria-label="<?= (int) $newBookings ?> new"><?= (int) $newBookings ?></span><?php endif; ?></a></li>
 <?php endforeach; ?>
   </ul>
   <a class="adm-side__site" href="/blog/" target="_blank" rel="noopener">Open the blog &nearr;</a>

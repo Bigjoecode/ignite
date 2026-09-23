@@ -98,6 +98,26 @@ CREATE TABLE IF NOT EXISTS redirects (
     to_path    TEXT NOT NULL,
     created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS bookings (
+    id          TEXT PRIMARY KEY,               -- the id written to bookings.jsonl
+    created_at  TEXT NOT NULL,                  -- UTC, when the request came in
+    status      TEXT NOT NULL DEFAULT 'new',    -- new | contacted | booked | closed
+    office      TEXT NOT NULL DEFAULT '',
+    patient     TEXT NOT NULL DEFAULT '',
+    treatment   TEXT NOT NULL DEFAULT '',
+    date        TEXT NOT NULL DEFAULT '',       -- preferred day, or "first"
+    time        TEXT NOT NULL DEFAULT '',
+    first_name  TEXT NOT NULL DEFAULT '',
+    last_name   TEXT NOT NULL DEFAULT '',
+    phone       TEXT NOT NULL DEFAULT '',
+    email       TEXT NOT NULL DEFAULT '',
+    notes       TEXT NOT NULL DEFAULT '',
+    source      TEXT NOT NULL DEFAULT '',       -- the page the visitor came from
+    staff_note  TEXT NOT NULL DEFAULT '',       -- what the practice wrote about it
+    updated_at  TEXT,
+    updated_by  INTEGER REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS bookings_created ON bookings (created_at DESC);
 SQL);
 
     if (db_setting($pdo, 'posts_seeded') === null) {
