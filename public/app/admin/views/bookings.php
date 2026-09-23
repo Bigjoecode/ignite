@@ -4,10 +4,14 @@ $query = static function (array $changes) use ($filters): string {
     $params = array_filter(array_merge($filters, $changes), static fn(string $v): bool => $v !== '');
     return $params ? '?' . http_build_query($params) : '';
 };
-$tabs = ['' => 'All'] + BOOKING_STATUSES;
+$tabs    = ['' => 'All'] + BOOKING_STATUSES + ['trash' => 'Trash'];
+$inTrash = $filters['status'] === 'trash';
 ?>
 <div class="adm-head">
   <h1>Bookings</h1>
+  <a class="adm-btn adm-btn--primary" href="/admin/bookings/new/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add a booking
+  </a>
   <a class="adm-btn" href="/admin/bookings/export.csv<?= e($query([])) ?>">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>Download as a spreadsheet
   </a>
@@ -42,6 +46,7 @@ $tabs = ['' => 'All'] + BOOKING_STATUSES;
 <?php else: ?>
   <h2>No requests yet</h2>
   <p>Consultation requests from the website appear here as soon as they come in.</p>
+  <a class="adm-btn adm-btn--primary" href="/admin/bookings/new/">Add a booking</a>
 <?php endif; ?>
 </div>
 <?php else: ?>
@@ -65,11 +70,24 @@ $tabs = ['' => 'All'] + BOOKING_STATUSES;
         <td>
           <a class="adm-post-title" href="<?= e($link) ?>"><?= e($name !== '' ? $name : '(no name)') ?></a>
           <div class="adm-row-actions">
+<?php if ($row['phone'] !== ''): ?>
             <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $row['phone'])) ?>"><?= e($row['phone']) ?></a>
+<?php endif; ?>
+<?php if ($row['email'] !== ''): ?>
             <a href="mailto:<?= e($row['email']) ?>"><?= e($row['email']) ?></a>
+<?php endif; ?>
+          </div>
+          <div class="adm-row-actions">
+            <a href="<?= e($link) ?>"><?= $inTrash ? 'Open' : 'Edit' ?></a>
+<?php if ($inTrash): ?>
+            <form method="post" action="<?= e($link) ?>restore/"><?= csrf_field() ?><button type="submit" class="adm-link">Restore</button></form>
+            <form method="post" action="<?= e($link) ?>delete/" data-adm-confirm="Delete this booking for good? This cannot be undone."><?= csrf_field() ?><button type="submit" class="adm-link adm-link--danger">Delete permanently</button></form>
+<?php else: ?>
+            <form method="post" action="<?= e($link) ?>trash/" data-adm-confirm="Move this booking to the trash?"><?= csrf_field() ?><button type="submit" class="adm-link adm-link--danger">Trash</button></form>
+<?php endif; ?>
           </div>
 <?php if ($row['source'] !== ''): ?>
-          <div class="adm-muted adm-path">from <?= e($row['source']) ?></div>
+          <div class="adm-muted adm-path"><?= e($row['source'][0] === '/' ? 'from ' . $row['source'] : $row['source']) ?></div>
 <?php endif; ?>
         </td>
         <td><?= e(locations()[$row['office']]['name'] ?? $row['office']) ?></td>

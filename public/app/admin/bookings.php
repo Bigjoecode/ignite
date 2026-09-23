@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 
-// Bookings screen: the consultation requests that came in from the website.
+// Bookings screen: the consultation requests from the website, plus the ones
+// the practice takes itself. Add, edit, trash, restore and delete.
 
 require_once APP . '/bookings.php';
 
@@ -23,7 +24,19 @@ function admin_bookings_index(array $user): void
     ], 'Bookings', $user);
 }
 
-/** One request, with its notes and what to do next. */
+/** The form for a request the practice takes itself. */
+function admin_booking_new(array $user): void
+{
+    admin_render('booking-edit', [
+        'row'      => ['id' => '', 'created_at' => gmdate('c'), 'status' => 'new', 'office' => (string) ($_GET['office'] ?? ''),
+            'patient' => '', 'treatment' => '', 'date' => 'first', 'time' => '', 'first_name' => '', 'last_name' => '',
+            'phone' => '', 'email' => '', 'notes' => '', 'staff_note' => '', 'source' => '', 'trashed_at' => null, 'updated_at' => null],
+        'problems' => [],
+        'isNew'    => true,
+    ], 'Add a booking', $user);
+}
+
+/** One request: everything it holds, and what to do next. */
 function admin_booking_view(array $user, string $id): void
 {
     $row = booking_find($id);
@@ -31,24 +44,54 @@ function admin_booking_view(array $user, string $id): void
         admin_not_found($user);
         exit;
     }
-    admin_render('booking', ['row' => $row], 'Booking', $user);
+    admin_render('booking-edit', ['row' => $row, 'problems' => [], 'isNew' => false], 'Booking', $user);
 }
 
-/** Saves the status and the practice's note. */
+/** Saves a new request, or the changes to one. */
 function admin_booking_save(array $user, string $id): void
 {
-    $status = (string) ($_POST['status'] ?? '');
-    $note   = trim((string) ($_POST['staff_note'] ?? ''));
+    $isNew = $id === '';
+    if (!$isNew && !booking_find($id)) {
+        admin_not_found($user);
+        exit;
+    }
+    $fields = array_intersect_key($_POST, array_flip(['status', 'office', 'patient', 'treatment', 'date', 'time',
+        'first_name', 'last_name', 'phone', 'email', 'notes', 'staff_note']));
+
+    if ($problems = booking_problems($fields)) {
+        admin_render('booking-edit', [
+            'row'      => $fields + ($isNew ? ['id' => '', 'created_at' => gmdate('c'), 'source' => '', 'trashed_at' => null, 'updated_at' => null] : booking_find($id)),
+            'problems' => $problems,
+            'isNew'    => $isNew,
+        ], $isNew ? 'Add a booking' : 'Booking', $user);
+        exit;
+    }
+
+    if ($isNew) {
+        $id = booking_create($fields, (int) $user['id']);
+        admin_flash('success', 'Booking added.');
+    } else {
+        booking_update($id, $fields, (int) $user['id']);
+        admin_flash('success', 'Booking saved.');
+    }
+    redirect('/admin/bookings/' . rawurlencode($id) . '/', 303);
+}
+
+/** Trash, restore or delete for good. */
+function admin_booking_action(array $user, string $id, string $action): void
+{
     if (!booking_find($id)) {
         admin_not_found($user);
         exit;
     }
-    if (!booking_update($id, $status, $note, (int) $user['id'])) {
-        admin_flash('error', 'That status is not one we know, so nothing was changed.');
-    } else {
-        admin_flash('success', 'Booking updated.');
+    if ($action === 'delete') {
+        booking_delete($id);
+        admin_flash('success', 'Booking deleted.');
+        redirect('/admin/bookings/?status=trash', 303);
     }
-    redirect('/admin/bookings/' . rawurlencode($id) . '/', 303);
+    booking_trash($id, $action === 'trash', (int) $user['id']);
+    admin_flash('success', $action === 'trash' ? 'Booking moved to the trash.' : 'Booking restored.');
+    redirect($action === 'trash' ? '/admin/bookings/' : '/admin/bookings/' . rawurlencode($id) . '/', 303);
 }
 
 /** Every request as a spreadsheet, so the practice can work offline or hand it over. */
@@ -79,7 +122,7 @@ function admin_bookings_export(): void
             booking_choice('time', $r['time']),
             $r['notes'],
             $r['staff_note'],
-            $r['source'] !== '' ? 'igniteorthodontics.com' . $r['source'] : '',
+            $r['source'] !== '' ? (str_starts_with($r['source'], '/') ? 'igniteorthodontics.com' . $r['source'] : $r['source']) : '',
             $r['id'],
         ]);
     }

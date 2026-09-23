@@ -69,11 +69,12 @@ Sign in at https://igniteorthodontics.com/admin/.
   to other websites are removed (the site never sends visitors off-site).
 - **Media Library:** drag-and-drop upload or import from a URL (the image is downloaded,
   never hotlinked). Images are validated, re-encoded and stored in `public_html/uploads/`.
-- **Bookings:** every consultation request from the website, newest first, with status tabs
-  (New / Contacted / Appointment booked / Closed), an office filter, search by name, phone or
-  email, a note field per request and a CSV download. The sidebar shows how many are new.
-  Requests live in the `bookings` table (`app/bookings.php`); anything that only reached
-  `bookings.jsonl` is imported when the screen is opened.
+- **Bookings:** every consultation request, newest first, with status tabs (New / Contacted /
+  Appointment booked / Closed / Trash), an office filter, search by name, phone or email, a
+  note field per request and a CSV download. The sidebar shows how many are new. Requests can
+  be added by hand (phone and walk-in enquiries), edited, trashed, restored and deleted.
+  They live in the `bookings` table (`app/bookings.php`); anything that only reached
+  `bookings.jsonl` is imported when the screen is opened, and a deleted one is not brought back.
 - **Settings → Booking notifications:** who is emailed when a consultation request comes in —
   one list that receives every booking plus extra addresses per office (`app/notify.php`,
   settings key `booking_emails`). "Save and send a test" mails a sample request, marked as a test.

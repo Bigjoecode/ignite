@@ -114,11 +114,18 @@ CREATE TABLE IF NOT EXISTS bookings (
     notes       TEXT NOT NULL DEFAULT '',
     source      TEXT NOT NULL DEFAULT '',       -- the page the visitor came from
     staff_note  TEXT NOT NULL DEFAULT '',       -- what the practice wrote about it
+    trashed_at  TEXT,                           -- in the trash, still recoverable
     updated_at  TEXT,
     updated_by  INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS bookings_created ON bookings (created_at DESC);
 SQL);
+
+    // columns added after a table first shipped
+    $bookingCols = $pdo->query('PRAGMA table_info(bookings)')->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('trashed_at', $bookingCols, true)) {
+        $pdo->exec('ALTER TABLE bookings ADD COLUMN trashed_at TEXT');
+    }
 
     if (db_setting($pdo, 'posts_seeded') === null) {
         db_seed_posts($pdo);

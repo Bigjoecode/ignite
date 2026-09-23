@@ -153,9 +153,11 @@ a.adm-post-title:hover{color:var(--orange-600);}
 .adm-booking__list dt{color:var(--muted);font-size:13px;font-weight:600;}
 .adm-booking__list dd{margin:0;font-size:14.5px;word-break:break-word;}
 .adm-booking__quote{margin:0;padding:14px 16px;border-left:3px solid var(--orange);border-radius:0 10px 10px 0;background:var(--tint);font-size:14.5px;line-height:1.6;}
-.adm-booking h2{margin:0 0 14px;}
-.adm-booking h2 + h2,.adm-booking__quote + h2{margin-top:22px;}
-.adm-booking form .adm-btn{margin-top:18px;}
+.adm-booking h2{margin:0 0 6px;}
+.adm-booking h2:not(:first-child){margin-top:26px;}
+.adm-booking .adm-btn--primary{margin-top:20px;}
+.adm-booking__danger{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);}
+.adm-grid-2{display:grid;gap:0 16px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
 @media (max-width:900px){.adm-booking{grid-template-columns:1fr;}}
 .adm-date{font-size:13.5px;white-space:nowrap;}
 .adm-date span{display:block;color:var(--muted);font-size:12px;}

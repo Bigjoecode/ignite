@@ -146,6 +146,21 @@ if ($route === 'bookings/export.csv' && $method === 'GET') {
     admin_bookings_export();
     exit;
 }
+if ($route === 'bookings/new' && $method === 'GET') {
+    require_once APP . '/admin/bookings.php';
+    admin_booking_new($user);
+    exit;
+}
+if ($route === 'bookings/create' && $method === 'POST') {
+    require_once APP . '/admin/bookings.php';
+    admin_booking_save($user, '');
+    exit;
+}
+if (preg_match('#^bookings/([A-Za-z0-9._-]{1,64})/(trash|restore|delete)$#', $route, $m) && $method === 'POST') {
+    require_once APP . '/admin/bookings.php';
+    admin_booking_action($user, rawurldecode($m[1]), $m[2]);
+    exit;
+}
 if (preg_match('#^bookings/([A-Za-z0-9._-]{1,64})$#', $route, $m)) {
     require_once APP . '/admin/bookings.php';
     $method === 'POST'
