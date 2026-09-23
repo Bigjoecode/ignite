@@ -6,7 +6,9 @@ $bk     = require APP . '/data/booking.php';
 $check  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4 4L18.5 7.5"/></svg>';
 $s      = consult_settings();
 $mins   = (int) $s['slot_minutes'];
-$live   = is_array($slots) && array_filter($slots) !== [];
+$open   = is_array($slots) ? array_filter($slots) : [];   // only days with times are worth listing
+$live   = $open !== [];
+$first  = $live ? array_key_first($open) : '';
 $phone  = $office['phone'] ?? cfg('phone');
 $tel    = $office['tel'] ?? cfg('phone_tel');
 $shown  = 8;    // times per day before "show all"
@@ -36,14 +38,16 @@ $shown  = 8;    // times per day before "show all"
 
         <fieldset class="ig-bk__pane" data-vc-step>
           <legend class="ig-bk__q">Choose a date &amp; time</legend>
-          <p class="ig-bk__sub">Showing availability for a free video consultation. All times are Eastern.</p>
+          <p class="ig-bk__sub">
+            Showing availability for a free video consultation. All times are Eastern.
+<?php if ($first !== '' && consult_day_label($first) !== 'Today'): ?>
+            Our next opening is <b><?= e(consult_day_label($first)) ?></b>.
+<?php endif; ?>
+          </p>
 
-<?php foreach ($slots as $ymd => $times): $day = new DateTimeImmutable($ymd); ?>
+<?php foreach ($open as $ymd => $times): $day = new DateTimeImmutable($ymd); ?>
           <div class="vc-day">
             <h3 class="vc-day__name"><?= e(consult_day_short($ymd)) ?><span><?= e($day->format('j F')) ?></span></h3>
-<?php if (!$times): ?>
-            <p class="vc-day__none">No times left on this day</p>
-<?php else: ?>
             <div class="vc-day__times" role="radiogroup" aria-label="Times on <?= e(consult_day_label($ymd)) ?>">
 <?php foreach ($times as $i => $slot): ?>
               <label class="vc-slot<?= $i >= $shown ? ' vc-slot--more' : '' ?>"<?= $i >= $shown ? ' hidden' : '' ?>>
@@ -55,7 +59,6 @@ $shown  = 8;    // times per day before "show all"
               <button type="button" class="vc-more" data-vc-more>+ show all <?= count($times) ?></button>
 <?php endif; ?>
             </div>
-<?php endif; ?>
           </div>
 <?php endforeach; ?>
 
