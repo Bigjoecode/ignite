@@ -552,6 +552,9 @@ $set = [
    ==================================================================== */
 $locations = [
     'farmingtonhills' => 'farmington-hills',
+    'sterlingheights' => 'sterling-heights',
+    'madisonheights'  => 'madison-heights',
+    'flint'           => 'flint',
     'allenpark'       => 'allen-park',
     'trenton'         => 'trenton',
     'pontiac'         => 'pontiac',

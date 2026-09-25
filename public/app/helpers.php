@@ -131,6 +131,7 @@ function page_office_shape(string $slug, string $name, array $f): array
     $state = $get('state') !== '' ? $get('state') : 'MI';
     $zip   = $get('zip');
 
+    // an office without a real number falls back to the main line, so every page can be called
     $digits = preg_replace('/\D/', '', $get('phone'));
     $tel    = '';
     if (strlen($digits) === 10) {
@@ -138,6 +139,8 @@ function page_office_shape(string $slug, string $name, array $f): array
     } elseif (strlen($digits) === 11 && $digits[0] === '1') {
         $tel = '+' . $digits;
     }
+    $phone = $tel !== '' ? $get('phone') : (string) cfg('phone');
+    $tel   = $tel !== '' ? $tel : (string) cfg('phone_tel');
 
     $hours = $f['hours'] ?? '';
     $hours = is_array($hours) ? $hours : preg_split('/\R/', (string) $hours);
@@ -150,7 +153,7 @@ function page_office_shape(string $slug, string $name, array $f): array
         'city'         => $get('city') !== '' ? $get('city') : $name,
         'state'        => $state,
         'zip'          => $zip,
-        'phone'        => $get('phone') !== '' ? $get('phone') : (string) cfg('phone'),
+        'phone'        => $phone,
         'tel'          => $tel,
         'email'        => $get('email'),
         'hours'        => $hours,
