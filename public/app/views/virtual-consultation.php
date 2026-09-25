@@ -93,6 +93,9 @@ $shown  = 8;    // times per day before "show all"
             </label>
             <label class="ig-bk__field"><span>Nearest office <i aria-hidden="true">*</i></span>
               <select name="office" required>
+<?php if (!isset($office['slug'])): ?>
+                <option value="" selected disabled>Choose your closest office</option>
+<?php endif; ?>
 <?php foreach (locations() as $slug => $each): ?>
                 <option value="<?= e($slug) ?>"<?= ($office['slug'] ?? '') === $slug ? ' selected' : '' ?>><?= e($each['name']) ?></option>
 <?php endforeach; ?>

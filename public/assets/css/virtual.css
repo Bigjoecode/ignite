@@ -36,6 +36,17 @@
 .vc-picked span{display:block;font-size:13.5px;color:var(--bk-muted);}
 .vc-picked__change{margin-left:auto;padding:0;border:0;background:none;color:#DA6210;font:inherit;font-size:14px;font-weight:700;text-decoration:underline;cursor:pointer;}
 
+/* --- the dropdowns, so they match the text fields beside them --- */
+.vc .ig-bk__field select{
+  width:100%;height:52px;padding:0 44px 0 14px;border:1.5px solid #D5DDE8;border-radius:10px;background:#FFFFFF;
+  font:inherit;font-size:16px;color:#0B2A55;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B6B82' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:18px 18px;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+.vc .ig-bk__field select:hover{border-color:#C3CEDD;}
+.vc .ig-bk__field select:focus{outline:none;border-color:#F47421;box-shadow:0 0 0 3px rgba(244,116,33,.2);}
+
 /* --- how it works, in the sidebar --- */
 .vc-how{display:grid;gap:16px;margin:0;padding:0;list-style:none;counter-reset:vc;}
 .vc-how li{display:grid;gap:2px;padding-left:38px;position:relative;counter-increment:vc;}

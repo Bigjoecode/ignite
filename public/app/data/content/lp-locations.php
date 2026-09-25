@@ -1,6 +1,7 @@
 <?php
-// Ad landing pages for Ignite Orthodontics Farmington Hills (/lp/farmingtonhills/...).
-// Loaded with: php app/cli/import-pages.php app/data/content/lp-farmington-hills.php
+// Ad landing pages per location (/lp/{location}/...): the same eight pages for every
+// office listed at the bottom of this file.
+// Loaded with: php app/cli/import-pages.php app/data/content/lp-locations.php
 // After import the pages are edited in /admin/pages/?type=lp.
 //
 // Three pages follow the structure of the practice's reference pages on
@@ -8,7 +9,7 @@
 // use Ignite's approved treatment copy. The references' statistics ("1,050+ smiles",
 // "4.9 stars") and their Detroit patients' reviews are not Ignite's, so they are not
 // used: highlights are facts the practice has confirmed, and reviews are the Ignite
-// patient reviews the practice confirmed as genuine. {office} becomes "Farmington Hills".
+// patient reviews the practice confirmed as genuine. {office} becomes the office's name.
 
 $lines = static fn(string ...$items): string => implode("\n", $items);
 $steps = static fn(array ...$pairs): array => array_map(static fn(array $p): array => ['title' => $p[0], 'text' => $p[1]], $pairs);
@@ -81,23 +82,18 @@ $finalCta = static fn(string $heading, string $text, string $button = 'Book Your
     'price' => '', 'button' => $button, 'call' => 'yes',
 ];
 
-$page = static function (string $slug, string $title, string $description, array $hero, array $blocks, string $parent = 'farmingtonhills') {
-    return ['parent' => $parent, 'slug' => $slug, 'title' => $title, 'description' => $description,
-        'seo_title' => $title . ' | Ignite Orthodontics', 'hero' => $hero, 'blocks' => $blocks];
-};
+// one page of the set; an empty slug means the location's own front page
+$page = static fn(string $slug, string $title, string $description, array $hero, array $blocks): array =>
+    ['slug' => $slug, 'title' => $title, 'description' => $description, 'hero' => $hero, 'blocks' => $blocks];
 
-return [
-    'type'     => 'lp',
-    'template' => 'lp-landing',
-    'settings' => ['office' => 'farmington-hills', 'index' => 'no'],
-    'off'      => [],
-
-    'pages' => [
+/* The set, written once. {city} becomes the office's name in titles and descriptions;
+   {office} in the page content itself is replaced when the page is drawn. */
+$set = [
 
         /* ================================================================
            /lp/farmingtonhills/ — braces in Farmington Hills
            ================================================================ */
-        $page('farmingtonhills', 'Braces in Farmington Hills', 'Braces for kids, teens and adults at Ignite Orthodontics Farmington Hills. Free consultation, braces from $99/month.', [
+        $page('', 'Braces in {city}', 'Braces for kids, teens and adults at Ignite Orthodontics {city}. Free consultation, braces from $99/month.', [
             'eyebrow' => 'Orthodontist in {office}, MI',
             'heading' => 'Braces in {office} for *Kids, Teens and Adults*',
             'lead' => $lines(
@@ -138,12 +134,12 @@ return [
             $whyIgnite,
             ['_type' => 'faq', 'tone' => 'white', 'eyebrow' => 'FAQ', 'heading' => 'Braces Questions, *Answered*', 'items' => $bracesFaq],
             $finalCta('Your New Smile Starts in *{office}*', 'Take the first step toward a healthier, straighter smile with a free braces consultation at Ignite Orthodontics {office}.'),
-        ], ''),
+        ]),
 
         /* ================================================================
            braces-kids
            ================================================================ */
-        $page('braces-kids', 'Braces for Kids in Farmington Hills', 'Gentle braces and early orthodontic care for kids at Ignite Orthodontics Farmington Hills. Free consultation.', [
+        $page('braces-kids', 'Braces for Kids in {city}', 'Gentle braces and early orthodontic care for kids at Ignite Orthodontics {city}. Free consultation.', [
             'eyebrow' => 'Braces for Kids in {office}',
             'heading' => 'Healthy, Confident *Smiles for Kids*',
             'lead' => 'Gentle, fun and stress-free orthodontic care designed for children. We guide early jaw growth, fix crowding and help your child build a lifetime of confidence.',
@@ -197,7 +193,7 @@ return [
         /* ================================================================
            braces-teens
            ================================================================ */
-        $page('braces-teens', 'Braces for Teens in Farmington Hills', 'Braces for teens at Ignite Orthodontics Farmington Hills: metal, ceramic and Invisalign options, from $99/month. Free consultation.', [
+        $page('braces-teens', 'Braces for Teens in {city}', 'Braces for teens at Ignite Orthodontics {city}: metal, ceramic and Invisalign options, from $99/month. Free consultation.', [
             'eyebrow' => 'Braces for Teens in {office}',
             'heading' => 'Give Your Teen a Smile *They Can Feel Confident About*',
             'lead' => $lines(
@@ -258,7 +254,7 @@ return [
         /* ================================================================
            braces — general braces page (Google Ads)
            ================================================================ */
-        $page('braces', 'Braces in Farmington Hills', 'Braces at Ignite Orthodontics Farmington Hills: board-certified orthodontists, free consultation, braces from $99/month.', [
+        $page('braces', 'Braces in {city}', 'Braces at Ignite Orthodontics {city}: board-certified orthodontists, free consultation, braces from $99/month.', [
             'eyebrow' => 'Braces in {office}, MI',
             'heading' => 'Straighter Teeth. Stronger Bite. *Lasting Results.*',
             'lead' => 'Braces are one of the most reliable ways to correct misaligned teeth, improve bite function and create a healthier, more confident smile. At Ignite Orthodontics {office}, we make the process clear, comfortable and tailored to you.',
@@ -304,7 +300,7 @@ return [
         /* ================================================================
            braces-99 — the $99/month offer (confident-smile structure)
            ================================================================ */
-        $page('braces-99', 'Braces From $99/Month in Farmington Hills', 'Braces from $99/month at Ignite Orthodontics Farmington Hills. Free consultation, flexible payment plans, insurance accepted.', [
+        $page('braces-99', 'Braces From $99/Month in {city}', 'Braces from $99/month at Ignite Orthodontics {city}. Free consultation, flexible payment plans, insurance accepted.', [
             'eyebrow' => 'Braces Offer · {office}',
             'heading' => 'Braces From *$99/Month* in {office}',
             'lead' => 'Stop putting off the smile you want. Get braces from board-certified orthodontists with flexible monthly payments, and start with a free consultation.',
@@ -358,7 +354,7 @@ return [
         /* ================================================================
            braces-confident-smiles (reference: braces-confidential-smile)
            ================================================================ */
-        $page('braces-confident-smiles', 'Braces for a Confident Smile in Farmington Hills', 'Get braces for a confident smile at Ignite Orthodontics Farmington Hills. Board-certified orthodontists, free consultation.', [
+        $page('braces-confident-smiles', 'Braces for a Confident Smile in {city}', 'Get braces for a confident smile at Ignite Orthodontics {city}. Board-certified orthodontists, free consultation.', [
             'eyebrow' => 'Orthodontist in {office}, MI',
             'heading' => 'Get Braces for a Confident Smile, *So You Can Smile Without Hiding*',
             'lead' => 'Stop hiding your smile in photos. Stop covering your mouth when you laugh. Our orthodontic team helps teens and adults achieve straight, confident smiles with modern braces designed for comfort and real results.',
@@ -428,7 +424,7 @@ return [
         /* ================================================================
            braces-underbite (reference: underbite-treatment)
            ================================================================ */
-        $page('braces-underbite', 'Underbite Treatment in Farmington Hills', 'Underbite treatment for teens and adults at Ignite Orthodontics Farmington Hills. Free consultation, flexible payment plans.', [
+        $page('braces-underbite', 'Underbite Treatment in {city}', 'Underbite treatment for teens and adults at Ignite Orthodontics {city}. Free consultation, flexible payment plans.', [
             'eyebrow' => 'Underbite Treatment in {office}',
             'heading' => 'Fix Your Underbite So You Can *Eat Comfortably and Smile With Confidence Again*',
             'lead' => 'If your bite feels off, your teeth do not align properly, or your smile makes you feel self-conscious, our team helps teens and adults correct underbites with treatment designed to improve comfort, function and long-term confidence.',
@@ -490,7 +486,7 @@ return [
         /* ================================================================
            braces-crowded-teeth (reference: braces-crowded-teeth)
            ================================================================ */
-        $page('braces-crowded-teeth', 'Braces for Crowded Teeth in Farmington Hills', 'Fix crowded teeth with braces at Ignite Orthodontics Farmington Hills. Free consultation, braces from $99/month.', [
+        $page('braces-crowded-teeth', 'Braces for Crowded Teeth in {city}', 'Fix crowded teeth with braces at Ignite Orthodontics {city}. Free consultation, braces from $99/month.', [
             'eyebrow' => 'Crowded Teeth Treatment in {office}',
             'heading' => 'Fix Your Crowded Teeth With Braces So You Can *Smile With Confidence Again*',
             'lead' => 'Crowded teeth do not fix themselves. Our board-certified orthodontists straighten crowded teeth with comfortable, modern braces and a plan built around your smile.',
@@ -546,5 +542,46 @@ return [
             )],
             $finalCta('Still Unsure? *That\'s Okay.*', 'Start with a free consultation. No pressure. Just answers.', 'Schedule Your Visit Today'),
         ]),
-    ],
+];
+
+/* ====================================================================
+   The locations that get the set: address on the site => office page.
+   Adding a line here gives that location all eight pages on the next
+   import. An office that does not exist yet is skipped, so a location
+   can be added as soon as its office page is created.
+   ==================================================================== */
+$locations = [
+    'farmingtonhills' => 'farmington-hills',
+    'allenpark'       => 'allen-park',
+    'trenton'         => 'trenton',
+    'pontiac'         => 'pontiac',
+];
+
+$pages = [];
+foreach ($locations as $lpSlug => $officeSlug) {
+    $office = locations()[$officeSlug] ?? null;
+    if (!$office) {
+        continue;       // no office page yet, so there is nothing to build a landing page on
+    }
+    $city = static fn(string $text): string => str_replace('{city}', $office['name'], $text);
+    foreach ($set as $page) {
+        $isFront  = $page['slug'] === '';
+        $pages[] = [
+            'parent'      => $isFront ? '' : $lpSlug,
+            'slug'        => $isFront ? $lpSlug : $page['slug'],
+            'settings'    => ['office' => $officeSlug, 'index' => 'no'],
+            'title'       => $city($page['title']),
+            'description' => $city($page['description']),
+            'seo_title'   => $city($page['title']) . ' | Ignite Orthodontics',
+            'hero'        => $page['hero'],
+            'blocks'      => $page['blocks'],
+        ];
+    }
+}
+
+return [
+    'type'     => 'lp',
+    'template' => 'lp-landing',
+    'off'      => [],
+    'pages'    => $pages,
 ];
