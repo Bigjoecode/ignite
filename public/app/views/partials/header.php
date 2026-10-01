@@ -86,16 +86,10 @@
 
       <ul class="ig-menu">
 
-        <li>
-          <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/about-us/">About Us</a>
-          </div>
-        </li>
-
         <li data-ig-parent>
           <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/treatments/">Our Treatments</a>
-            <button class="ig-menu__toggle" type="button" aria-label="Toggle Our Treatments submenu" aria-expanded="false">
+            <a class="ig-menu__link" href="/treatments/">Treatments</a>
+            <button class="ig-menu__toggle" type="button" aria-label="Toggle Treatments submenu" aria-expanded="false">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15.5 4.5 8l1.6-1.6L12 12.3l5.9-5.9L19.5 8z"/></svg>
             </button>
           </div>
@@ -106,41 +100,58 @@
 </div>
         </li>
 
-        <li>
-          <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/virtual-consultation/">Virtual Consultation</a>
-          </div>
-        </li>
-
-        <li>
-          <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/patient-info/">Patient Info</a>
-          </div>
-        </li>
-
         <li data-ig-parent>
           <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/locations/">Our Locations</a>
-            <button class="ig-menu__toggle" type="button" aria-label="Toggle Our Locations submenu" aria-expanded="false">
+            <a class="ig-menu__link" href="/locations/">Locations</a>
+            <button class="ig-menu__toggle" type="button" aria-label="Toggle Locations submenu" aria-expanded="false">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15.5 4.5 8l1.6-1.6L12 12.3l5.9-5.9L19.5 8z"/></svg>
             </button>
           </div>
-          <div class="ig-sub">
+          <div class="ig-sub ig-sub--grid">
 <?php foreach (locations() as $l): ?>
             <a href="/locations/<?= e($l['slug']) ?>/"><?= e($l['name']) ?></a>
 <?php endforeach; ?>
 </div>
         </li>
 
-        <li>
+        <li data-ig-parent>
           <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/blog/">Blog</a>
+            <a class="ig-menu__link" href="/booking/">Free Consultation</a>
+            <button class="ig-menu__toggle" type="button" aria-label="Toggle Free Consultation submenu" aria-expanded="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15.5 4.5 8l1.6-1.6L12 12.3l5.9-5.9L19.5 8z"/></svg>
+            </button>
+          </div>
+          <div class="ig-sub">
+            <a href="/booking/">Book an Office Visit</a>
+            <a href="/virtual-consultation/">Virtual Consultation</a>
           </div>
         </li>
 
-        <li>
+        <li data-ig-parent>
           <div class="ig-menu__row">
-            <a class="ig-menu__link" href="/refer-a-patient/">Refer a Patient</a>
+            <a class="ig-menu__link" href="/patient-info/">Patients</a>
+            <button class="ig-menu__toggle" type="button" aria-label="Toggle Patients submenu" aria-expanded="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15.5 4.5 8l1.6-1.6L12 12.3l5.9-5.9L19.5 8z"/></svg>
+            </button>
+          </div>
+          <div class="ig-sub">
+            <a href="/patient-info/">Patient Info</a>
+            <a href="/insurance-financing/">Insurance &amp; Financing</a>
+            <a href="/refer-a-patient/">Refer a Patient</a>
+            <a href="/blog/">Blog</a>
+          </div>
+        </li>
+
+        <li data-ig-parent>
+          <div class="ig-menu__row">
+            <a class="ig-menu__link" href="/about-us/">About</a>
+            <button class="ig-menu__toggle" type="button" aria-label="Toggle About submenu" aria-expanded="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15.5 4.5 8l1.6-1.6L12 12.3l5.9-5.9L19.5 8z"/></svg>
+            </button>
+          </div>
+          <div class="ig-sub">
+            <a href="/about-us/">About Us</a>
+            <a href="/contact-us/">Contact Us</a>
           </div>
         </li>
 
@@ -152,9 +163,9 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
           <?= e(cfg('phone')) ?>
         </a>
-        <a href="mailto:sterlingheights@igniteorthodontics.com"><!-- EDIT -->
+        <a href="mailto:booking@igniteorthodontics.com"><!-- EDIT -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 4.8-8-4.8V6l8 4.8L20 6v2.2z"/></svg>
-          sterlingheights@igniteorthodontics.com
+          booking@igniteorthodontics.com
         </a>
       </div>
     </div>

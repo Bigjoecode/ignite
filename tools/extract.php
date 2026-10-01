@@ -108,14 +108,14 @@ $h = rep_re($h, '#<div class="ig-drop" role="menu">.*?</div>#s', <<<'HTML'
 <?php endforeach; ?>
           </div>
 HTML);
-$h = wrap_re($h, '#(<a class="ig-menu__link" href="/locations/">Our Locations</a>.*?<div class="ig-sub">).*?(</div>)#s', <<<'HTML'
+$h = wrap_re($h, '#(<a class="ig-menu__link" href="/locations/">Locations</a>.*?<div class="ig-sub[^"]*">).*?(</div>)#s', <<<'HTML'
 
 <?php foreach (locations() as $l): ?>
             <a href="/locations/<?= e($l['slug']) ?>/"><?= e($l['name']) ?></a>
 <?php endforeach; ?>
 
 HTML);
-$h = wrap_re($h, '#(<a class="ig-menu__link" href="/treatments/">Our Treatments</a>.*?<div class="ig-sub">).*?(</div>)#s', <<<'HTML'
+$h = wrap_re($h, '#(<a class="ig-menu__link" href="/treatments/">Treatments</a>.*?<div class="ig-sub">).*?(</div>)#s', <<<'HTML'
 
 <?php foreach (service_menu() as [$href, $label]): ?>
             <a href="<?= e($href) ?>"><?= e($label) ?></a>
@@ -124,9 +124,8 @@ $h = wrap_re($h, '#(<a class="ig-menu__link" href="/treatments/">Our Treatments<
 HTML);
 $h = rep($h, 'Our Locations (6)', 'Our Locations (<?= count(locations()) ?>)');
 $h = brand_phone($h);
-// no "Contact Us" item in the menu (desktop bar or mobile panel)
+// no email address in the top bar; Contact Us lives under About in the menu
 $h = rep_re($h, '#\s*<!-- EDIT: email address -->\s*<div class="ig-util__item ig-util__item--contact">.*?</div>#s', '');
-$h = rep_re($h, '#\s*<li>\s*<div class="ig-menu__row">\s*<a class="ig-menu__link" href="/contact-us/">Contact Us</a>\s*</div>\s*</li>#s', '');
 // "Request a Consultation" goes to the booking page (with the office chosen on office pages)
 $h = rep($h, '<a class="ig-btn ig-btn--consult" href="/contact-us/">', '<a class="ig-btn ig-btn--consult" href="<?= e(booking_url()) ?>">');
 put('app/views/partials/header.php', sprintf(VIEW_HEADER, 'menu.html') . $h);
