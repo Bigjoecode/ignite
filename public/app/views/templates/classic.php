@@ -249,7 +249,13 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
         </div>
 
         <div class="ig-mapbox">
+<?php if ($office && $office['street'] !== ''): ?>
+          <iframe class="ig-map" src="https://www.google.com/maps?q=<?= rawurlencode($office['map_q']) ?>&amp;output=embed"
+                  title="Map showing Ignite Orthodontics <?= e($office['name']) ?>"
+                  loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+<?php else: ?>
           <img src="<?= e($s['image']) ?>" alt="<?= e($s['image_alt']) ?>" width="288" height="467" loading="lazy" decoding="async">
+<?php endif; ?>
         </div>
       </div>
     </div>

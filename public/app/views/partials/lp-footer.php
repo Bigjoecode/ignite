@@ -17,6 +17,11 @@ $lpTel    = $lpOffice['tel'] ?? cfg('phone_tel');
 <?php endif; ?>
 <?php endif; ?>
       <p><a href="tel:<?= e($lpTel) ?>"><?= e($lpPhone) ?></a><?php if (!empty($lpOffice['email'])): ?> &middot; <a href="mailto:<?= e($lpOffice['email']) ?>"><?= e($lpOffice['email']) ?></a><?php endif; ?></p>
+<?php if (!empty($lpOffice['street'])): ?>
+      <iframe class="lp-map" src="https://www.google.com/maps?q=<?= rawurlencode($lpOffice['map_q']) ?>&amp;output=embed"
+              title="Map showing Ignite Orthodontics <?= e($lpOffice['name']) ?>"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+<?php endif; ?>
     </div>
     <div class="lp-foot__cta">
       <p>Your first visit is a no-cost consultation.</p>

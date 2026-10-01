@@ -1,0 +1,13 @@
+/* The office map, on location pages (views/templates/classic.php) and on the
+   landing pages' footer (views/partials/lp-footer.php). The map itself comes
+   from Google and is only fetched when the visitor scrolls to it. */
+.ig-map{display:block;width:100%;height:100%;min-height:340px;border:0;border-radius:18px;background:#E8EDF4;}
+.ig-mapbox .ig-map{min-height:100%;}
+
+/* on an ad landing page the footer carries a smaller one */
+.lp-map{display:block;width:100%;height:220px;margin-top:16px;border:0;border-radius:14px;background:#0B2A55;}
+.lp-foot__office .lp-map{max-width:420px;}
+
+@media (max-width:860px){
+  .ig-map{min-height:260px;}
+}

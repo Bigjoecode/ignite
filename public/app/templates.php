@@ -147,7 +147,7 @@ function templates(): array
         'tagline' => 'The full page design: photo header, highlight cards, offers, treatment cards and FAQ.',
         'family'  => 'classic',
         'wrap'    => 'ig-locpage',
-        'css'     => ['location.css'],
+        'css'     => ['location.css', 'map.css'],
         'js'      => ['location.js'],
         'shape'   => ['hero', 'cards', 'cards', 'band', 'faq'],
         'sections' => [
@@ -426,7 +426,7 @@ function templates(): array
         'tagline' => 'Every section: photo header with the address, highlights, offers, treatments, contact details and FAQ.',
         'family'  => 'classic',
         'wrap'    => 'ig-locpage',
-        'css'     => ['location.css'],
+        'css'     => ['location.css', 'map.css'],
         'js'      => ['location.js'],
         'shape'   => ['hero', 'cards', 'cards', 'band', 'faq'],
         'sections' => [
@@ -483,7 +483,7 @@ function templates(): array
         'tagline' => 'A lighter office page: header, introduction, treatments, contact details and FAQ.',
         'family'  => 'classic',
         'wrap'    => 'ig-locpage',
-        'css'     => ['location.css'],
+        'css'     => ['location.css', 'map.css'],
         'js'      => ['location.js'],
         'shape'   => ['hero', 'text', 'cards', 'band'],
         'sections' => [
@@ -570,7 +570,7 @@ function templates(): array
         'family'  => 'guide',
         'wrap'    => 'gd',
         'layout'  => 'lp',
-        'css'     => ['guide.css', 'lp.css'],
+        'css'     => ['guide.css', 'lp.css', 'map.css'],
         'js'      => [],
         'shape'   => ['split', 'cards', 'text', 'dark', 'faq'],
         'sections' => [
