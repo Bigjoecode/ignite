@@ -17,6 +17,7 @@ if ($path === 'admin' || strncmp($path, 'admin/', 6) === 0) { require APP . '/ad
 // endpoints without the trailing-slash convention
 if ($path === 'book') { require APP . '/book.php'; exit; }
 if ($path === 'book-virtual') { require APP . '/book-virtual.php'; exit; }
+if ($path === 'see-smile')    { require APP . '/see-smile.php'; exit; }
 if ($path === 'sitemap.xml') { require APP . '/sitemap.php'; exit; }
 
 // one canonical URL per page: always a trailing slash
@@ -64,6 +65,53 @@ if ($path === 'virtual-consultation') {
         'css'         => ['booking.css', 'virtual.css'],
         'js'          => ['virtual.js'],
         'book_office' => $office['slug'] ?? '',
+    ]);
+    exit;
+}
+
+// See Your Smile: send a photo, see what treatment could change
+if ($path === 'see-your-smile') {
+    require_once APP . '/smile.php';
+    require_once APP . '/smile-ai.php';
+    $office = locations()[(string) ($_GET['office'] ?? '')] ?? null;
+    render('see-smile', ['office' => $office, 'aiOn' => smile_ai_ready()], $meta + [
+        'title'       => 'See Your Smile | Ignite Orthodontics',
+        'description' => 'Send a photo of your smile and see what orthodontic treatment could change, with a free opinion from our team.',
+        'css'         => ['booking.css', 'virtual.css', 'smile.css'],
+        'js'          => ['smile.js'],
+        'book_office' => $office['slug'] ?? '',
+    ]);
+    exit;
+}
+
+if ($path === 'see-your-smile/image') {
+    require_once APP . '/smile.php';
+    require_once APP . '/bookings.php';
+    $id      = (string) ($_GET['ref'] ?? '');
+    $which   = ($_GET['which'] ?? '') === 'preview' ? 'result_path' : 'photo_path';
+    $request = booking_find($id);
+    if (!$request || ($request['kind'] ?? '') !== 'smile'
+        || !smile_image_link_valid($id, (string) ($_GET['which'] ?? ''), (int) ($_GET['exp'] ?? 0), (string) ($_GET['sig'] ?? ''))) {
+        http_response_code(404);
+        exit;
+    }
+    smile_send_image((string) $request[$which]);
+}
+
+if ($path === 'see-your-smile/sent') {
+    require_once APP . '/smile.php';
+    require_once APP . '/bookings.php';
+    $id      = (string) ($_GET['ref'] ?? '');
+    $request = booking_find($id);
+    $request = $request && ($request['kind'] ?? '') === 'smile' ? $request : null;
+    render('see-smile-sent', [
+        'request'    => $request,
+        'photoUrl'   => $request && $request['photo_path'] !== '' ? smile_image_url($id, 'photo') : '',
+        'previewUrl' => $request && $request['result_path'] !== '' ? smile_image_url($id, 'preview') : '',
+    ], $meta + [
+        'title'   => 'Your Smile Preview | Ignite Orthodontics',
+        'css'     => ['booking.css', 'virtual.css', 'smile.css'],
+        'noindex' => true,
     ]);
     exit;
 }

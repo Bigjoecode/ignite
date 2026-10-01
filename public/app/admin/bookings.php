@@ -5,6 +5,7 @@ declare(strict_types=1);
 // the practice takes itself. Add, edit, trash, restore and delete.
 
 require_once APP . '/bookings.php';
+require_once APP . '/smile.php';     // smile requests carry a photo
 
 /** The list, with the status tabs, the office filter and a search box. */
 function admin_bookings_index(array $user): void

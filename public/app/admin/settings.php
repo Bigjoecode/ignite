@@ -5,12 +5,15 @@ declare(strict_types=1);
 
 require_once APP . '/notify.php';
 require_once APP . '/consult.php';
+require_once APP . '/smile.php';
+require_once APP . '/smile-ai.php';
 
 /** GET shows the form; POST saves it and can send a test email. */
 function admin_settings(array $user, string $method): void
 {
     if ($method === 'POST') {
         consult_save_settings((array) ($_POST['consult'] ?? []));
+        smile_ai_save_settings((array) ($_POST['smile'] ?? []));
         $all     = (string) ($_POST['all'] ?? '');
         $offices = [];
         foreach (locations() as $slug => $office) {
@@ -61,6 +64,8 @@ function admin_settings(array $user, string $method): void
         'hasKey'   => gcal_key() !== null,
         'keyPath'  => cfg('data_dir') . '/' . GCAL_KEY_FILE,
         'slotCheck' => admin_consult_check(),
+        'smile'     => smile_ai_settings(),
+        'smileUsed' => smile_ai_used_today(),
     ], 'Settings', $user);
 }
 

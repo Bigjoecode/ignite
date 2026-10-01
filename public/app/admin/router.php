@@ -156,6 +156,17 @@ if ($route === 'bookings/create' && $method === 'POST') {
     admin_booking_save($user, '');
     exit;
 }
+// a smile request's photo, which never leaves the data folder
+if (preg_match('#^bookings/([A-Za-z0-9._-]{1,64})/(photo|preview)$#', $route, $m) && $method === 'GET') {
+    require_once APP . '/bookings.php';
+    require_once APP . '/smile.php';
+    $row = booking_find(rawurldecode($m[1]));
+    if (!$row) {
+        admin_not_found($user);
+        exit;
+    }
+    smile_send_image((string) $row[$m[2] === 'preview' ? 'result_path' : 'photo_path']);
+}
 if (preg_match('#^bookings/([A-Za-z0-9._-]{1,64})/(trash|restore|delete)$#', $route, $m) && $method === 'POST') {
     require_once APP . '/admin/bookings.php';
     admin_booking_action($user, rawurldecode($m[1]), $m[2]);

@@ -129,10 +129,13 @@ SQL);
     $bookingCols = $pdo->query('PRAGMA table_info(bookings)')->fetchAll(PDO::FETCH_COLUMN, 1);
     $laterCols   = [
         'trashed_at' => 'TEXT',                          // in the trash, still recoverable
-        'kind'       => "TEXT NOT NULL DEFAULT 'office'", // office | virtual (a video consultation)
-        'start_at'   => 'TEXT',                          // a virtual consultation's agreed time
-        'meet_url'   => 'TEXT',                          // its Google Meet link
-        'event_id'   => 'TEXT',                          // its Google Calendar event
+        'kind'        => "TEXT NOT NULL DEFAULT 'office'", // office | virtual (video call) | smile (photo preview)
+        'start_at'    => 'TEXT',                          // a virtual consultation's agreed time
+        'meet_url'    => 'TEXT',                          // its Google Meet link
+        'event_id'    => 'TEXT',                          // its Google Calendar event
+        'concerns'    => "TEXT NOT NULL DEFAULT ''",      // what a smile request says is bothering them
+        'photo_path'  => "TEXT NOT NULL DEFAULT ''",      // their photo, inside the data folder, never public
+        'result_path' => "TEXT NOT NULL DEFAULT ''",      // the preview made from it
     ];
     foreach ($laterCols as $column => $type) {
         if (!in_array($column, $bookingCols, true)) {

@@ -31,6 +31,33 @@ $value   = static fn(string $key): string => (string) ($row[$key] ?? '');
 <form method="post" action="<?= e($action) ?>" class="adm-booking" novalidate>
   <?= csrf_field() ?>
   <div class="adm-card adm-box">
+<?php if (!$isNew && $value('kind') === 'smile'): ?>
+    <h2>Smile preview request</h2>
+<?php if ($value('concerns') !== ''): ?>
+    <p class="adm-booking__meet">What bothers them: <b><?= e(smile_concerns()[$value('concerns')] ?? $value('concerns')) ?></b></p>
+<?php endif; ?>
+<?php if ($value('photo_path') !== ''): ?>
+    <div class="adm-booking__photos">
+      <figure>
+        <a href="/admin/bookings/<?= e(rawurlencode($id)) ?>/photo" target="_blank" rel="noopener">
+          <img src="/admin/bookings/<?= e(rawurlencode($id)) ?>/photo" alt="The photo they sent">
+        </a>
+        <figcaption>Their photo</figcaption>
+      </figure>
+<?php if ($value('result_path') !== ''): ?>
+      <figure>
+        <a href="/admin/bookings/<?= e(rawurlencode($id)) ?>/preview" target="_blank" rel="noopener">
+          <img src="/admin/bookings/<?= e(rawurlencode($id)) ?>/preview" alt="The generated preview">
+        </a>
+        <figcaption>Preview shown to them &mdash; an illustration</figcaption>
+      </figure>
+<?php endif; ?>
+    </div>
+    <p class="adm-help">The photo is kept outside the website's folders and is only visible here. It is deleted automatically after the period set in Settings.</p>
+<?php else: ?>
+    <p class="adm-help">The photo has been deleted, which happens automatically after the retention period.</p>
+<?php endif; ?>
+<?php endif; ?>
 <?php if (!$isNew && $value('kind') === 'virtual'): ?>
     <h2>Video visit</h2>
     <p class="adm-booking__meet">

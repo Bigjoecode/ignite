@@ -124,6 +124,7 @@
           <div class="ig-sub">
             <a href="/booking/">Book an Office Visit</a>
             <a href="/virtual-consultation/">Virtual Consultation</a>
+            <a href="/see-your-smile/">See Your Smile</a>
           </div>
         </li>
 

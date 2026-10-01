@@ -86,21 +86,35 @@ function booking_email(array $r): array
         $day  = $when->format('l, F j') . ' at ' . ltrim($when->format('g:ia'), '0');
     }
 
+    $smile = ($r['kind'] ?? '') === 'smile';
+
     $lines = [
-        $virtual ? 'New video consultation booked' : 'New consultation request',
+        $smile ? 'New smile preview request' : ($virtual ? 'New video consultation booked' : 'New consultation request'),
         '',
         'Name: ' . $name,
         'Phone: ' . ($r['phone'] ?? ''),
         'Email: ' . ($r['email'] ?? ''),
         '',
-        'For: ' . $label($opts['patients'][$r['patient'] ?? ''] ?? null),
-        'Treatment: ' . $label($opts['treatments'][$r['treatment'] ?? ''] ?? null),
-        ($virtual ? 'Nearest office: ' : 'Office: ') . ($office ? $office['name'] . ' (' . $office['address_full'] . ')' : ($r['office'] ?? '')),
-        ($virtual ? 'Appointment: ' : 'Preferred: ') . $day . ($virtual ? ' (Eastern)' : ', ' . ($opts['times'][$r['time'] ?? ''] ?? '')),
     ];
+    if (!$smile) {    // a photo request has no appointment or treatment choice
+        $lines[] = 'For: ' . $label($opts['patients'][$r['patient'] ?? ''] ?? null);
+        $lines[] = 'Treatment: ' . $label($opts['treatments'][$r['treatment'] ?? ''] ?? null);
+    }
+    $lines[] = ($virtual || $smile ? 'Nearest office: ' : 'Office: ')
+        . ($office ? $office['name'] . ' (' . $office['address_full'] . ')' : ($r['office'] ?? ''));
+    if (!$smile) {
+        $lines[] = ($virtual ? 'Appointment: ' : 'Preferred: ') . $day
+            . ($virtual ? ' (Eastern)' : ', ' . ($opts['times'][$r['time'] ?? ''] ?? ''));
+    }
     if ($virtual && !empty($r['meet_url'])) {
         $lines[] = 'Join: ' . $r['meet_url'];
         $lines[] = 'The patient has the invite and the same link by email.';
+    }
+    if ($smile) {
+        require_once APP . '/smile.php';
+        $lines[] = 'What bothers them: ' . (smile_concerns()[$r['concerns'] ?? ''] ?? 'not said');
+        $lines[] = 'Their photo is in the dashboard (the photo is not emailed):';
+        $lines[] = cfg('base_url') . '/admin/bookings/' . ($r['id'] ?? '') . '/';
     }
     $lines = array_merge($lines, [
         '',
@@ -113,7 +127,7 @@ function booking_email(array $r): array
     ]);
 
     return [
-        'subject' => ($virtual ? 'Video consultation booked: ' : 'Consultation request: ')
+        'subject' => ($smile ? 'Smile preview request: ' : ($virtual ? 'Video consultation booked: ' : 'Consultation request: '))
             . ($name !== '' ? $name : 'new patient') . ' (' . ($office['name'] ?? $r['office'] ?? '') . ')',
         'body'    => implode("\n", $lines) . "\n",
     ];

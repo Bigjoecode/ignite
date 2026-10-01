@@ -384,3 +384,7 @@ a.adm-post-title:hover{color:var(--orange-600);}
 }
 .adm-settings__sub{margin:22px 0 4px;font-size:14px;font-weight:700;}
 .adm-booking__meet{margin:0 0 6px;padding:12px 14px;border-radius:10px;background:var(--orange-100);font-size:14px;line-height:1.6;}
+.adm-booking__photos{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:12px 0 10px;}
+.adm-booking__photos figure{margin:0;}
+.adm-booking__photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;border:1px solid var(--line);}
+.adm-booking__photos figcaption{margin-top:6px;color:var(--muted);font-size:12px;}

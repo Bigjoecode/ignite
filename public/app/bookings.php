@@ -13,7 +13,8 @@ const BOOKING_STATUSES = [
 ];
 
 const BOOKING_FIELDS = ['id', 'created_at', 'status', 'office', 'patient', 'treatment', 'date', 'time',
-    'first_name', 'last_name', 'phone', 'email', 'notes', 'source', 'kind', 'start_at', 'meet_url', 'event_id'];
+    'first_name', 'last_name', 'phone', 'email', 'notes', 'source', 'kind', 'start_at', 'meet_url', 'event_id',
+    'concerns', 'photo_path', 'result_path'];
 
 /** Saves one request. Never throws: the request is already safe in bookings.jsonl. */
 function booking_store(array $record): bool

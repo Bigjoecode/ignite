@@ -13,9 +13,12 @@ const CONSULT_DAYS = ['mon' => 'Monday', 'tue' => 'Tuesday', 'wed' => 'Wednesday
     'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday'];
 
 /** What the practice set in Settings, with sensible defaults. */
-function consult_settings(): array
+function consult_settings(bool $fresh = false): array
 {
     static $settings = null;
+    if ($fresh) {
+        $settings = null;
+    }
     if ($settings !== null) {
         return $settings;
     }
@@ -53,6 +56,7 @@ function consult_save_settings(array $input): void
         'meeting_link' => filter_var(trim((string) ($input['meeting_link'] ?? '')), FILTER_VALIDATE_URL) ?: '',
         'hours'        => $hours,
     ], JSON_UNESCAPED_SLASHES));
+    consult_settings(true);   // so a save is visible straight away
 }
 
 /** "9:00-17:00, 18:00 - 19:30" → "09:00-17:00, 18:00-19:30". Anything unreadable is dropped. */

@@ -110,6 +110,49 @@
 <?php endforeach; ?>
   </div>
 
+  <h2>See Your Smile</h2>
+  <p class="adm-help">
+    The page at <a href="/see-your-smile/" target="_blank" rel="noopener">/see-your-smile/</a> takes a photo from a
+    visitor and shows it to your team in <a href="/admin/bookings/">Bookings</a>. Photos are kept outside the website's
+    folders and nobody but a signed-in admin can open them.
+  </p>
+<?php if ($smile['provider'] === '' || $smile['key'] === ''): ?>
+  <p class="adm-notice adm-notice--warning">No image service connected, so visitors are told your team will look at their photo and reply. Add a key below to show them a preview straight away.</p>
+<?php else: ?>
+  <p class="adm-notice adm-notice--success">Previews are on, through <?= e($smile['provider'] === 'gemini' ? 'Google Gemini' : 'OpenAI') ?>. <?= (int) $smileUsed ?> made today<?= $smile['daily_cap'] > 0 ? ' of ' . (int) $smile['daily_cap'] : '' ?>.</p>
+<?php endif; ?>
+
+  <div class="adm-grid-2">
+    <label class="adm-field">
+      <span>Image service</span>
+      <select name="smile[provider]">
+        <option value=""<?= $smile['provider'] === '' ? ' selected' : '' ?>>None &mdash; the team replies by hand</option>
+        <option value="gemini"<?= $smile['provider'] === 'gemini' ? ' selected' : '' ?>>Google Gemini</option>
+        <option value="openai"<?= $smile['provider'] === 'openai' ? ' selected' : '' ?>>OpenAI</option>
+      </select>
+    </label>
+    <label class="adm-field">
+      <span>API key</span>
+      <input type="password" name="smile[key]" value="" autocomplete="off" spellcheck="false" placeholder="<?= $smile['key'] !== '' ? 'Saved — type a new key to replace it' : 'Paste the key here' ?>">
+    </label>
+    <label class="adm-field">
+      <span>Most previews per day</span>
+      <input type="number" name="smile[daily_cap]" value="<?= (int) $smile['daily_cap'] ?>" min="0" max="1000">
+    </label>
+    <label class="adm-field">
+      <span>Delete photos after</span>
+      <select name="smile[keep_days]">
+<?php foreach ([30 => '30 days', 60 => '60 days', 90 => '90 days', 180 => '6 months', 365 => '1 year'] as $days => $label): ?>
+        <option value="<?= $days ?>"<?= $smile['keep_days'] === $days ? ' selected' : '' ?>><?= e($label) ?></option>
+<?php endforeach; ?>
+      </select>
+    </label>
+  </div>
+  <p class="adm-help">
+    The key is stored with the site's settings, outside the web root, and is never shown again once saved.
+    The daily limit is there so a busy day cannot run up a bill; set it to 0 for no limit.
+  </p>
+
   <div class="adm-settings__actions">
     <button type="submit" class="adm-btn adm-btn--primary">Save changes</button>
     <span class="adm-settings__test">

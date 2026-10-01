@@ -85,6 +85,13 @@ Sign in at https://igniteorthodontics.com/admin/.
   sends the meeting room link; connecting Google adds a per-appointment Meet link and keeps the
   practice calendar as the source of truth. Either way the patient gets a confirmation email with
   the appointment attached, and two people cannot take the same time.
+- **See Your Smile:** `/see-your-smile/` takes a photo from a visitor and shows it to the team in Bookings
+  (`app/smile.php`, `app/see-smile.php`, views `see-smile.php`/`see-smile-sent.php`). Photos are re-encoded,
+  stripped of their camera data and written to `ignite-data/smile/`, outside the web root: a visitor sees their
+  own through a signed link that expires, staff through the dashboard, and nothing else can reach them.
+  `php app/cli/purge-smile-photos.php` deletes them after the retention period (worth running daily by cron).
+  With an image service connected in Settings the page also shows a generated preview, always labelled as an
+  illustration (`app/smile-ai.php`, Google Gemini or OpenAI, with a daily cap).
 - **Settings → Booking notifications:** who is emailed when a consultation request comes in —
   one list that receives every booking plus extra addresses per office (`app/notify.php`,
   settings key `booking_emails`). "Save and send a test" mails a sample request, marked as a test.

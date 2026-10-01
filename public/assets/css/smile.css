@@ -1,0 +1,42 @@
+/* See Your Smile (/see-your-smile/). Builds on booking.css and virtual.css:
+   the hero, card, side boxes and fields are shared; this adds the photo box,
+   the concern choices and the before/after. */
+
+.sm .ig-bk__q{margin:0 0 4px;font-size:clamp(19px,2vw,23px);font-weight:800;}
+.sm .ig-bk__q + .ig-bk__sub{margin-bottom:16px;}
+.sm h2.ig-bk__q:not(:first-of-type){margin-top:34px;}
+
+/* --- the photo --- */
+.sm-drop{position:relative;display:block;min-height:210px;padding:28px;border:2px dashed #C9D6E6;border-radius:18px;background:var(--bk-tint);text-align:center;cursor:pointer;transition:border-color .18s ease,background .18s ease;}
+.sm-drop:hover,.sm-drop.is-over{border-color:var(--bk-orange);background:#FDF3EB;}
+.sm-drop input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;}
+.sm-drop__inner{display:grid;justify-items:center;gap:6px;}
+.sm-drop__inner svg{width:34px;height:34px;fill:none;stroke:var(--bk-orange);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.sm-drop__inner b{font-size:16.5px;}
+.sm-drop__inner small{color:var(--bk-muted);font-size:13.5px;}
+.sm-drop__preview{display:block;width:100%;max-height:340px;object-fit:contain;border-radius:12px;}
+.sm-note[hidden],.sm-drop__preview[hidden]{display:none;}
+.sm-note{display:flex;justify-content:center;gap:6px;margin:10px 0 0;font-size:14px;color:var(--bk-muted);}
+.sm-note__change{padding:0;border:0;background:none;color:#DA6210;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer;}
+
+/* --- what bothers them --- */
+.sm-concerns{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.sm-concern{position:relative;display:flex;align-items:center;min-height:54px;padding:10px 16px;border:1.5px solid var(--bk-line);border-radius:12px;background:#FFFFFF;font-size:15px;cursor:pointer;transition:border-color .15s ease,background .15s ease;}
+.sm-concern input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;}
+.sm-concern:hover{border-color:#C3CEDD;}
+.sm-concern:has(input:checked){border-color:var(--bk-orange);background:#FDEEE3;font-weight:600;}
+.sm-concern:has(input:focus-visible){outline:3px solid rgba(244,116,33,.35);outline-offset:2px;}
+
+/* --- the result --- */
+.sm-done .bk-wrap{max-width:840px;}
+.sm-compare{display:grid;gap:18px;grid-template-columns:1fr 1fr;margin:8px 0 22px;}
+.sm-compare figure{margin:0;}
+.sm-compare img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;box-shadow:0 18px 40px rgba(5,26,57,.16);}
+.sm-compare figcaption{margin-top:10px;color:var(--bk-muted);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.sm-disclaim{max-width:620px;margin:0 auto 26px;padding:14px 18px;border-radius:12px;background:#FFF7E0;color:#6B4A00 !important;font-size:14.5px;line-height:1.6;}
+.sm-disclaim b{color:#6B4A00 !important;}
+
+@media (max-width:640px){
+  .sm-compare{grid-template-columns:1fr;}
+  .sm-drop{min-height:170px;padding:22px;}
+}
