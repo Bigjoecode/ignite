@@ -1,10 +1,11 @@
 <?php
 $canonical = cfg('base_url') . $meta['path'];
 $ogImage   = cfg('base_url') . ($meta['image'] ?? '/assets/img/home-page-hero-image-kids-ortho.jpg');
-// Google Tag Manager on every public page, but not on dashboard previews
-$lp    = ($meta['layout'] ?? '') === 'lp'; // ad landing page: slim header and footer
-$gtmId = empty($meta['preview_id']) && empty($meta['preview_page']) && preg_match('/^GTM-[A-Z0-9]+$/', (string) cfg('gtm_id'))
-    ? (string) cfg('gtm_id') : '';
+// Google Tag Manager and the Meta pixel on every public page, but not on dashboard previews
+$lp      = ($meta['layout'] ?? '') === 'lp'; // ad landing page: slim header and footer
+$live    = empty($meta['preview_id']) && empty($meta['preview_page']);
+$gtmId   = $live && preg_match('/^GTM-[A-Z0-9]+$/', (string) cfg('gtm_id')) ? (string) cfg('gtm_id') : '';
+$pixelId = $live && preg_match('/^\d{10,20}$/', (string) cfg('meta_pixel')) ? (string) cfg('meta_pixel') : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +62,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php endif; ?>
 <?php if (!empty($meta['schema'])): ?>
 <script type="application/ld+json"><?= json_encode($meta['schema'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?></script>
+<?php endif; ?>
+<?php if ($pixelId !== ''): ?>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '<?= e($pixelId) ?>');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=<?= e($pixelId) ?>&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <?php endif; ?>
 </head>
 <body>

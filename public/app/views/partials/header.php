@@ -108,6 +108,12 @@
 
         <li>
           <div class="ig-menu__row">
+            <a class="ig-menu__link" href="/virtual-consultation/">Virtual Consultation</a>
+          </div>
+        </li>
+
+        <li>
+          <div class="ig-menu__row">
             <a class="ig-menu__link" href="/patient-info/">Patient Info</a>
           </div>
         </li>
