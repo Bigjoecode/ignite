@@ -14,14 +14,16 @@ function admin_bookings_index(array $user): void
 
     $filters = [
         'status' => (string) ($_GET['status'] ?? ''),
+        'kind'   => (string) ($_GET['kind'] ?? ''),
         'office' => (string) ($_GET['office'] ?? ''),
         'q'      => mb_substr(trim((string) ($_GET['q'] ?? '')), 0, 60),
     ];
 
     admin_render('bookings', [
-        'rows'    => booking_list($filters),
-        'counts'  => booking_counts(),
-        'filters' => $filters,
+        'rows'       => booking_list($filters),
+        'counts'     => booking_counts(),
+        'kindCounts' => booking_kind_counts(),
+        'filters'    => $filters,
     ], 'Bookings', $user);
 }
 
@@ -57,7 +59,7 @@ function admin_booking_save(array $user, string $id): void
         exit;
     }
     $fields = array_intersect_key($_POST, array_flip(['status', 'office', 'patient', 'treatment', 'date', 'time',
-        'first_name', 'last_name', 'phone', 'email', 'notes', 'staff_note']));
+        'first_name', 'last_name', 'phone', 'email', 'notes', 'staff_note', 'kind']));
 
     if ($problems = booking_problems($fields)) {
         admin_render('booking-edit', [
@@ -100,6 +102,7 @@ function admin_bookings_export(): void
 {
     $rows = booking_list([
         'status' => (string) ($_GET['status'] ?? ''),
+        'kind'   => (string) ($_GET['kind'] ?? ''),
         'office' => (string) ($_GET['office'] ?? ''),
         'q'      => (string) ($_GET['q'] ?? ''),
     ], 5000);
@@ -108,10 +111,11 @@ function admin_bookings_export(): void
     header('Content-Disposition: attachment; filename="ignite-bookings-' . date('Y-m-d') . '.csv"');
     $out = fopen('php://output', 'w');
     fwrite($out, "\xEF\xBB\xBF");   // so Excel reads the accents correctly
-    fputcsv($out, ['Received', 'Status', 'Name', 'Phone', 'Email', 'Office', 'For', 'Treatment', 'Preferred day', 'Preferred time', 'Notes from patient', 'Our notes', 'Came from', 'Request ID']);
+    fputcsv($out, ['Received', 'Type', 'Status', 'Name', 'Phone', 'Email', 'Office', 'For', 'Treatment', 'Appointment or preferred day', 'Preferred time', 'What bothers them', 'Notes from patient', 'Our notes', 'Came from', 'Request ID']);
     foreach ($rows as $r) {
         fputcsv($out, [
             booking_local_time($r['created_at']),
+            BOOKING_KINDS[$r['kind'] !== '' ? $r['kind'] : 'office'] ?? $r['kind'],
             BOOKING_STATUSES[$r['status']] ?? $r['status'],
             trim($r['first_name'] . ' ' . $r['last_name']),
             $r['phone'],
@@ -119,8 +123,9 @@ function admin_bookings_export(): void
             locations()[$r['office']]['name'] ?? $r['office'],
             booking_choice('patient', $r['patient']),
             booking_choice('treatment', $r['treatment']),
-            booking_day($r['date']),
+            booking_when($r),
             booking_choice('time', $r['time']),
+            smile_concerns()[$r['concerns']] ?? '',
             $r['notes'],
             $r['staff_note'],
             $r['source'] !== '' ? (str_starts_with($r['source'], '/') ? 'igniteorthodontics.com' . $r['source'] : $r['source']) : '',

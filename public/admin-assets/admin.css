@@ -388,3 +388,9 @@ a.adm-post-title:hover{color:var(--orange-600);}
 .adm-booking__photos figure{margin:0;}
 .adm-booking__photos img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;border:1px solid var(--line);}
 .adm-booking__photos figcaption{margin-top:6px;color:var(--muted);font-size:12px;}
+
+/* what kind of request it is */
+.adm-kind{display:inline-block;margin-bottom:4px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.adm-kind--office{background:#EEF1F5;color:#475569;}
+.adm-kind--virtual{background:#E8F0FD;color:#1D4ED8;}
+.adm-kind--smile{background:var(--orange-100);color:var(--orange-600);}

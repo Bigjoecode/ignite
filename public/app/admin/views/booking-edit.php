@@ -143,6 +143,14 @@ $value   = static fn(string $key): string => (string) ($row[$key] ?? '');
   <div class="adm-card adm-box">
     <h2>Where it stands</h2>
     <label class="adm-field">
+      <span>Type of request</span>
+      <select name="kind">
+<?php foreach (BOOKING_KINDS as $key => $label): ?>
+        <option value="<?= e($key) ?>"<?= ($value('kind') !== '' ? $value('kind') : 'office') === $key ? ' selected' : '' ?>><?= e($label) ?></option>
+<?php endforeach; ?>
+      </select>
+    </label>
+    <label class="adm-field">
       <span>Status</span>
       <select name="status">
 <?php foreach (BOOKING_STATUSES as $key => $label): ?>

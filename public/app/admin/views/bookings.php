@@ -27,6 +27,12 @@ $inTrash = $filters['status'] === 'trash';
   </nav>
   <form class="adm-search" method="get" action="/admin/bookings/" role="search">
     <input type="hidden" name="status" value="<?= e($filters['status']) ?>">
+    <select name="kind" aria-label="Type of request">
+      <option value="">All types (<?= (int) $kindCounts[''] ?>)</option>
+<?php foreach (BOOKING_KINDS as $key => $label): ?>
+      <option value="<?= e($key) ?>"<?= $filters['kind'] === $key ? ' selected' : '' ?>><?= e($label) ?>s (<?= (int) $kindCounts[$key] ?>)</option>
+<?php endforeach; ?>
+    </select>
     <select name="office" aria-label="Office">
       <option value="">All offices</option>
 <?php foreach (locations() as $slug => $office): ?>
@@ -56,7 +62,7 @@ $inTrash = $filters['status'] === 'trash';
       <tr>
         <th scope="col">Patient</th>
         <th scope="col">Office</th>
-        <th scope="col">Wants</th>
+        <th scope="col">Type and what they want</th>
         <th scope="col">Status</th>
         <th scope="col">Received</th>
       </tr>
@@ -92,10 +98,21 @@ $inTrash = $filters['status'] === 'trash';
         </td>
         <td><?= e(locations()[$row['office']]['name'] ?? $row['office']) ?></td>
         <td>
-          <?= e(booking_choice('treatment', $row['treatment']) ?: 'Not said') ?><?= $row['kind'] === 'virtual' ? ' <span class="adm-badge">Video</span>' : '' ?>
+<?php
+    $kind = $row['kind'] !== '' ? $row['kind'] : 'office';
+    $wants = $kind === 'smile'
+        ? (smile_concerns()[$row['concerns']] ?? 'A smile preview')
+        : (booking_choice('treatment', $row['treatment']) ?: 'Not said');
+?>
+          <span class="adm-kind adm-kind--<?= e($kind) ?>"><?= e(BOOKING_KINDS[$kind] ?? $kind) ?></span>
+          <div><?= e($wants) ?></div>
           <div class="adm-muted">
+<?php if ($kind === 'smile'): ?>
+            <?= $row['photo_path'] !== '' ? 'Photo attached' : 'Photo deleted' ?><?= $row['result_path'] !== '' ? ' &middot; preview made' : '' ?>
+<?php else: ?>
             <?= e(booking_choice('patient', $row['patient'])) ?><?= $row['patient'] !== '' ? ' &middot; ' : '' ?>
             <?= e(booking_when($row)) ?>
+<?php endif; ?>
           </div>
         </td>
         <td><span class="adm-status adm-status--<?= e($row['status']) ?>"><?= e(BOOKING_STATUSES[$row['status']] ?? $row['status']) ?></span></td>

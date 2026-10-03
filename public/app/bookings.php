@@ -101,11 +101,25 @@ function booking_import_file(): int
     return $added;
 }
 
-/** Requests newest first. $filters: status ('trash' for the trash), office, q (name, phone or email). */
+/** The three ways a request reaches us, as shown in the dashboard. */
+const BOOKING_KINDS = [
+    'office'  => 'Office visit',
+    'virtual' => 'Video consultation',
+    'smile'   => 'Smile preview',
+];
+
+/** Requests newest first. $filters: status ('trash' for the trash), kind, office, q (name, phone or email). */
 function booking_list(array $filters = [], int $limit = 200): array
 {
     $where = [($filters['status'] ?? '') === 'trash' ? 'trashed_at IS NOT NULL' : 'trashed_at IS NULL'];
     $args  = [];
+    if (!empty($filters['kind']) && isset(BOOKING_KINDS[$filters['kind']])) {
+        // anything saved before the video and smile pages existed is an office visit
+        $where[] = $filters['kind'] === 'office' ? "(kind = 'office' OR kind = '')" : 'kind = ?';
+        if ($filters['kind'] !== 'office') {
+            $args[] = $filters['kind'];
+        }
+    }
     if (!empty($filters['status']) && isset(BOOKING_STATUSES[$filters['status']])) {
         $where[] = 'status = ?';
         $args[]  = $filters['status'];
@@ -135,6 +149,21 @@ function booking_counts(): array
         }
         $counts[$row['status']] = (int) $row['n'];
         $counts['']            += (int) $row['n'];
+    }
+    return $counts;
+}
+
+/** How many of each kind are waiting, for the filter. */
+function booking_kind_counts(): array
+{
+    $counts = ['' => 0] + array_map(static fn(): int => 0, BOOKING_KINDS);
+    $sql    = "SELECT CASE WHEN kind = '' THEN 'office' ELSE kind END AS k, COUNT(*) AS n
+                 FROM bookings WHERE trashed_at IS NULL GROUP BY k";
+    foreach (db()->query($sql)->fetchAll() as $row) {
+        if (isset($counts[$row['k']])) {
+            $counts[$row['k']] = (int) $row['n'];
+        }
+        $counts[''] += (int) $row['n'];
     }
     return $counts;
 }
@@ -189,6 +218,7 @@ function booking_clean(array $f): array
     $date = trim((string) ($f['date'] ?? ''));
     return [
         'status'     => isset(BOOKING_STATUSES[$f['status'] ?? '']) ? (string) $f['status'] : 'new',
+        'kind'       => isset(BOOKING_KINDS[$f['kind'] ?? '']) ? (string) $f['kind'] : 'office',
         'office'     => isset(locations()[$f['office'] ?? '']) ? (string) $f['office'] : '',
         'patient'    => $pick('patient', (string) ($f['patient'] ?? '')),
         'treatment'  => $pick('treatment', (string) ($f['treatment'] ?? '')),
