@@ -62,6 +62,62 @@
     }
   });
 
+  /* --- keeping the details of someone who starts and leaves ---
+     Saved as "Started, never finished" so the practice can follow up. They have not
+     agreed to anything yet, which is why the dashboard marks these apart. */
+  var draftField = root.querySelector('[data-sm-draft]');
+  var draftId = null;
+  var draftSent = '';
+
+  function draft() {
+    if (draftId) return draftId;
+    try {
+      draftId = window.sessionStorage.getItem('ig_smile_draft');
+    } catch (e) { /* private browsing: just keep it in memory */ }
+    if (!draftId) {
+      var bytes = new Uint8Array(8);
+      (window.crypto || {}).getRandomValues ? window.crypto.getRandomValues(bytes) : bytes.fill(0);
+      draftId = Array.prototype.map.call(bytes, function (b) {
+        return ('0' + b.toString(16)).slice(-2);
+      }).join('') + Date.now().toString(16).slice(-8);
+      try { window.sessionStorage.setItem('ig_smile_draft', draftId); } catch (e) {}
+    }
+    if (draftField) draftField.value = draftId;
+    return draftId;
+  }
+
+  function value(name) {
+    var el = form.querySelector('[name="' + name + '"]');
+    return el ? el.value.trim() : '';
+  }
+
+  function keepDetails() {
+    var email = value('email');
+    var phone = value('phone').replace(/\D/g, '');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) && phone.length < 10) return;
+
+    var body = new FormData();
+    body.append('draft_id', draft());
+    ['first_name', 'last_name', 'email', 'phone', 'office', 'concerns', 'notes'].forEach(function (name) {
+      body.append(name, value(name));
+    });
+    body.append('source', '/see-your-smile/');
+    body.append('kind', 'smile');
+
+    var fingerprint = Array.prototype.join.call(body.values ? Array.from(body.values()) : [], '|');
+    if (fingerprint === draftSent) return;       // nothing new since last time
+    draftSent = fingerprint;
+
+    fetch('/lead-partial', { method: 'POST', body: body, keepalive: true }).catch(function () {});
+  }
+
+  form.addEventListener('change', keepDetails);
+  ['email', 'phone'].forEach(function (name) {
+    var el = form.querySelector('[name="' + name + '"]');
+    if (el) el.addEventListener('blur', keepDetails);
+  });
+  window.addEventListener('pagehide', keepDetails);
+
   /* --- sending it --- */
   form.addEventListener('submit', function (event) {
     event.preventDefault();

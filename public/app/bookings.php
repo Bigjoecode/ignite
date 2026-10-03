@@ -6,10 +6,13 @@ declare(strict_types=1);
 // that file is the record of what came in; this table is the working copy.
 
 const BOOKING_STATUSES = [
-    'new'       => 'New',
-    'contacted' => 'Contacted',
-    'booked'    => 'Appointment booked',
-    'closed'    => 'Closed',
+    'new'        => 'New',
+    'contacted'  => 'Contacted',
+    'booked'     => 'Appointment booked',
+    'closed'     => 'Closed',
+    // someone who started a form and left: their details are here, but they never
+    // pressed the button, so they have NOT agreed to be contacted for marketing
+    'unfinished' => 'Started, never finished',
 ];
 
 const BOOKING_FIELDS = ['id', 'created_at', 'status', 'office', 'patient', 'treatment', 'date', 'time',

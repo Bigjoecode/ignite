@@ -24,6 +24,13 @@ $value   = static fn(string $key): string => (string) ($row[$key] ?? '');
 <?php if ($trashed): ?>
 <p class="adm-notice adm-notice--warning">This booking is in the trash. Restore it to work on it again.</p>
 <?php endif; ?>
+<?php if ($value('status') === 'unfinished'): ?>
+<p class="adm-notice adm-notice--warning">
+  <b>They started the form and left without sending it.</b> These details were typed on the page but never
+  submitted, so this person has <b>not</b> agreed to be contacted for marketing and has not consented to texts
+  or automated calls. Treat it as an enquiry worth a courteous reply, not as a lead to market to.
+</p>
+<?php endif; ?>
 <?php foreach ($problems as $problem): ?>
 <p class="adm-notice adm-notice--error" role="alert"><?= $problem ?></p>
 <?php endforeach; ?>
@@ -54,6 +61,8 @@ $value   = static fn(string $key): string => (string) ($row[$key] ?? '');
 <?php endif; ?>
     </div>
     <p class="adm-help">The photo is kept outside the website's folders and is only visible here. It is deleted automatically after the period set in Settings.</p>
+<?php elseif ($value('status') === 'unfinished'): ?>
+    <p class="adm-help">No photo: they left before sending one.</p>
 <?php else: ?>
     <p class="adm-help">The photo has been deleted, which happens automatically after the retention period.</p>
 <?php endif; ?>

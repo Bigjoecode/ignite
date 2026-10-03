@@ -21,6 +21,7 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
       <form class="ig-bk__body" action="/see-smile" method="post" enctype="multipart/form-data" novalidate data-sm-form>
         <input type="text" name="website" value="" class="ig-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="source" value="/see-your-smile/">
+        <input type="hidden" name="draft_id" value="" data-sm-draft>
 
         <h2 class="ig-bk__q">Your photo</h2>
         <p class="ig-bk__sub">A straight-on photo of you smiling, with your teeth showing. Daylight helps. Nobody but our team sees it.</p>

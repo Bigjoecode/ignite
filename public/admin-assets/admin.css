@@ -394,3 +394,4 @@ a.adm-post-title:hover{color:var(--orange-600);}
 .adm-kind--office{background:#EEF1F5;color:#475569;}
 .adm-kind--virtual{background:#E8F0FD;color:#1D4ED8;}
 .adm-kind--smile{background:var(--orange-100);color:var(--orange-600);}
+.adm-status--unfinished{background:#FFF7E0;color:#6B4A00;}

@@ -18,6 +18,7 @@ if ($path === 'admin' || strncmp($path, 'admin/', 6) === 0) { require APP . '/ad
 if ($path === 'book') { require APP . '/book.php'; exit; }
 if ($path === 'book-virtual') { require APP . '/book-virtual.php'; exit; }
 if ($path === 'see-smile')    { require APP . '/see-smile.php'; exit; }
+if ($path === 'lead-partial') { require APP . '/lead-partial.php'; exit; }
 if ($path === 'sitemap.xml') { require APP . '/sitemap.php'; exit; }
 
 // one canonical URL per page: always a trailing slash

@@ -61,7 +61,13 @@ if ($errors) {
     ]);
 }
 
-$id = bin2hex(random_bytes(8));
+// if they left part-way and we saved their details, this finishes that same record
+$draft = mb_substr(trim((string) ($_POST['draft_id'] ?? '')), 0, 32);
+$started = preg_match('/^[a-f0-9]{16,32}$/', $draft) ? booking_find($draft) : null;
+$id = $started && $started['status'] === 'unfinished' ? $draft : bin2hex(random_bytes(8));
+if ($started && $started['status'] === 'unfinished') {
+    db()->prepare('DELETE FROM bookings WHERE id = ? AND status = ?')->execute([$draft, 'unfinished']);
+}
 [$photo, $problem] = smile_store_photo($_FILES['photo'] ?? [], $id);
 if ($problem !== null) {
     smile_reply(422, ['ok' => false, 'field' => 'photo', 'error' => $problem]);
