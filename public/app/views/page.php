@@ -20,7 +20,18 @@
 <?php endif; ?>
 <?php foreach ($p['sections'] ?? [] as $i => [$heading, $text]): ?>
       <h2<?= $slug === 'types-of-braces' && $i === 0 ? ' id="metal"' : '' ?>><?= e($heading) ?></h2>
-      <p><?= e($text) ?></p>
+<?php   // a section is one paragraph, or several paragraphs and bullet lists
+        foreach (is_array($text) ? $text : [$text] as $part): ?>
+<?php     if (is_array($part)): ?>
+      <ul class="pg-list">
+<?php       foreach ($part as $item): ?>
+        <li><?= e($item) ?></li>
+<?php       endforeach; ?>
+      </ul>
+<?php     else: ?>
+      <p><?= e($part) ?></p>
+<?php     endif; ?>
+<?php   endforeach; ?>
 <?php endforeach; ?>
 <?php $links = !empty($p['links_auto']) ? service_menu() : ($p['links'] ?? []); ?>
 <?php if ($links): ?>

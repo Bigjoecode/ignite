@@ -36,3 +36,8 @@
 .pg-link:hover{border-color:var(--ig-orange);transform:translateY(-4px);box-shadow:0 18px 40px rgba(11,42,85,.12);}
 .pg-link b{display:block;font-size:17px;font-weight:700;color:var(--ig-navy);margin-bottom:6px;}
 .pg-link span{display:block;font-size:14.5px;line-height:1.55;color:var(--ig-muted);}
+
+/* bullet lists inside a long page such as the privacy policy */
+.ig-home .pg-body .pg-list{margin:-18px 0 34px;padding-left:22px;}
+.ig-home .pg-body .pg-list li{margin-bottom:10px;font-size:clamp(15px,1.12vw,17px);line-height:1.8;color:var(--ig-muted);}
+.ig-home .pg-body .pg-list li::marker{color:var(--ig-orange,#F47421);}
