@@ -405,3 +405,11 @@
   render();
   track('booking_view');
 })();
+
+/* Keep the details of someone who starts this form and leaves (js/lead-draft.js). */
+(function () {
+  var form = document.querySelector('[data-bk-form]');
+  if (form && window.igLeadDraft) {
+    window.igLeadDraft(form, 'office', ['first_name', 'last_name', 'email', 'phone', 'office', 'patient', 'treatment', 'date', 'time', 'notes']);
+  }
+}());

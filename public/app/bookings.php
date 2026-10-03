@@ -61,6 +61,24 @@ function booking_reserve_slot(array $record): bool
     }
 }
 
+/**
+ * A finished form takes over the "started, never finished" record the same visitor
+ * left behind, so the dashboard shows one request rather than two. Returns the id to
+ * save under: theirs if it was only a draft, otherwise a fresh one.
+ */
+function booking_claim_draft(string $draft): string
+{
+    if (!preg_match('/^[a-f0-9]{16,32}$/', $draft)) {
+        return bin2hex(random_bytes(8));
+    }
+    $started = booking_find($draft);
+    if ($started && $started['status'] === 'unfinished') {
+        db()->prepare("DELETE FROM bookings WHERE id = ? AND status = 'unfinished'")->execute([$draft]);
+        return $draft;
+    }
+    return $started ? bin2hex(random_bytes(8)) : $draft;
+}
+
 /** Gives a held time back, when the appointment could not be completed. */
 function booking_release_slot(string $id): void
 {

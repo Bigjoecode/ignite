@@ -44,26 +44,34 @@ if ($existing && $existing['status'] !== 'unfinished') {
     exit;
 }
 
+// only choices the forms actually offer are kept
+$pick = static fn(string $group, string $key): string => booking_choice($group, $key) !== '' ? $key : '';
+$date = $field('date', 10);
+
 $record = [
     'id'         => $draft,
     'created_at' => gmdate('c'),
     'status'     => 'unfinished',
-    'kind'       => $field('kind', 20) === 'virtual' ? 'virtual' : 'smile',
+    'kind'       => isset(BOOKING_KINDS[$field('kind', 20)]) ? $field('kind', 20) : 'office',
     'office'     => isset(locations()[$field('office', 60)]) ? $field('office', 60) : '',
     'first_name' => $field('first_name', 60),
     'last_name'  => $field('last_name', 60),
     'phone'      => $phone,
     'email'      => $email,
+    'patient'    => $pick('patient', $field('patient', 20)),
+    'treatment'  => $pick('treatment', $field('treatment', 20)),
+    'time'       => $pick('time', $field('time', 20)),
+    'date'       => preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) ? $date : 'first',
     'concerns'   => $field('concerns', 20),
     'notes'      => $field('notes', 1000),
     'source'     => mb_substr((string) ($_POST['source'] ?? ''), 0, 200),
-    'date'       => 'first',
 ];
 
 if ($existing) {
-    db()->prepare('UPDATE bookings SET first_name = ?, last_name = ?, phone = ?, email = ?, office = ?, concerns = ?, notes = ? WHERE id = ? AND status = ?')
-        ->execute([$record['first_name'], $record['last_name'], $record['phone'], $record['email'],
-            $record['office'], $record['concerns'], $record['notes'], $draft, 'unfinished']);
+    $keep = ['first_name', 'last_name', 'phone', 'email', 'office', 'patient', 'treatment', 'date', 'time', 'concerns', 'notes'];
+    $sets = implode(', ', array_map(static fn(string $k): string => "{$k} = :{$k}", $keep));
+    db()->prepare("UPDATE bookings SET {$sets} WHERE id = :id AND status = 'unfinished'")
+        ->execute(array_intersect_key($record, array_flip($keep)) + ['id' => $draft]);
 } else {
     booking_store($record);       // no email to the offices: this is not a request yet
 }

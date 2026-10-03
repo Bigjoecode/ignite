@@ -142,3 +142,11 @@
 
   track('virtual_consult_view', {});
 }());
+
+/* Keep the details of someone who starts this form and leaves (js/lead-draft.js). */
+(function () {
+  var form = document.querySelector('[data-vc-form]');
+  if (form && window.igLeadDraft) {
+    window.igLeadDraft(form, 'virtual', ['first_name', 'last_name', 'email', 'phone', 'office', 'patient', 'notes']);
+  }
+}());

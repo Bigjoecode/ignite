@@ -106,7 +106,10 @@ if ($rl && flock($rl, LOCK_EX)) {
     }
 }
 
-$record = ['id' => bin2hex(random_bytes(8)), 'created_at' => gmdate('c'), 'status' => 'new'] + $req + [
+// a visitor who started this form earlier finishes that same record
+require_once APP . '/bookings.php';
+$record = ['id' => booking_claim_draft(mb_substr(trim((string) ($_POST['draft_id'] ?? '')), 0, 32)),
+    'created_at' => gmdate('c'), 'status' => 'new', 'kind' => 'office'] + $req + [
     'source'     => $field('source', 200),
     'ip'         => $ip,
     'user_agent' => mb_substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 300),

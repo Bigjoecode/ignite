@@ -50,7 +50,7 @@ if ($path === 'booking') {
         'title'       => $office ? 'Book a Consultation at Ignite Orthodontics ' . $office['name'] : 'Book a No-Cost Consultation | Ignite Orthodontics',
         'description' => 'Request a no-cost orthodontic consultation at Ignite Orthodontics in about a minute. Choose a preferred day and time and we will confirm your visit.',
         'css'         => ['booking.css'],
-        'js'          => ['booking.js'],
+        'js'          => ['lead-draft.js', 'booking.js'],
         'book_office' => $office['slug'] ?? '',
     ]);
     exit;
@@ -64,7 +64,7 @@ if ($path === 'virtual-consultation') {
         'title'       => 'Virtual Consultation | Ignite Orthodontics',
         'description' => 'Meet an Ignite Orthodontics orthodontist by video, at no cost. Pick a time that suits you and we will send a Google Meet link.',
         'css'         => ['booking.css', 'virtual.css'],
-        'js'          => ['virtual.js'],
+        'js'          => ['lead-draft.js', 'virtual.js'],
         'book_office' => $office['slug'] ?? '',
     ]);
     exit;
@@ -79,7 +79,7 @@ if ($path === 'see-your-smile') {
         'title'       => 'See Your Smile | Ignite Orthodontics',
         'description' => 'Send a photo of your smile and see what orthodontic treatment could change, with a free opinion from our team.',
         'css'         => ['booking.css', 'virtual.css', 'smile.css'],
-        'js'          => ['smile.js'],
+        'js'          => ['lead-draft.js', 'smile.js'],
         'book_office' => $office['slug'] ?? '',
     ]);
     exit;

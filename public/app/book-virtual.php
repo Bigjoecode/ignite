@@ -76,7 +76,8 @@ $office = locations()[$req['office']];
 $s      = consult_settings();
 
 $record = [
-    'id'         => bin2hex(random_bytes(8)),
+    // a visitor who started this form earlier finishes that same record
+    'id'         => booking_claim_draft(mb_substr(trim((string) ($_POST['draft_id'] ?? '')), 0, 32)),
     'created_at' => gmdate('c'),
     'status'     => 'booked',
     'kind'       => 'virtual',

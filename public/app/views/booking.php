@@ -40,6 +40,7 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
 
       <form class="ig-bk__body" action="/book" method="post" novalidate data-bk-form>
         <input type="text" name="website" value="" class="ig-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="draft_id" value="">
 <?php if ($office): ?>
         <input type="hidden" name="office" value="<?= e($office['slug']) ?>" data-label="<?= e($office['name']) ?> office" data-phone="<?= e($office['phone']) ?>" data-tel="<?= e($office['tel']) ?>">
 <?php endif; ?>

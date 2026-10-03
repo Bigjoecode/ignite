@@ -34,6 +34,7 @@ $shown  = 8;    // times per day before "show all"
 
       <form class="ig-bk__body" action="/book-virtual" method="post" novalidate data-vc-form>
         <input type="text" name="website" value="" class="ig-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="draft_id" value="">
         <input type="hidden" name="source" value="/virtual-consultation/">
 
         <fieldset class="ig-bk__pane" data-vc-step>
