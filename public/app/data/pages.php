@@ -186,11 +186,84 @@ return [
             ]],
         ],
     ],
+    // Covers what the site actually offers: the $99 and $185 a month figures on the
+    // treatment and landing pages, the free consultation, how a booking request
+    // differs from a confirmed video appointment, and the See Your Smile preview.
+    // If an offer on any page changes, change it here too.
     'terms-and-conditions' => [
-        'title' => 'Terms and Conditions', 'description' => 'Ignite Orthodontics terms and conditions.',
+        'title' => 'Terms and Conditions', 'description' => 'The terms that apply to this website, our consultations and the payment plans advertised on our pages.',
         'kicker' => 'Legal', 'h1' => 'Terms and <em>Conditions.</em>',
-        'lead' => 'Our full terms and conditions, including offer terms and eligibility, are being finalized and will be published on this page.',
-        'note' => 'For questions about current offers or terms, please contact us.',
-        'draft' => true,
+        'lead' => 'These terms cover using igniteorthodontics.com, booking with us, and the offers and payment plans we advertise.',
+        'note' => 'Last updated 3 October 2026. Using this website means you accept these terms. They do not replace the treatment agreement you sign before treatment begins, which is the document that governs your care and what you pay.',
+        'sections' => [
+            ['Who we are',
+                'Ignite Orthodontics ("we", "us") provides orthodontic care at the Michigan offices listed on this website. You can reach us on (947) 254-1718 or at booking@igniteorthodontics.com.'],
+
+            ['The information on this website', [
+                'Our pages explain orthodontic treatment in general terms so you can decide whether to come and see us. They are not a diagnosis, a treatment plan or medical advice, and no page here creates a doctor-patient relationship.',
+                'Only an orthodontist who has examined your teeth can tell you what treatment you need, how long it will take and what it will cost. Treatment times quoted on this site are typical ranges, not a prediction about you.',
+            ]],
+
+            ['Booking a consultation', [
+                'There are three ways to start with us, and they work differently:',
+                [
+                    'An office visit request asks for the day and time you would prefer. It is a request, not a confirmed appointment: we will contact you to agree a time',
+                    'A video consultation books a specific time straight away and sends you a link by email. That one is confirmed when you receive the confirmation',
+                    'See Your Smile sends us a photo so our team can tell you what treatment could involve',
+                ],
+                'Please give us accurate contact details, and let us know as early as you can if you cannot make an appointment, so we can offer the time to someone else. We may have to reschedule an appointment ourselves, and we will tell you as soon as possible if that happens.',
+            ]],
+
+            ['The free consultation', [
+                'Your first consultation is at no cost and with no obligation. It covers an examination, a discussion of your options and an explanation of the likely cost.',
+                'It does not include X-rays, records or treatment itself, and it is not an emergency or problem-focused appointment. If you need treatment on the day, we will tell you the cost before anything is done.',
+            ]],
+
+            ['Payment plans and the prices we advertise', [
+                'Where our pages say braces from $99 a month, or clear aligners and Invisalign from $185 a month, those are the lowest monthly payments available on a payment plan. They are starting figures, not the price of your treatment.',
+                'What you actually pay depends on:',
+                [
+                    'The treatment plan your orthodontist recommends, and how long it takes',
+                    'Your dental insurance and what it covers',
+                    'The payment arrangement you choose, including any amount paid up front',
+                    'Approval: payment plans are subject to approval, and not everyone will qualify',
+                ],
+                'Before any treatment begins we give you the full cost, the monthly amount, the number of payments and any interest or fees in writing. Nothing is owed until you sign that agreement. If anything on this website differs from the agreement you sign, the agreement is what counts.',
+                'Offers may be changed or withdrawn at any time, cannot be combined with other offers unless we say so, and have no cash value.',
+            ]],
+
+            ['Your smile preview', [
+                'If we show you a preview of a straighter smile, it is produced by automated image software from the photo you send. It is an illustration intended to show the kind of change orthodontic treatment can make.',
+                'It is not a diagnosis, a treatment plan, a simulation of your actual result or a promise of any outcome. Do not make a decision about treatment based on it alone. What is achievable for you depends on your teeth, your bite and your jaw, and only an examination can establish that.',
+            ]],
+
+            ['Using this website', [
+                'You may read our pages, print them and share links to them. Please do not copy our text, photographs or branding for your own use, attempt to break into any part of the site, send automated traffic to it, or use our forms to send anything unlawful or abusive.',
+                'Everything on this site, including the text, images and design, belongs to us or is used with permission. Invisalign and other product names belong to their owners.',
+            ]],
+
+            ['Texts and calls', [
+                'If you tick the consent box on one of our forms, you are agreeing that we may contact you by phone or text about your care and our services, including by automated systems. You do not have to agree in order to become a patient or buy anything.',
+                'Reply STOP to a text at any time to stop marketing messages. Message and data rates may apply depending on your phone plan. We will still contact you about an appointment you have booked.',
+            ]],
+
+            ['Things we cannot promise', [
+                'We work to keep this website accurate and available, but we cannot promise it will always be free of errors or never go offline, and prices or offers shown may be out of date.',
+                'To the extent the law allows, we are not responsible for any loss arising from your use of this website or from relying on information on it. Nothing in these terms limits our responsibility for the orthodontic care we provide, or anything else the law does not allow us to limit.',
+            ]],
+
+            ['Privacy', [
+                'How we handle the information and photographs you send us is set out in our Privacy Policy, which forms part of these terms.',
+            ]],
+
+            ['Changes and governing law', [
+                'We may update these terms, and the date at the top will change when we do. Michigan law applies, and the courts of Michigan deal with any dispute.',
+                'If you have a question about these terms, or about an offer you have seen, call us on (947) 254-1718 before you book.',
+            ]],
+        ],
+        'links' => [
+            ['/privacy-policy/', 'Privacy Policy', 'What we collect, how we use it and how to have it deleted.'],
+            ['/insurance-financing/', 'Insurance & Financing', 'How insurance benefits and payment plans work.'],
+        ],
     ],
 ];
