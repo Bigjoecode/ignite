@@ -89,6 +89,16 @@ foreach ($content['posts'] as $post) {
     }
 }
 
+// an article merged into another one: its address keeps working, and it leaves the blog
+foreach ($content['redirects'] ?? [] as $from => $to) {
+    $pdo->prepare('INSERT INTO redirects (from_path, to_path, created_at) VALUES (?, ?, ?)
+                   ON CONFLICT(from_path) DO UPDATE SET to_path = excluded.to_path')
+        ->execute([$from, $to, $now]);
+    $gone = $pdo->prepare("UPDATE posts SET status = 'trash', updated_at = ? WHERE slug = ? AND status != 'trash'");
+    $gone->execute([$now, trim(str_replace('/blog/', '', $from), '/')]);
+    echo 'MERGED ', $from, '  ->  ', $to, $gone->rowCount() ? "  (article moved to the trash)\n" : "\n";
+}
+
 if ($dryRun) {
     $pdo->rollBack();
     echo "rolled back (dry run)\n";
