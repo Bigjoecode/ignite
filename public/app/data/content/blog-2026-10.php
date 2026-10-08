@@ -75,7 +75,9 @@ return [
     // the earnings article covered the same study as the index, so it was merged into
     // it; anyone holding the old address lands on the piece that replaced it
     'redirects' => [
-        '/blog/braces-cost-share-of-earnings-by-state/' => '/blog/us-braces-affordability-index/',
+        '/blog/braces-cost-share-of-earnings-by-state/'  => '/blog/us-braces-affordability-index/',
+        // the practice decided against publishing the population study
+        '/blog/americans-living-where-braces-cost-more/' => '/blog/us-braces-affordability-index/',
     ],
 
     'posts' => [
@@ -159,59 +161,5 @@ HTML,
 ],
 
 /* ================================================================ */
-[
-    'slug'        => 'americans-living-where-braces-cost-more',
-    'title'       => 'How Many Americans Live in States Where Braces Cost More Relative to Earnings?',
-    'description' => 'Around 164 million people, roughly 47.7% of the population across the 50 states, live in states where metal braces cost more relative to median salary than the national benchmark of 7.87%.',
-    'category'    => 'Costs & Research',
-    'published'   => '2026-10-08',
-    'image'       => '/assets/img/braces-cost-vs-income.jpg',
-    'image_alt'   => 'A braces model beside a map of the United States and books labelled income, expenses and healthcare',
-    'body'        => <<<HTML
-<p>New analysis finds that around 164 million people live in US states where the cost of metal braces is above the national state-level benchmark relative to median salary.</p>
-<p>The analysis found that 25 states have above-benchmark braces costs relative to median salary. Together, these states have a combined population of approximately 163.6 million people, around 47.7% of the combined population across the 50 states in the dataset.</p>
-<p>The findings highlight how the financial weight of orthodontic treatment can vary across the country, even before considering insurance coverage, payment plans or differences in individual household circumstances.</p>
-
-<h2>Nearly half the population lives in above-benchmark states</h2>
-<p>The analysis compared the average cost of metal braces in each state with its median salary, then identified states where the resulting cost-to-salary ratio exceeded the benchmark calculated from the 50-state dataset. That benchmark was approximately 7.87% of median annual salary.</p>
-<p>States above this benchmark accounted for about 163.6 million residents, based on 2026 state population estimates.</p>
-<p>This does not mean that 163.6 million people need braces or personally face higher treatment costs. It measures the population living in states where the state-level cost-to-salary ratio is above the benchmark.</p>
-
-<h2>Which states have the highest relative braces costs?</h2>
-<p>Louisiana recorded the highest braces-cost-to-median-salary ratio in the dataset. The average cost of metal braces was $7,509, equivalent to approximately 12.31% of the state's median salary of $60,986. Mississippi ranked next at 10.76%, followed by Oklahoma at 10.49%.</p>
-<p>Nevada and Kansas also recorded ratios above 10%, reflecting the relationship between local braces costs and median earnings rather than treatment prices alone.</p>
-{$costTable($benchmarkTop, 'The 10 highest braces-cost-to-salary ratios', false)}
-<p>Percentages are calculated by dividing the average braces cost by the median salary for each state and rounding to two decimal places.</p>
-
-<h2>Population size changes the picture</h2>
-<p>Looking at the relative cost of braces alone does not show how many people live in each state. Adding population estimates provides another way to understand the scale.</p>
-<p>Texas, for example, has a lower relative braces cost than several states near the top of the ranking. However, its population of approximately 32.1 million means it contributes a substantial number of residents to the overall population living in above-benchmark states.</p>
-<p>Florida is similar, with approximately 23.7 million residents and a braces-cost-to-median-salary ratio of 8.00%, above the 7.87% benchmark. By contrast, Louisiana has a much higher relative cost ratio of 12.31%, but a smaller population of approximately 4.6 million.</p>
-<p>These differences demonstrate why population-weighted context can complement a state-by-state affordability comparison.</p>
-
-<h2>The states below the benchmark</h2>
-<p>The remaining 25 states recorded braces-cost-to-median-salary ratios at or below the 7.87% benchmark.</p>
-<p>A lower ratio does not necessarily mean braces are inexpensive in absolute terms. It means the average cost of treatment represents a smaller share of the median salary figure. California's average braces cost was $6,087, or approximately 6.08% of its median salary of $100,149. Utah's ratio was approximately 6.06%, based on an average braces cost of $5,853 and a median salary of $96,658.</p>
-<p>These results underline the distinction between the price of treatment and its cost relative to earnings.</p>
-
-<h2>What the findings mean for families</h2>
-<p>Orthodontic treatment can involve a substantial upfront or ongoing expense. The analysis offers a state-level comparison that may help families understand how typical treatment costs relate to the salary figures used in the study.</p>
-<p>However, the ratio is not a direct measure of affordability for every family. Actual costs and financial circumstances vary according to the treatment plan, provider, insurance benefits, financing arrangements, household income and other expenses.</p>
-<p>The figures should therefore be interpreted as a comparison of state-level averages and median salaries, not as evidence that residents in any particular state cannot afford orthodontic treatment.</p>
-
-<h2>Methodology</h2>
-<p>This analysis combines three datasets: average metal braces costs by state, attributed to CareCredit; a state-level median salary dataset; and 2026 state population estimates attributed to World Population Review.</p>
-<p>For each state, the braces-cost-to-salary ratio was calculated as average cost of metal braces &divide; median salary &times; 100.</p>
-<p>The benchmark of approximately 7.87% is the ratio between the unweighted average braces cost across the 50 states and the unweighted average median salary of $80,902.92. States with ratios greater than 7.87% were classified as above benchmark, and their population estimates added together, producing a total of approximately 163.6 million people across 25 states. The population share was calculated against the combined population of the 50 states in the dataset, approximately 342.9 million.</p>
-<p><strong>Limitations.</strong> The population total represents residents of states above the benchmark, not the number of people who need braces or experience financial difficulty paying for treatment. The salary figures are median salary rather than verified household income.</p>
-{$sources}
-HTML,
-    'faq' => [
-        ['What is the 7.87% benchmark?', 'It is the ratio between the unweighted average braces cost across the 50 states and the unweighted average median salary of $80,902.92. States above it were classified as above benchmark.'],
-        ['How many people live in above-benchmark states?', 'Approximately 163.6 million across 25 states, around 47.7% of the combined population of the 50 states in the dataset.'],
-        ['Does this mean 164 million people cannot afford braces?', 'No. It counts residents of states where the state-level cost-to-salary ratio is above the benchmark. It says nothing about how many people need braces or can afford treatment.'],
-    ],
-],
-
     ],
 ];
