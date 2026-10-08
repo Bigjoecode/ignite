@@ -57,7 +57,11 @@ $copyIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0
 
     <figure class="bl-post__hero">
       <div class="ig-wrap">
-        <img src="<?= e($post['image']) ?>" alt="<?= e($post['image_alt']) ?>" fetchpriority="high" decoding="async">
+<?php
+      // the whole picture is shown, so its own size is given to reserve the right space
+      $heroSize = @getimagesize(__DIR__ . '/../../' . ltrim($post['image'], '/'));
+?>
+        <img src="<?= e($post['image']) ?>" alt="<?= e($post['image_alt']) ?>"<?= $heroSize ? ' width="' . (int) $heroSize[0] . '" height="' . (int) $heroSize[1] . '"' : '' ?> fetchpriority="high" decoding="async">
       </div>
     </figure>
 
