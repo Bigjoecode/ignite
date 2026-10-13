@@ -211,6 +211,34 @@
       });
   });
 
+  /* ---------- an office that only takes appointments on certain days ----------
+     Every day chip is tagged with its weekday, so once an office is chosen the
+     days it does not work are hidden. An office with no days set keeps them all. */
+  function applyOfficeDays(days) {
+    var allowed = String(days || '').split(',').map(function (d) { return d.trim().toLowerCase(); }).filter(Boolean);
+    var note    = form.querySelector('[data-bk-days-note]');
+
+    form.querySelectorAll('[data-bk-day]').forEach(function (chip) {
+      var ok    = !allowed.length || allowed.indexOf(chip.getAttribute('data-bk-day')) !== -1;
+      var input = chip.querySelector('input');
+      chip.hidden    = !ok;
+      input.disabled = !ok;
+      if (!ok && input.checked) input.checked = false;
+    });
+
+    if (note) {
+      var names = { mon: 'Mondays', tue: 'Tuesdays', wed: 'Wednesdays', thu: 'Thursdays', fri: 'Fridays', sat: 'Saturdays', sun: 'Sundays' };
+      var list  = allowed.map(function (d) { return names[d] || d; });
+      note.textContent = list.length
+        ? 'This office sees patients on ' + (list.length > 1 ? list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1] : list[0]) + '.'
+        : '';
+      note.hidden = !list.length;
+    }
+  }
+
+  // an office booking link arrives with its office already chosen
+  var fixedOffice = form.querySelector('input[type="hidden"][name="office"][data-days]');
+  if (fixedOffice) applyOfficeDays(fixedOffice.getAttribute('data-days'));
   /* ---------- office search: type a city, zip code or office name, then pick a match ---------- */
   var find = root.querySelector('[data-bk-find]');
   if (find) {
@@ -367,6 +395,7 @@
       officeIn.setAttribute('data-label', o.name + ' office');
       officeIn.setAttribute('data-phone', o.phone);
       officeIn.setAttribute('data-tel', o.tel);
+      applyOfficeDays((o.days || []).join(','));
       picked.querySelector('[data-bk-picked-name]').textContent = 'Ignite Orthodontics ' + o.name;
       picked.querySelector('[data-bk-picked-addr]').textContent = o.address;
       picked.hidden = false;
@@ -380,6 +409,7 @@
 
     picked.querySelector('[data-bk-picked-change]').addEventListener('click', function () {
       officeIn.value = '';
+      applyOfficeDays('');
       ['data-label', 'data-phone', 'data-tel'].forEach(function (a) { officeIn.setAttribute(a, ''); });
       picked.hidden = true;
       find.hidden = false;

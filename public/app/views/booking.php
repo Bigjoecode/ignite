@@ -42,7 +42,7 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
         <input type="text" name="website" value="" class="ig-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="draft_id" value="">
 <?php if ($office): ?>
-        <input type="hidden" name="office" value="<?= e($office['slug']) ?>" data-label="<?= e($office['name']) ?> office" data-phone="<?= e($office['phone']) ?>" data-tel="<?= e($office['tel']) ?>">
+        <input type="hidden" name="office" value="<?= e($office['slug']) ?>" data-label="<?= e($office['name']) ?> office" data-phone="<?= e($office['phone']) ?>" data-tel="<?= e($office['tel']) ?>" data-days="<?= e(implode(',', $office['days'])) ?>">
 <?php endif; ?>
 
         <fieldset class="ig-bk__pane" data-step data-auto>
@@ -77,6 +77,7 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
     $offices = array_values(array_map(static fn(array $l): array => [
         'slug' => $l['slug'], 'name' => $l['name'], 'street' => $l['street'], 'city' => $l['city'],
         'state' => $l['state'], 'zip' => $l['zip'], 'address' => $l['address_full'], 'phone' => $l['phone'], 'tel' => $l['tel'],
+        'days' => $l['days'],   // the weekdays this office takes appointments; empty means any
     ], locations()));
 ?>
           <div class="bk-find" data-bk-find data-offices="<?= e(json_encode($offices, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) ?>">
@@ -101,10 +102,11 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
           <p class="ig-bk__sub">Pick a preferred day and time. We will confirm the exact appointment with you.</p>
 
           <p class="ig-bk__label" id="igBkDay">Preferred day</p>
+          <p class="ig-bk__days-note" data-bk-days-note hidden></p>
           <div class="ig-bk__days" role="radiogroup" aria-labelledby="igBkDay">
             <label class="ig-bk__opt ig-bk__opt--chip ig-bk__opt--wide"><input type="radio" name="date" value="first" data-label="First available" required><b>First available</b><span>Soonest opening</span></label>
 <?php for ($i = 0; $i < $bk['days_ahead']; $i++): $d = $start->modify("+{$i} days"); ?>
-            <label class="ig-bk__opt ig-bk__opt--chip"><input type="radio" name="date" value="<?= $d->format('Y-m-d') ?>" data-label="<?= $d->format('D, M j') ?>" required><span><?= $d->format('D') ?></span><b><?= $d->format('M j') ?></b></label>
+            <label class="ig-bk__opt ig-bk__opt--chip" data-bk-day="<?= strtolower($d->format('D')) ?>"><input type="radio" name="date" value="<?= $d->format('Y-m-d') ?>" data-label="<?= $d->format('D, M j') ?>" required><span><?= $d->format('D') ?></span><b><?= $d->format('M j') ?></b></label>
 <?php endfor; ?>
           </div>
 

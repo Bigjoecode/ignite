@@ -45,7 +45,7 @@ function current_admin(): ?array
         return null;
     }
     $_SESSION['seen'] = time();
-    $stmt = db()->prepare('SELECT id, email, name FROM users WHERE id = ?');
+    $stmt = db()->prepare('SELECT id, email, name, office FROM users WHERE id = ?');
     $stmt->execute([$id]);
     return $stmt->fetch() ?: null;
 }

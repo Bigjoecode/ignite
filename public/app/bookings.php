@@ -160,10 +160,14 @@ function booking_list(array $filters = [], int $limit = 200): array
 }
 
 /** How many requests sit in each status, plus '' for all and 'trash', for the filter tabs. */
-function booking_counts(): array
+function booking_counts(string $office = ''): array
 {
     $counts = ['' => 0, 'trash' => 0] + array_map(static fn(): int => 0, BOOKING_STATUSES);
-    foreach (db()->query('SELECT status, trashed_at IS NULL AS live, COUNT(*) AS n FROM bookings GROUP BY status, live')->fetchAll() as $row) {
+    $sql = 'SELECT status, trashed_at IS NULL AS live, COUNT(*) AS n FROM bookings'
+        . ($office !== '' ? ' WHERE office = ?' : '') . ' GROUP BY status, live';
+    $stmt = db()->prepare($sql);
+    $stmt->execute($office !== '' ? [$office] : []);
+    foreach ($stmt->fetchAll() as $row) {
         if (!$row['live']) {
             $counts['trash'] += (int) $row['n'];
             continue;
@@ -175,12 +179,14 @@ function booking_counts(): array
 }
 
 /** How many of each kind are waiting, for the filter. */
-function booking_kind_counts(): array
+function booking_kind_counts(string $office = ''): array
 {
     $counts = ['' => 0] + array_map(static fn(): int => 0, BOOKING_KINDS);
     $sql    = "SELECT CASE WHEN kind = '' THEN 'office' ELSE kind END AS k, COUNT(*) AS n
-                 FROM bookings WHERE trashed_at IS NULL GROUP BY k";
-    foreach (db()->query($sql)->fetchAll() as $row) {
+                 FROM bookings WHERE trashed_at IS NULL" . ($office !== '' ? ' AND office = ?' : '') . ' GROUP BY k';
+    $stmt = db()->prepare($sql);
+    $stmt->execute($office !== '' ? [$office] : []);
+    foreach ($stmt->fetchAll() as $row) {
         if (isset($counts[$row['k']])) {
             $counts[$row['k']] = (int) $row['n'];
         }
@@ -189,10 +195,13 @@ function booking_kind_counts(): array
     return $counts;
 }
 
-function booking_new_count(): int
+function booking_new_count(string $office = ''): int
 {
     try {
-        return (int) db()->query("SELECT COUNT(*) FROM bookings WHERE status = 'new' AND trashed_at IS NULL")->fetchColumn();
+        $stmt = db()->prepare("SELECT COUNT(*) FROM bookings WHERE status = 'new' AND trashed_at IS NULL"
+            . ($office !== '' ? ' AND office = ?' : ''));
+        $stmt->execute($office !== '' ? [$office] : []);
+        return (int) $stmt->fetchColumn();
     } catch (Throwable $e) {
         return 0;
     }

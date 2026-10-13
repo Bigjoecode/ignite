@@ -64,6 +64,12 @@ if (!isset($opts['patients'][$req['patient']]))     $errors[] = ['patient', 'who
 if (!isset($opts['treatments'][$req['treatment']])) $errors[] = ['treatment', 'treatment'];
 if (!isset(locations()[$req['office']]))            $errors[] = ['office', 'office'];
 if (!$dateOk)                                        $errors[] = ['date', 'preferred day'];
+// an office that only works certain days cannot be asked for another one
+$officeDays = locations()[$req['office']]['days'] ?? [];
+if ($dateOk && $officeDays && $req['date'] !== 'first'
+    && !in_array(strtolower((new DateTimeImmutable($req['date']))->format('D')), $officeDays, true)) {
+    $errors[] = ['date', 'preferred day, because that office does not see patients that day'];
+}
 if (!isset($opts['times'][$req['time']]))           $errors[] = ['time', 'preferred time'];
 if ($req['first_name'] === '')                       $errors[] = ['first_name', 'first name'];
 if ($req['last_name'] === '')                        $errors[] = ['last_name', 'last name'];

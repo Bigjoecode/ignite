@@ -27,8 +27,8 @@ if ($method === 'POST' && !csrf_valid()) {
 
 /* ---------- sign in / sign out (no login required) ---------- */
 if ($route === 'login') {
-    if (current_admin()) {
-        redirect('/admin/posts/', 303);
+    if ($signedIn = current_admin()) {
+        redirect(admin_office_login($signedIn) ? '/admin/bookings/' : '/admin/posts/', 303);
     }
     $error = null;
     $email = '';
@@ -37,7 +37,8 @@ if ($route === 'login') {
         $result = admin_attempt_login($email, (string) ($_POST['password'] ?? ''));
         if (is_array($result)) {
             $next = (string) ($_GET['next'] ?? '');
-            redirect(preg_match('#^/admin/[A-Za-z0-9/_?=&%.-]*$#', $next) && strpos($next, '//') === false ? $next : '/admin/posts/', 303);
+            $home = admin_office_login($result) ? '/admin/bookings/' : '/admin/posts/';
+            redirect(preg_match('#^/admin/[A-Za-z0-9/_?=&%.-]*$#', $next) && strpos($next, '//') === false ? $next : $home, 303);
         }
         $error = $result;
     }
@@ -54,7 +55,12 @@ if ($route === 'logout' && $method === 'POST') {
 $user = require_admin(admin_wants_json());
 
 if ($route === '') {
-    redirect('/admin/posts/', 302);
+    redirect(admin_office_login($user) ? '/admin/bookings/' : '/admin/posts/', 302);
+}
+
+// someone tied to one office works on its bookings and its account, nothing else
+if (admin_office_login($user) && !preg_match('#^(bookings|account|logout)#', $route)) {
+    redirect('/admin/bookings/', 302);
 }
 
 // posts
@@ -143,7 +149,7 @@ if ($route === 'bookings' && $method === 'GET') {
 }
 if ($route === 'bookings/export.csv' && $method === 'GET') {
     require_once APP . '/admin/bookings.php';
-    admin_bookings_export();
+    admin_bookings_export($user);
     exit;
 }
 if ($route === 'bookings/new' && $method === 'GET') {

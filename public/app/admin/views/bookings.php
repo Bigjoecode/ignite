@@ -1,5 +1,5 @@
 <?php
-// Vars: $rows, $counts, $filters (status, office, q)
+// Vars: $rows, $counts, $filters (status, office, q), $onlyOffice (set for an office login)
 $query = static function (array $changes) use ($filters): string {
     $params = array_filter(array_merge($filters, $changes), static fn(string $v): bool => $v !== '');
     return $params ? '?' . http_build_query($params) : '';
@@ -15,7 +15,11 @@ $inTrash = $filters['status'] === 'trash';
   <a class="adm-btn" href="/admin/bookings/export.csv<?= e($query([])) ?>">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>Download as a spreadsheet
   </a>
+<?php if ($onlyOffice === ''): ?>
   <p class="adm-head__sub">Every consultation request from the website. They are also emailed to the addresses in <a href="/admin/settings/">Settings</a>.</p>
+<?php else: ?>
+  <p class="adm-head__sub">Every consultation request for the <?= e(locations()[$onlyOffice]['name']) ?> office. They are emailed to this office as they come in.</p>
+<?php endif; ?>
 </div>
 
 <div class="adm-toolbar">
@@ -33,12 +37,14 @@ $inTrash = $filters['status'] === 'trash';
       <option value="<?= e($key) ?>"<?= $filters['kind'] === $key ? ' selected' : '' ?>><?= e($label) ?>s (<?= (int) $kindCounts[$key] ?>)</option>
 <?php endforeach; ?>
     </select>
+<?php if ($onlyOffice === ''): ?>
     <select name="office" aria-label="Office">
       <option value="">All offices</option>
 <?php foreach (locations() as $slug => $office): ?>
       <option value="<?= e($slug) ?>"<?= $filters['office'] === $slug ? ' selected' : '' ?>><?= e($office['name']) ?></option>
 <?php endforeach; ?>
     </select>
+<?php endif; ?>
     <input type="search" name="q" value="<?= e($filters['q']) ?>" placeholder="Name, phone or email" aria-label="Search bookings">
     <button class="adm-btn" type="submit">Search</button>
   </form>

@@ -7,23 +7,36 @@ declare(strict_types=1);
 require_once APP . '/bookings.php';
 require_once APP . '/smile.php';     // smile requests carry a photo
 
+/**
+ * The office a signed-in person is tied to, or '' for the practice as a whole.
+ * An office login only ever sees its own bookings, so this is applied to the list,
+ * to a single booking and to the spreadsheet, not just to the filter box.
+ */
+function admin_user_office(array $user): string
+{
+    $office = (string) ($user['office'] ?? '');
+    return isset(locations()[$office]) ? $office : '';
+}
+
 /** The list, with the status tabs, the office filter and a search box. */
 function admin_bookings_index(array $user): void
 {
     booking_import_file();   // anything that only reached bookings.jsonl
 
+    $mine    = admin_user_office($user);
     $filters = [
         'status' => (string) ($_GET['status'] ?? ''),
         'kind'   => (string) ($_GET['kind'] ?? ''),
-        'office' => (string) ($_GET['office'] ?? ''),
+        'office' => $mine !== '' ? $mine : (string) ($_GET['office'] ?? ''),
         'q'      => mb_substr(trim((string) ($_GET['q'] ?? '')), 0, 60),
     ];
 
     admin_render('bookings', [
         'rows'       => booking_list($filters),
-        'counts'     => booking_counts(),
-        'kindCounts' => booking_kind_counts(),
+        'counts'     => booking_counts($mine),
+        'kindCounts' => booking_kind_counts($mine),
         'filters'    => $filters,
+        'onlyOffice' => $mine,
     ], 'Bookings', $user);
 }
 
@@ -42,7 +55,11 @@ function admin_booking_new(array $user): void
 /** One request: everything it holds, and what to do next. */
 function admin_booking_view(array $user, string $id): void
 {
-    $row = booking_find($id);
+    $row  = booking_find($id);
+    $mine = admin_user_office($user);
+    if ($row && $mine !== '' && $row['office'] !== $mine) {
+        $row = null;      // another office's patient is not this login's business
+    }
     if (!$row) {
         admin_not_found($user);
         exit;
@@ -54,7 +71,9 @@ function admin_booking_view(array $user, string $id): void
 function admin_booking_save(array $user, string $id): void
 {
     $isNew = $id === '';
-    if (!$isNew && !booking_find($id)) {
+    $mine  = admin_user_office($user);
+    $was   = $isNew ? null : booking_find($id);
+    if ((!$isNew && !$was) || ($was && $mine !== '' && $was['office'] !== $mine)) {
         admin_not_found($user);
         exit;
     }
@@ -83,7 +102,9 @@ function admin_booking_save(array $user, string $id): void
 /** Trash, restore or delete for good. */
 function admin_booking_action(array $user, string $id, string $action): void
 {
-    if (!booking_find($id)) {
+    $row  = booking_find($id);
+    $mine = admin_user_office($user);
+    if (!$row || ($mine !== '' && $row['office'] !== $mine)) {
         admin_not_found($user);
         exit;
     }
@@ -98,12 +119,13 @@ function admin_booking_action(array $user, string $id, string $action): void
 }
 
 /** Every request as a spreadsheet, so the practice can work offline or hand it over. */
-function admin_bookings_export(): void
+function admin_bookings_export(array $user): void
 {
+    $mine = admin_user_office($user);
     $rows = booking_list([
         'status' => (string) ($_GET['status'] ?? ''),
         'kind'   => (string) ($_GET['kind'] ?? ''),
-        'office' => (string) ($_GET['office'] ?? ''),
+        'office' => $mine !== '' ? $mine : (string) ($_GET['office'] ?? ''),
         'q'      => (string) ($_GET['q'] ?? ''),
     ], 5000);
 

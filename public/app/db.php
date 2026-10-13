@@ -125,6 +125,12 @@ CREATE TABLE IF NOT EXISTS bookings (
 CREATE INDEX IF NOT EXISTS bookings_created ON bookings (created_at DESC);
 SQL);
 
+    // an office login sees only its own bookings; an empty office means the whole practice
+    $userCols = $pdo->query('PRAGMA table_info(users)')->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (!in_array('office', $userCols, true)) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN office TEXT NOT NULL DEFAULT ''");
+    }
+
     // columns added after a table first shipped
     $bookingCols = $pdo->query('PRAGMA table_info(bookings)')->fetchAll(PDO::FETCH_COLUMN, 1);
     $laterCols   = [

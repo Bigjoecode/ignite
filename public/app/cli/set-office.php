@@ -4,7 +4,8 @@
  *
  *   php app/cli/set-office.php SLUG [--phone="(248) 658-8681"] [--street="1190 E 12 Mile Rd"]
  *                              [--city="Madison Heights"] [--state=MI] [--zip=48071]
- *                              [--email=...] [--hours="Mon-Fri: 9AM - 5PM|Sat: Closed"] [--dry-run]
+ *                              [--email=...] [--hours="Mon-Fri: 9AM - 5PM|Sat: Closed"]
+ *                              [--days="tue"] [--dry-run]
  *
  * Only what is given changes; anything else is left alone. The address on the page,
  * the map, the tap-to-call link, the schema data, the booking page, the footer and
@@ -22,7 +23,7 @@ require dirname(__DIR__) . '/bootstrap.php';
 
 $slug   = $argv[1] ?? '';
 $dryRun = in_array('--dry-run', $argv, true);
-$fields = ['street', 'city', 'state', 'zip', 'phone', 'email', 'hours'];
+$fields = ['street', 'city', 'state', 'zip', 'phone', 'email', 'hours', 'days'];
 
 $given = [];
 foreach ($argv as $arg) {
@@ -37,7 +38,7 @@ if (isset($given['hours'])) {
 }
 
 if ($slug === '' || !$given) {
-    fwrite(STDERR, "usage: php app/cli/set-office.php SLUG --phone=\"(248) 658-8681\" --street=\"...\" --zip=48071 [--dry-run]\n");
+    fwrite(STDERR, "usage: php app/cli/set-office.php SLUG --phone=\"(248) 658-8681\" --street=\"...\" --days=tue [--dry-run]\n");
     exit(1);
 }
 if (isset($given['phone']) && $given['phone'] !== '' && strlen(preg_replace('/\D/', '', $given['phone'])) !== 10) {

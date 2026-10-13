@@ -12,6 +12,10 @@ $nav = [
     ['/admin/settings/',  'Settings',      'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M4 12l-1.6-1.2 1.3-3.1 2 .3 1.7-1.7-.3-2 3.1-1.3L11.4 4h2.4l1.2-1.6 3.1 1.3-.3 2 1.7 1.7 2-.3 1.3 3.1L20.4 12l1.6 1.2-1.3 3.1-2-.3-1.7 1.7.3 2-3.1 1.3-1.2-1.6h-2.4l-1.2 1.6-3.1-1.3.3-2-1.7-1.7-2 .3-1.3-3.1z', ['settings']],
     ['/admin/account/',   'Your Account',  'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0', ['account']],
 ];
+require_once APP . '/bookings.php';
+// an office login only has Bookings, so that is its home and the only thing it is counted
+$myOffice     = $user && isset(locations()[(string) ($user['office'] ?? '')]) ? (string) $user['office'] : '';
+$home         = $myOffice !== '' ? '/admin/bookings/' : '/admin/posts/';
 $currentRoute = $GLOBALS['route'] ?? '';
 $navType      = $GLOBALS['admin_nav_type'] ?? '';   // which kind of page is open
 $isActive = static function (array $keys, string $type) use ($currentRoute, $navType): bool {
@@ -44,7 +48,7 @@ $isActive = static function (array $keys, string $type) use ($currentRoute, $nav
   <button class="adm-top__menu" type="button" data-adm-menu aria-label="Open menu" aria-expanded="false">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
   </button>
-  <a class="adm-top__brand" href="/admin/posts/"><img src="/assets/img/ignitelogo.png" alt="Ignite Orthodontics"><span>Admin</span></a>
+  <a class="adm-top__brand" href="<?= e($home) ?>"><img src="/assets/img/ignitelogo.png" alt="Ignite Orthodontics"><span>Admin</span></a>
   <a class="adm-top__site" href="/" target="_blank" rel="noopener">View site</a>
   <div class="adm-top__user">
     <span class="adm-top__avatar" aria-hidden="true"><?= e(strtoupper(mb_substr($user['name'], 0, 1))) ?></span>
@@ -55,7 +59,12 @@ $isActive = static function (array $keys, string $type) use ($currentRoute, $nav
 
 <nav class="adm-side" data-adm-side aria-label="Admin">
   <ul>
-<?php require_once APP . '/bookings.php'; $newBookings = booking_new_count(); ?>
+<?php
+  $newBookings = booking_new_count($myOffice);
+  if ($myOffice !== '') {
+      $nav = array_values(array_filter($nav, static fn(array $item): bool => in_array($item[0], ['/admin/bookings/', '/admin/account/'], true)));
+  }
+?>
 <?php foreach ($nav as $item): [$href, $label, $icon, $keys] = $item; $navItemType = $item[4] ?? ''; ?>
     <li><a href="<?= e($href) ?>"<?= $isActive($keys, $navItemType) ? ' class="is-active" aria-current="page"' : '' ?>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="<?= e($icon) ?>"/></svg><?= e($label) ?><?php if ($keys === ['bookings'] && $newBookings): ?><span class="adm-side__count" aria-label="<?= (int) $newBookings ?> new"><?= (int) $newBookings ?></span><?php endif; ?></a></li>
 <?php endforeach; ?>

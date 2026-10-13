@@ -146,6 +146,15 @@ function page_office_shape(string $slug, string $name, array $f): array
     $hours = is_array($hours) ? $hours : preg_split('/\R/', (string) $hours);
     $hours = array_values(array_filter(array_map('trim', $hours ?: []), static fn(string $l): bool => $l !== ''));
 
+    // the weekdays this office takes appointments on; empty means every day
+    $days = [];
+    foreach (preg_split('/[\s,;]+/', strtolower($get('days'))) as $day) {
+        $day = substr(trim($day), 0, 3);
+        if ($day !== '' && in_array($day, ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], true) && !in_array($day, $days, true)) {
+            $days[] = $day;
+        }
+    }
+
     return [
         'slug'         => $slug,
         'name'         => $name,
@@ -157,6 +166,7 @@ function page_office_shape(string $slug, string $name, array $f): array
         'tel'          => $tel,
         'email'        => $get('email'),
         'hours'        => $hours,
+        'days'         => $days,
         'address_full' => implode(', ', array_filter([$get('street'), $get('city'), trim($state . ' ' . $zip)])),
         'map_q'        => trim($get('street') . ' ' . $get('city') . ' ' . $state . ' ' . $zip),
     ];

@@ -395,6 +395,9 @@ function templates(): array
             ['key' => 'phone', 'type' => 'text', 'label' => 'Phone number', 'default' => '(xxx) xxx-xxxx', 'help' => 'Shown as typed. A real 10-digit number also becomes a tap-to-call link.'],
             ['key' => 'email', 'type' => 'text', 'label' => 'Email address'],
             ['key' => 'hours', 'type' => 'lines', 'label' => 'Opening hours (optional)', 'help' => 'One per line, for example: Monday 9:00 AM – 5:00 PM'],
+            ['key' => 'days', 'type' => 'text', 'label' => 'Appointment days (optional)',
+                'help' => 'Which days this office takes appointments, for example: Tue. Separate several with commas (Mon, Wed). '
+                    . 'Leave empty to offer every day. The booking page only shows these days once someone picks this office.'],
         ],
     ];
 

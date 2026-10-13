@@ -463,6 +463,12 @@ function admin_media_update(int $id): void
    ACCOUNT
    ============================================================ */
 
+/** True when this login belongs to a single office rather than the whole practice. */
+function admin_office_login(array $user): bool
+{
+    return isset(locations()[(string) ($user['office'] ?? '')]);
+}
+
 function admin_account(array $user, string $method): void
 {
     $errors = [];
