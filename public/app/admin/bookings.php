@@ -7,16 +7,9 @@ declare(strict_types=1);
 require_once APP . '/bookings.php';
 require_once APP . '/smile.php';     // smile requests carry a photo
 
-/**
- * The office a signed-in person is tied to, or '' for the practice as a whole.
- * An office login only ever sees its own bookings, so this is applied to the list,
- * to a single booking and to the spreadsheet, not just to the filter box.
- */
-function admin_user_office(array $user): string
-{
-    $office = (string) ($user['office'] ?? '');
-    return isset(locations()[$office]) ? $office : '';
-}
+// admin_user_office() lives in admin/functions.php, because the sidebar needs it too.
+// Whatever it returns is applied to the list, to a single booking and to the
+// spreadsheet, not just to the filter box.
 
 /** The list, with the status tabs, the office filter and a search box. */
 function admin_bookings_index(array $user): void
@@ -37,6 +30,7 @@ function admin_bookings_index(array $user): void
         'kindCounts' => booking_kind_counts($mine),
         'filters'    => $filters,
         'onlyOffice' => $mine,
+        'bookingsOnly' => admin_office_login($user),   // no Settings to link to
     ], 'Bookings', $user);
 }
 

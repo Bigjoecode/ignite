@@ -13,9 +13,10 @@ $nav = [
     ['/admin/account/',   'Your Account',  'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0', ['account']],
 ];
 require_once APP . '/bookings.php';
-// an office login only has Bookings, so that is its home and the only thing it is counted
-$myOffice     = $user && isset(locations()[(string) ($user['office'] ?? '')]) ? (string) $user['office'] : '';
-$home         = $myOffice !== '' ? '/admin/bookings/' : '/admin/posts/';
+// a bookings-only login starts and stays on Bookings
+$bookingsOnly = $user && admin_office_login($user);
+$myOffice     = $user ? admin_user_office($user) : '';
+$home         = $bookingsOnly ? '/admin/bookings/' : '/admin/posts/';
 $currentRoute = $GLOBALS['route'] ?? '';
 $navType      = $GLOBALS['admin_nav_type'] ?? '';   // which kind of page is open
 $isActive = static function (array $keys, string $type) use ($currentRoute, $navType): bool {
@@ -61,7 +62,7 @@ $isActive = static function (array $keys, string $type) use ($currentRoute, $nav
   <ul>
 <?php
   $newBookings = booking_new_count($myOffice);
-  if ($myOffice !== '') {
+  if ($bookingsOnly) {
       $nav = array_values(array_filter($nav, static fn(array $item): bool => in_array($item[0], ['/admin/bookings/', '/admin/account/'], true)));
   }
 ?>

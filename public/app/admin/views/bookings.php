@@ -1,5 +1,6 @@
 <?php
-// Vars: $rows, $counts, $filters (status, office, q), $onlyOffice (set for an office login)
+// Vars: $rows, $counts, $filters (status, office, q), $onlyOffice (one office, or ''),
+//       $bookingsOnly (this login cannot leave the bookings screen)
 $query = static function (array $changes) use ($filters): string {
     $params = array_filter(array_merge($filters, $changes), static fn(string $v): bool => $v !== '');
     return $params ? '?' . http_build_query($params) : '';
@@ -15,10 +16,12 @@ $inTrash = $filters['status'] === 'trash';
   <a class="adm-btn" href="/admin/bookings/export.csv<?= e($query([])) ?>">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>Download as a spreadsheet
   </a>
-<?php if ($onlyOffice === ''): ?>
-  <p class="adm-head__sub">Every consultation request from the website. They are also emailed to the addresses in <a href="/admin/settings/">Settings</a>.</p>
-<?php else: ?>
+<?php if ($onlyOffice !== ''): ?>
   <p class="adm-head__sub">Every consultation request for the <?= e(locations()[$onlyOffice]['name']) ?> office. They are emailed to this office as they come in.</p>
+<?php elseif ($bookingsOnly): ?>
+  <p class="adm-head__sub">Every consultation request from the website, across all <?= count(locations()) ?> offices. They are emailed out as they come in.</p>
+<?php else: ?>
+  <p class="adm-head__sub">Every consultation request from the website. They are also emailed to the addresses in <a href="/admin/settings/">Settings</a>.</p>
 <?php endif; ?>
 </div>
 

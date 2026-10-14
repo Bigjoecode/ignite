@@ -463,10 +463,22 @@ function admin_media_update(int $id): void
    ACCOUNT
    ============================================================ */
 
-/** True when this login belongs to a single office rather than the whole practice. */
+/** True when this login is limited to the bookings screen: one office, or a rep ('*'). */
 function admin_office_login(array $user): bool
 {
-    return isset(locations()[(string) ($user['office'] ?? '')]);
+    return (string) ($user['office'] ?? '') !== '';
+}
+
+/**
+ * The office whose bookings this login may see, or '' for all of them.
+ * '' is returned both for someone who runs the whole dashboard and for a rep tied
+ * to '*', because neither is limited to one office; what separates them is
+ * admin_office_login(), which decides whether they can leave the bookings screen.
+ */
+function admin_user_office(array $user): string
+{
+    $office = (string) ($user['office'] ?? '');
+    return isset(locations()[$office]) ? $office : '';
 }
 
 function admin_account(array $user, string $method): void

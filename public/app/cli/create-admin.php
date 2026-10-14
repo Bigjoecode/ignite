@@ -7,6 +7,10 @@ declare(strict_types=1);
 //
 //   php app/cli/create-admin.php you@example.com "Your Name"
 //   php app/cli/create-admin.php flint@igniteorthodontics.com "Flint Front Desk" --office=flint
+//
+// --office=all is the rep's login: every office's bookings, and nothing else.
+//
+//   php app/cli/create-admin.php rep@igniteorthodontics.com "Patient Rep" --office=all
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
@@ -27,8 +31,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $name === '') {
     fwrite(STDERR, "usage: php app/cli/create-admin.php email@example.com \"Full Name\" [--office=SLUG]\n");
     exit(1);
 }
-if ($office !== '' && !isset(locations()[$office])) {
-    fwrite(STDERR, "no office with the address /locations/{$office}/. The offices are: " . implode(', ', array_keys(locations())) . "\n");
+if ($office === 'all') {
+    $office = '*';   // every office's bookings, nothing else in the dashboard
+}
+if ($office !== '' && $office !== '*' && !isset(locations()[$office])) {
+    fwrite(STDERR, "no office with the address /locations/{$office}/. Use 'all', or one of: " . implode(', ', array_keys(locations())) . "\n");
     exit(1);
 }
 
@@ -54,5 +61,9 @@ if ($id) {
         ->execute([$email, $name, $hash, $office, date('Y-m-d H:i:s')]);
     echo "Created login {$email}\n";
 }
-echo 'Sees: ', $office !== '' ? locations()[$office]['name'] . " bookings only\n" : "everything\n";
+echo 'Sees: ', match (true) {
+    $office === ''  => "everything\n",
+    $office === '*' => "the bookings of every office, and nothing else\n",
+    default         => locations()[$office]['name'] . " bookings only\n",
+};
 echo "Password: {$password}\n";
