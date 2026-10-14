@@ -2,6 +2,9 @@
 // "Find Ignite Orthodontics Near You" — markup from the home-preview design,
 // rendered from the office data. Needs home.css + home.js inside .ig-home.
 // No map embed or map links: the site never links visitors to other websites.
+// $finderPhones: print each office's number. Only the locations directory does;
+// everywhere else the office link and the booking button are the way through.
+$finderPhones = $finderPhones ?? false;
 $locs = locations();
 $pin   = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
 $phone = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
@@ -37,8 +40,12 @@ $mail  = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path 
             <p class="ig-office__addr"><?= e($l['street']) ?><br><?= e($l['city']) ?>, MI<?= $l['zip'] !== '' ? ' ' . e($l['zip']) : '' ?></p>
             <div class="ig-office__row">
               <div class="ig-office__contact">
+<?php if ($finderPhones): ?>
                 <a href="tel:<?= e($l['tel']) ?>"><?= $phone ?> <?= e($l['phone']) ?></a>
+<?php endif; ?>
+<?php if ($l['email'] !== ''): ?>
                 <a href="mailto:<?= e($l['email']) ?>"><?= $mail ?> <?= e($l['email']) ?></a>
+<?php endif; ?>
               </div>
               <div class="ig-office__links">
                 <a class="ig-btn" href="/locations/<?= e($l['slug']) ?>/">View Location</a>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 header('Content-Type: application/xml; charset=utf-8');
 
 // [path, lastmod or null]
-$urls = [['/', null], ['/booking/', null], ['/locations/', null]];
+$urls = [['/', null], ['/booking/', null], ['/locations/', null], ['/sitemap/', null]];
 
 // the video consultation page is only worth listing once it can offer real times
 require_once APP . '/consult.php';

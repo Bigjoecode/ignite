@@ -1,0 +1,31 @@
+/* The sitemap people read (/sitemap/, views/sitemap.php). Brand tokens come from site.css. */
+.sm-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:clamp(20px,2.4vw,32px);align-items:start;
+}
+
+.sm-group{
+  background:#FFFFFF;border:1px solid var(--ig-line);border-radius:16px;
+  padding:clamp(22px,2.2vw,30px);box-shadow:0 2px 14px rgba(11,42,85,.05);
+}
+.sm-group h2{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 6px;font-size:clamp(18px,1.5vw,21px);font-weight:700;color:var(--ig-navy);
+}
+.sm-group h2 span{
+  display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;padding:0 7px;
+  border-radius:11px;background:rgba(244,116,33,.12);
+  font-size:12.5px;font-weight:700;color:var(--ig-orange);
+}
+.sm-group__note{margin:0 0 16px;font-size:14px;line-height:1.6;color:var(--ig-muted);}
+.sm-group h2 + ul{margin-top:16px;}
+
+.sm-group ul{list-style:none;margin:0;padding:0;display:grid;gap:14px;}
+.sm-group li{display:grid;gap:3px;}
+.sm-group li a{font-size:15.5px;font-weight:600;color:var(--ig-navy);text-decoration:none;}
+.sm-group li a:hover{color:var(--ig-orange);text-decoration:underline;}
+.sm-group li span{font-size:13.5px;line-height:1.55;color:var(--ig-muted);}
+
+@media (max-width:560px){
+  .sm-grid{grid-template-columns:1fr;}
+}

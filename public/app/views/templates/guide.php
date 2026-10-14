@@ -4,8 +4,9 @@
 // list and the booking band. Vars: $page from page_prepare().
 $d      = $page['d'];
 // an office's own page or landing page calls that office
-$phone  = (string) ($page['office']['phone'] ?? cfg('phone'));
-$tel    = (string) ($page['office']['tel'] ?? cfg('phone_tel'));
+// only an office page has a number to call; elsewhere $call() returns nothing
+$phone  = (string) ($page['office']['phone'] ?? '');
+$tel    = (string) ($page['office']['tel'] ?? '');
 $parent = page_parent($page);
 $check  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
 $arrow  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -15,7 +16,7 @@ $book = static function (string $label, string $class = 'gd-btn gd-btn--primary'
     return trim($label) === '' ? '' : '<a class="' . $class . '" href="' . e(booking_url()) . '">' . e($label) . '</a>';
 };
 $call = static function (string $class) use ($phone, $tel): string {
-    return '<a class="' . $class . '" href="tel:' . e($tel) . '">Call ' . e($phone) . '</a>';
+    return $tel === '' ? '' : '<a class="' . $class . '" href="tel:' . e($tel) . '">Call ' . e($phone) . '</a>';
 };
 // eyebrow, heading and intro shared by most blocks
 $head = static function (array $b, string $class = 'gd-head'): string {

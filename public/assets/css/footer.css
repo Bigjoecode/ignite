@@ -20,8 +20,14 @@
   transition:background .2s ease,transform .2s ease;
 }
 .ig-foot__cta:hover{background:#DA6210;transform:translateY(-2px);}
-.ig-foot__phone{display:block;margin-top:16px;font-size:17px;font-weight:700;color:#FFFFFF;}
-.ig-foot__phone:hover{color:#F47421;}
+/* Facebook and Instagram, under the footer's consultation button */
+.ig-foot__social{display:flex !important;gap:12px;margin:20px 0 0;padding:0;list-style:none;}
+.ig-foot__social a{
+  display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;
+  border-radius:50%;background:rgba(255,255,255,.1);transition:background .18s ease,transform .18s ease;
+}
+.ig-foot__social a:hover{background:#F47421;transform:translateY(-2px);}
+.ig-foot__social svg{width:20px;height:20px;fill:#FFFFFF;}
 
 .ig-foot h3{
   font-size:13px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;

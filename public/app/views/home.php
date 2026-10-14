@@ -31,7 +31,6 @@
 
               <div class="ig-btns">
                 <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
-                <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call Now</a>
               </div>
             </div>
           </div>
@@ -60,7 +59,6 @@
 
               <div class="ig-btns">
                 <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
-                <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call Now</a>
               </div>
             </div>
           </div>
@@ -341,7 +339,6 @@
       <h2>Your Best Smile Starts With <em>a Conversation.</em></h2>
       <div class="ig-btns" style="justify-content:center;">
         <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a>
-        <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call <?= e(cfg('phone')) ?></a>
       </div>
     </div>
   </section>

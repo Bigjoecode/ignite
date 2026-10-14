@@ -86,10 +86,13 @@ function put(string $path, string $data): void
     printf("wrote %-36s %7d bytes\n", $path, strlen($data));
 }
 
+// The template's number becomes this page's office number (page_phone() in helpers.php).
+// A page belonging to no office has none, and the markup around each link is made
+// conditional by hand afterwards — see public/app/views/partials/header.php.
 function brand_phone(string $s): string
 {
-    $s = rep($s, 'tel:+15863937972', "tel:<?= e(cfg('phone_tel')) ?>");
-    return rep($s, '(586) 393-7972', "<?= e(cfg('phone')) ?>");
+    $s = rep($s, 'tel:+15863937972', "tel:<?= e(\$igPhone['tel']) ?>");
+    return rep($s, '(586) 393-7972', "<?= e(\$igPhone['phone']) ?>");
 }
 
 /* ------------------------------------------------------------------ header */

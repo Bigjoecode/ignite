@@ -17,7 +17,6 @@ $star = '<svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.
                 <p><?= e($s['lead']) ?></p>
                 <div class="hero-actions">
                     <a href="<?= e(booking_url()) ?>" class="btn btn-primary"><?= e($s['button']) ?></a>
-                    <a href="tel:<?= e(cfg('phone_tel')) ?>" class="btn btn-outline" style="border-color: rgba(255,255,255,0.4); color: white;">Call <?= e(cfg('phone')) ?></a>
                 </div>
 <?php if ($s['points']): ?>
                 <div class="hero-trust-bar">

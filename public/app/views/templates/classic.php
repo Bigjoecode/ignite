@@ -5,8 +5,9 @@
 // Vars: $page from page_prepare().
 $d      = $page['d'];
 $office = $page['office'];
-$phone  = $office['phone'] ?? cfg('phone');
-$tel    = $office['tel'] ?? cfg('phone_tel');
+// an office page shows its own number; a general page using this template shows none
+$phone  = $office['phone'] ?? '';
+$tel    = $office['tel'] ?? '';
 $icons  = $page['tpl']['icons'];
 $pin    = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
 $phoneIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
@@ -36,7 +37,9 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 <?php endif; ?>
           <div class="ig-btns ig-btns--c">
             <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
+<?php if ($tel !== ''): ?>
             <a class="ig-btn ig-btn--white" href="tel:<?= e($tel) ?>">Call Now</a>
+<?php endif; ?>
           </div>
         </div>
       </div>
@@ -110,7 +113,9 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 
       <div class="ig-btns ig-btns--c" style="margin-top:clamp(30px,3.6vw,64px);">
         <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
+<?php if ($tel !== ''): ?>
         <a class="ig-btn ig-btn--navy" href="tel:<?= e($tel) ?>">Call Now</a>
+<?php endif; ?>
       </div>
     </div>
   </section>
@@ -145,7 +150,9 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 
       <div class="ig-btns ig-btns--c" style="margin-top:clamp(28px,3.2vw,44px);">
         <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
+<?php if ($tel !== ''): ?>
         <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call Now</a>
+<?php endif; ?>
       </div>
     </div>
   </section>
@@ -191,7 +198,9 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 <?php endif; ?>
       <div class="ig-btns ig-btns--c">
         <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
+<?php if ($tel !== ''): ?>
         <a class="ig-btn ig-btn--white" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
+<?php endif; ?>
       </div>
     </div>
   </section>
@@ -243,16 +252,22 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 
             <div class="ig-btns">
               <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
+<?php if ($tel !== ''): ?>
               <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
+<?php endif; ?>
             </div>
           </div>
         </div>
 
         <div class="ig-mapbox">
-<?php if ($office && $office['street'] !== ''): ?>
+<?php if ($office && $office['map_q'] !== ''): ?>
           <iframe class="ig-map" src="https://www.google.com/maps?q=<?= rawurlencode($office['map_q']) ?>&amp;output=embed"
                   title="Map showing Ignite Orthodontics <?= e($office['name']) ?>"
                   loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <a class="ig-mapbox__link" href="<?= e(map_url($office['map_q'])) ?>" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+            Get directions
+          </a>
 <?php else: ?>
           <img src="<?= e($s['image']) ?>" alt="<?= e($s['image_alt']) ?>" width="288" height="467" loading="lazy" decoding="async">
 <?php endif; ?>
@@ -287,7 +302,9 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 
       <div class="ig-btns ig-btns--c" style="margin-top:clamp(28px,3.2vw,44px);">
         <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Book A No-Cost Consultation</a>
+<?php if ($tel !== ''): ?>
         <a class="ig-btn ig-btn--out" href="tel:<?= e($tel) ?>">Call Now</a>
+<?php endif; ?>
       </div>
     </div>
   </section>
@@ -307,7 +324,9 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 <?php endif; ?>
           <div class="ig-btns">
             <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule Now</a>
+<?php if ($tel !== ''): ?>
             <a class="ig-btn ig-btn--white" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
+<?php endif; ?>
           </div>
         </div>
         <div class="ig-cta__img">

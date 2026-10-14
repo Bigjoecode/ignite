@@ -144,6 +144,7 @@ if ($path === '') {
         'title'       => 'Ignite Orthodontics | Braces & Clear Aligners in Michigan',
         'description' => 'Braces and clear aligners for kids, teens and adults at ' . count(locations()) . ' Ignite Orthodontics offices in Michigan. Flexible payment options and no-cost consultations.',
         'css' => ['home.css'], 'js' => ['home.js'],
+        'schema' => schema_all_offices(),   // the practice and all its offices
     ]);
     exit;
 }
@@ -154,6 +155,7 @@ if ($path === 'locations') {
         'title'       => 'Our Locations | Ignite Orthodontics',
         'description' => 'Find your nearest Ignite Orthodontics office in ' . implode(', ', array_slice($names, 0, -1)) . ' or ' . end($names) . '.',
         'css' => ['home.css', 'page.css'], 'js' => ['home.js'],
+        'schema' => schema_all_offices(),
     ]);
     exit;
 }
@@ -164,6 +166,68 @@ if (preg_match('#^locations/([a-z0-9-]+)$#', $path, $m) && ($row = page_find('lo
     exit;
 }
 
+// the sitemap people read; sitemap.xml is the one search engines read
+if ($path === 'sitemap') {
+    $treatments = [];
+    foreach (page_rows('service') as $row) {
+        // a nested page is shown under its parent's name, e.g. "Types of Braces: Ceramic Braces"
+        $label = strpos($row['slug'], '/') === false
+            ? $row['title']
+            : (($parent = page_find('service', explode('/', $row['slug'])[0])) ? $parent['title'] . ': ' . $row['title'] : $row['title']);
+        $treatments[] = ['/' . $row['slug'] . '/', $label, (string) $row['description']];
+    }
+    usort($treatments, static fn(array $a, array $b): int => strcmp($a[1], $b[1]));
+
+    $offices = [];
+    foreach (locations() as $l) {
+        $offices[] = ['/locations/' . $l['slug'] . '/', 'Ignite Orthodontics ' . $l['name'], $l['address_full']];
+    }
+
+    $patient = [];
+    foreach (pages() as $slug => $p) {
+        // drafts are live but unfinished, and the legal pages get their own group
+        // treatments has its own entry above, and the legal pages get their own group
+        if (!empty($p['draft']) || in_array($slug, ['treatments', 'privacy-policy', 'terms-and-conditions'], true)) {
+            continue;
+        }
+        $patient[] = ['/' . $slug . '/', $p['title'], (string) $p['description']];
+    }
+
+    $posts = [];
+    foreach (posts() as $post) {
+        $posts[] = ['/blog/' . $post['slug'] . '/', $post['title'], date('j F Y', strtotime($post['published']))];
+    }
+
+    require_once APP . '/consult.php';
+    $book = [['/booking/', 'Book a Consultation', 'Request a no-cost visit at any office.']];
+    if (consult_settings()['enabled']) {
+        $book[] = ['/virtual-consultation/', 'Virtual Consultation', 'Meet an orthodontist by video.'];
+    }
+    $book[] = ['/see-your-smile/', 'See Your Smile', 'Send a photo and get a free opinion.'];
+
+    render('sitemap', ['groups' => [
+        ['Main pages', '', [
+            ['/', 'Home', 'Braces and clear aligners across ' . count(locations()) . ' Michigan offices.'],
+            ['/locations/', 'Our Locations', 'Every Ignite Orthodontics office.'],
+            ['/treatments/', 'Our Treatments', 'All the ways we straighten teeth.'],
+            ['/blog/', 'Blog', 'Advice on braces, aligners and orthodontic care.'],
+        ]],
+        ['Book a visit', '', $book],
+        ['Treatments', 'Every treatment page on the site.', $treatments],
+        ['Our offices', 'Each office page has its address, hours, map and own phone number.', $offices],
+        ['For patients', '', $patient],
+        ['From the blog', '', $posts],
+        ['Legal', '', [
+            ['/privacy-policy/', 'Privacy Policy', 'What this website collects and why.'],
+            ['/terms-and-conditions/', 'Terms and Conditions', 'The terms for using this website.'],
+        ]],
+    ]], $meta + [
+        'title'       => 'Sitemap | Ignite Orthodontics',
+        'description' => 'Every page on igniteorthodontics.com, grouped by treatments, offices, patient information and the blog.',
+        'css' => ['home.css', 'page.css', 'sitemap.css'], 'js' => ['home.js'],
+    ]);
+    exit;
+}
 if ($path === 'thank-you') {
     render('thank-you', [], $meta + [
         'title' => 'Thank You | Ignite Orthodontics',
@@ -216,6 +280,10 @@ if (isset(pages()[$path])) {
         'description' => $p['description'],
         'css' => ['home.css', 'page.css'], 'js' => ['home.js'],
         'noindex' => !empty($p['draft']),
+        // the doctor page is where the orthodontist is described, so it says so in the markup
+        'schema' => $path === 'meet-the-doctor' && ($doctor = schema_doctor()) !== []
+            ? ['@context' => 'https://schema.org', '@graph' => [$doctor, schema_practice()]]
+            : null,
     ]);
     exit;
 }

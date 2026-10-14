@@ -22,7 +22,6 @@ $d = $page['d'];
 <?php endif; ?>
       <div class="ig-btns">
         <a class="ig-btn ig-btn--primary" href="<?= e(booking_url()) ?>">Schedule a Consultation</a>
-        <a class="ig-btn ig-btn--white" href="tel:<?= e(cfg('phone_tel')) ?>">Call <?= e(cfg('phone')) ?></a>
       </div>
     </div>
   </section>

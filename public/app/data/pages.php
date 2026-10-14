@@ -72,10 +72,29 @@ return [
         'draft' => true,
     ],
     'meet-the-doctor' => [
-        'title' => 'Meet the Doctors', 'description' => 'Meet the orthodontists at Ignite Orthodontics.',
-        'kicker' => 'Your Care Team', 'h1' => 'Meet Your <em>Orthodontists.</em>',
-        'lead' => 'Profiles of our orthodontists are coming soon. In the meantime, book a no-cost consultation to meet the team at your nearest office.',
-        'draft' => true,
+        'title' => 'Meet the Doctor', 'description' => 'Meet Dr Hatim Alqurashi, the orthodontist at Ignite Orthodontics, and the team who will look after your treatment.',
+        'kicker' => 'Your Care Team', 'h1' => 'Meet <em>Dr Hatim Alqurashi.</em>',
+        'lead' => 'Your treatment is planned and followed by an orthodontist, not handed off. Dr Hatim Alqurashi leads care at Ignite Orthodontics and sees patients across our Michigan offices.',
+        'sections' => [
+            ['Dr Hatim Alqurashi',
+                'Dr Hatim Alqurashi is the orthodontist at Ignite Orthodontics. He treats children, teens and adults with traditional metal braces, ceramic braces, gold braces and clear aligners, including Invisalign and 3M Clear Aligners, and plans each case around what the patient actually wants from their smile.'],
+            ['What that means for your visit', [
+                'Whichever office you choose, your care follows the same pattern:',
+                [
+                    'Your no-cost consultation includes an examination and a conversation about your goals',
+                    'You are shown your options, the likely timeline and the cost before you decide anything',
+                    'Your treatment plan is written for you, not picked off a list',
+                    'Adjustment visits are built into the plan, and retainers are fitted when active treatment ends',
+                ],
+            ]],
+            ['The team around him',
+                'Our treatment coordinators and clinical staff at each office handle appointments, insurance benefits and payment plans, so the questions that are not clinical get answered by someone whose job that is.'],
+        ],
+        'links' => [
+            ['/treatments/', 'Our Treatments', 'Braces and clear aligners for every age.'],
+            ['/patient-info/', 'Patient Info', 'What happens at your first visit and after.'],
+            ['/locations/', 'Our Locations', 'Find the office nearest you.'],
+        ],
     ],
     // Describes exactly what the website does: the booking, video consultation and
     // See Your Smile forms, what is kept when a form is started but not sent, the

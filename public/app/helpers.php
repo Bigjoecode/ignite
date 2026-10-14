@@ -168,7 +168,11 @@ function page_office_shape(string $slug, string $name, array $f): array
         'hours'        => $hours,
         'days'         => $days,
         'address_full' => implode(', ', array_filter([$get('street'), $get('city'), trim($state . ' ' . $zip)])),
-        'map_q'        => trim($get('street') . ' ' . $get('city') . ' ' . $state . ' ' . $zip),
+        // what the map searches for. Without a street address yet, the practice name and
+        // the city still put the right pin on the map, so every office page gets one.
+        'map_q'        => $get('street') !== ''
+            ? trim($get('street') . ' ' . $get('city') . ' ' . $state . ' ' . $zip)
+            : trim(cfg('site_name') . ' ' . ($get('city') !== '' ? $get('city') : $name) . ' ' . $state . ' ' . $zip),
     ];
 }
 
@@ -317,29 +321,18 @@ function page_schema(array $p): array
     $crumbs[] = ['@type' => 'ListItem', 'position' => count($crumbs) + 1, 'name' => $p['title'], 'item' => $url];
 
     if ($p['type'] === 'location' && $p['office']) {
-        $o = $p['office'];
-        $main = [
-            '@type' => 'Dentist',
-            'name'  => cfg('site_name') . ' ' . $p['title'],
-            'url'   => $url,
-            'parentOrganization' => $org,
-            'address' => array_filter([
-                '@type'           => 'PostalAddress',
-                'streetAddress'   => $o['street'],
-                'addressLocality' => $o['city'],
-                'addressRegion'   => $o['state'],
-                'postalCode'      => $o['zip'],
-                'addressCountry'  => 'US',
-            ]),
-        ];
-        if ($o['tel'] !== '')   $main['telephone'] = $o['tel'];
-        if ($o['email'] !== '') $main['email'] = $o['email'];
-        if ($p['image'] !== '') $main['image'] = $base . $p['image'];
+        // the full local-business node: address, phone, map, hours, area served
+        $main = schema_office($p['office'], (string) $p['image']);
     } else {
         $main = ['@type' => 'WebPage', 'name' => $p['title'], 'url' => $url, 'description' => $p['description'], 'publisher' => $org];
     }
 
     $graph = [$main, ['@type' => 'BreadcrumbList', 'itemListElement' => $crumbs]];
+    // every page points back at the one practice, and names its orthodontist
+    $graph[] = schema_practice();
+    if (($doctor = schema_doctor()) !== []) {
+        $graph[] = $doctor;
+    }
 
     $faq = in_array('faq', $p['on'], true) ? ($p['d']['faq']['items'] ?? []) : [];
     // guide pages keep their questions in FAQ blocks
@@ -536,6 +529,27 @@ function render(string $view, array $vars = [], array $meta = []): void
 
     $meta += ['title' => cfg('site_name'), 'description' => '', 'css' => [], 'js' => [], 'noindex' => false, 'path' => '/'];
     require APP . '/views/layout.php';
+}
+
+/**
+ * The number to offer in the header of this page: the office's own, when the page
+ * belongs to one office. Everywhere else it is empty, so nothing on the home page or
+ * a general page dials the main line — those visitors are sent to the booking page
+ * instead. Office pages, their landing pages and the booking page for one office all
+ * set ig_book_office, so they keep a number.
+ */
+/** A Google Maps search link for an address, for "Get directions". */
+function map_url(string $query): string
+{
+    return 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode($query);
+}
+
+function page_phone(): array
+{
+    $office = locations()[(string) ($GLOBALS['ig_book_office'] ?? '')] ?? null;
+    return $office && $office['phone'] !== ''
+        ? ['phone' => $office['phone'], 'tel' => $office['tel']]
+        : ['phone' => '', 'tel' => ''];
 }
 
 function redirect(string $to, int $code = 301): void

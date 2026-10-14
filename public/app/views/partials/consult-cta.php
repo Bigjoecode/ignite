@@ -1,9 +1,11 @@
 <?php
 // "Book a No-Cost Consultation" band (photo left, call-to-action right).
 // Used by home, location and content pages. Optional: $ctaImage, $ctaPhone, $ctaTel.
+// Without $ctaPhone there is no number to call, so only the booking button shows:
+// the practice would rather send people to the booking page than to the main line.
 $ctaImage = $ctaImage ?? '/assets/img/IMG_20260814_125716.jpg';
-$ctaPhone = $ctaPhone ?? cfg('phone');
-$ctaTel   = $ctaTel ?? cfg('phone_tel');
+$ctaPhone = $ctaPhone ?? '';
+$ctaTel   = $ctaTel ?? '';
 $officeCount = count(locations());
 $officeWord  = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'][$officeCount] ?? $officeCount;
 $check = '<span class="ig-cc__tick" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5.5 12.5l4 4L18.5 7.5"/></svg></span>';
@@ -26,7 +28,9 @@ $check = '<span class="ig-cc__tick" aria-hidden="true"><svg viewBox="0 0 24 24">
 
       <div class="ig-cc__btns">
         <a class="ig-cc__btn ig-cc__btn--call" href="<?= e(booking_url()) ?>">Book Online</a>
+<?php if ($ctaPhone !== '' && $ctaTel !== ''): ?>
         <a class="ig-cc__btn ig-cc__btn--out" href="tel:<?= e($ctaTel) ?>">Call <?= e($ctaPhone) ?></a>
+<?php endif; ?>
       </div>
 
       <p class="ig-cc__note">No referral needed. New patients are welcome.</p>
