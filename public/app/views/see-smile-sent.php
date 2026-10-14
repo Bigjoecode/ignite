@@ -1,6 +1,10 @@
 <?php
 // Shown after a photo is sent (/see-your-smile/sent/?ref=...).
 // Vars: $request (the row) or null, $photoUrl, $previewUrl (one-time links, may be '').
+// the office this request went to, so the only number offered is that front desk
+$desk      = locations()[$request["office"] ?? ""] ?? null;
+$deskPhone = $desk["phone"] ?? "";
+$deskTel   = $desk["tel"] ?? "";
 ?>
 <div class="bk vc-done sm-done">
   <div class="bk-wrap">
@@ -24,10 +28,12 @@
       <a class="vc-done__join" href="/virtual-consultation/">Book a free video consultation</a>
       <a class="vc-done__ics" href="<?= e(booking_url($request['office'])) ?>">Book an office visit</a>
     </div>
-    <p class="vc-done__help">Questions in the meantime? Call us on <a href="tel:<?= e(cfg('phone_tel')) ?>"><?= e(cfg('phone')) ?></a>.</p>
+<?php if ($deskTel !== ''): ?>
+    <p class="vc-done__help">Questions in the meantime? Call us on <a href="tel:<?= e($deskTel) ?>"><?= e($deskPhone) ?></a>.</p>
+<?php endif; ?>
 <?php else: ?>
     <h1>That link has expired</h1>
-    <p>If you sent us a photo, it is safely with our team and they will be in touch. If you are not sure it arrived, call us on <a href="tel:<?= e(cfg('phone_tel')) ?>"><?= e(cfg('phone')) ?></a>.</p>
+    <p>If you sent us a photo, it is safely with our team and they will be in touch. If you are not sure it arrived, <a href="/contact-us/">get in touch</a> and we will check.</p>
     <a class="vc-done__join" href="/see-your-smile/">Send a photo</a>
 <?php endif; ?>
   </div>

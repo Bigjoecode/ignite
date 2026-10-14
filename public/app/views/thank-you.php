@@ -32,9 +32,10 @@
 
       <div class="ty-card ty-help">
         <h2>Need to make a change?</h2>
-        <p>Call us and we&rsquo;ll update your request.</p>
-        <a class="ig-btn ig-btn--primary" data-ty-call href="tel:<?= e(cfg('phone_tel')) ?>">Call <?= e(cfg('phone')) ?></a>
+        <p>Get in touch and we&rsquo;ll update your request.</p>
+        <a class="ig-btn ig-btn--primary" data-ty-call href="#" hidden>Call the office</a>
         <div class="ty-links">
+          <a href="/contact-us/">Contact Us</a>
           <a href="/">Back to Home</a>
           <a href="/treatments/">Explore Treatments</a>
         </div>
@@ -57,9 +58,11 @@
   });
   if (data.treatment || data.office) document.querySelector('[data-ty-summary]').hidden = false;
   var call = document.querySelector('[data-ty-call]');
+  // the button is hidden until we know which office this request went to
   if (call && data.tel && data.phone) {
     call.href = 'tel:' + data.tel;
     call.textContent = 'Call ' + data.phone;
+    call.hidden = false;
   }
 })();
 </script>

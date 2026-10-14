@@ -4,6 +4,10 @@
 $when = $booking && $booking['start_at']
     ? (new DateTimeImmutable($booking['start_at']))->setTimezone(new DateTimeZone(CONSULT_ZONE))
     : null;
+// the office this request went to, so the only number offered is that front desk
+$desk      = locations()[$booking["office"] ?? ""] ?? null;
+$deskPhone = $desk["phone"] ?? "";
+$deskTel   = $desk["tel"] ?? "";
 ?>
 <div class="bk vc-done">
   <div class="bk-wrap">
@@ -23,10 +27,12 @@ $when = $booking && $booking['start_at']
 <?php else: ?>
     <p class="vc-done__note">The same link is in your email, so you do not need to keep this page.</p>
 <?php endif; ?>
-    <p class="vc-done__help">Need to change it? Call us on <a href="tel:<?= e(cfg('phone_tel')) ?>"><?= e(cfg('phone')) ?></a>.</p>
+<?php if ($deskTel !== ''): ?>
+    <p class="vc-done__help">Need to change it? Call us on <a href="tel:<?= e($deskTel) ?>"><?= e($deskPhone) ?></a>.</p>
+<?php endif; ?>
 <?php else: ?>
     <h1>That link has expired</h1>
-    <p>Your appointment is still booked if you received the invite. If you are not sure, call us on <a href="tel:<?= e(cfg('phone_tel')) ?>"><?= e(cfg('phone')) ?></a> and we will check.</p>
+    <p>Your appointment is still booked if you received the invite. If you are not sure, <a href="/contact-us/">get in touch</a> and we will check.</p>
     <a class="vc-done__join" href="/virtual-consultation/">Book a video visit</a>
 <?php endif; ?>
   </div>

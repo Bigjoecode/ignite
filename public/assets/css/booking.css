@@ -211,6 +211,8 @@
 .ty-steps span{font-size:14.5px;line-height:1.55;color:var(--ig-muted);}
 .ig-home .ty-help p{margin:0 0 18px;font-size:15px;line-height:1.6;color:var(--ig-muted);}
 .ty-help .ig-btn{width:100%;border-radius:8px;}
+/* the call button only appears once the page knows which office the request went to */
+.ty-help .ig-btn[hidden]{display:none;}
 .ty-links{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;}
 .ig-home .ty-links a{font-size:15px;font-weight:600;color:var(--ig-orange);}
 .ig-home .ty-links a:hover{text-decoration:underline !important;}

@@ -9,8 +9,9 @@ $mins   = (int) $s['slot_minutes'];
 $open   = is_array($slots) ? array_filter($slots) : [];   // only days with times are worth listing
 $live   = $open !== [];
 $first  = $live ? array_key_first($open) : '';
-$phone  = $office['phone'] ?? cfg('phone');
-$tel    = $office['tel'] ?? cfg('phone_tel');
+// as on the booking page: an office's own number, or none at all
+$phone  = $office['phone'] ?? '';
+$tel    = $office['tel'] ?? '';
 $shown  = 8;    // times per day before "show all"
 ?>
 <div class="bk vc">
@@ -126,7 +127,9 @@ $shown  = 8;    // times per day before "show all"
           <li><?= $check ?>Nothing to install&mdash;the link opens in your browser</li>
         </ul>
         <a class="ig-bk__next ig-bk__submit vc-ask__btn" href="<?= e(booking_url($office['slug'] ?? '')) ?>">Request My Visit</a>
+<?php if ($tel !== ''): ?>
         <p class="ig-bk__note">Or call us on <a href="tel:<?= e($tel) ?>"><?= e($phone) ?></a> and we will arrange it.</p>
+<?php endif; ?>
       </div>
 <?php endif; ?>
 

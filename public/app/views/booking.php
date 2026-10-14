@@ -10,8 +10,9 @@ $pin   = 'M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z M12 
 $check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 12.5l4 4L18.5 7.5"/></svg>';
 $start = new DateTimeImmutable('tomorrow');
 $total = $office ? 4 : 5;
-$phone = $office['phone'] ?? cfg('phone');
-$tel   = $office['tel'] ?? cfg('phone_tel');
+// a number to call only once an office is chosen; the main line is not offered
+$phone = $office['phone'] ?? '';
+$tel   = $office['tel'] ?? '';
 ?>
 <div class="bk">
 
@@ -171,10 +172,12 @@ $tel   = $office['tel'] ?? cfg('phone_tel');
         </ul>
       </div>
 
+<?php if ($tel !== ''): ?>
       <div class="bk-box bk-call">
         <span class="bk-box__label">Prefer to talk?</span>
         <a class="bk-call__btn" href="tel:<?= e($tel) ?>">Call <?= e($phone) ?></a>
       </div>
+<?php endif; ?>
     </aside>
   </div>
 </div>
