@@ -278,7 +278,7 @@ if (isset(pages()[$path])) {
     render('page', ['p' => $p, 'slug' => $path], $meta + [
         'title'       => $p['title'] . ' | Ignite Orthodontics',
         'description' => $p['description'],
-        'css' => ['home.css', 'page.css'], 'js' => ['home.js'],
+        'css' => array_merge(['home.css', 'page.css'], !empty($p['doctor']) ? ['doctor.css'] : []), 'js' => ['home.js'],
         'noindex' => !empty($p['draft']),
         // the doctor page is where the orthodontist is described, so it says so in the markup
         'schema' => $path === 'meet-the-doctor' && ($doctor = schema_doctor()) !== []

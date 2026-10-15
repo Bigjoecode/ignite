@@ -72,12 +72,13 @@ return [
         'draft' => true,
     ],
     'meet-the-doctor' => [
-        'title' => 'Meet the Doctor', 'description' => 'Meet Dr Hatim Alqurashi, the orthodontist at Ignite Orthodontics, and the team who will look after your treatment.',
-        'kicker' => 'Your Care Team', 'h1' => 'Meet <em>Dr Hatim Alqurashi.</em>',
-        'lead' => 'Your treatment is planned and followed by an orthodontist, not handed off. Dr Hatim Alqurashi leads care at Ignite Orthodontics and sees patients across our Michigan offices.',
+        'title' => 'Meet the Doctor', 'description' => 'Meet Dr. Hatim Alqurashi, the orthodontist at Ignite Orthodontics: PhD in Clinical Dentistry, MSD in Orthodontics from Boston University and American Board of Orthodontics certified.',
+        'kicker' => 'Your Care Team', 'h1' => 'Meet <em>Dr. Hatim Alqurashi.</em>',
+        'lead' => 'Your treatment is planned and followed by an orthodontist, not handed off. Dr. Hatim Alqurashi leads care at Ignite Orthodontics and sees patients across our Michigan offices.',
+        'doctor' => true,   // the photo and full profile, from cfg('doctor_*')
         'sections' => [
-            ['Dr Hatim Alqurashi',
-                'Dr Hatim Alqurashi is the orthodontist at Ignite Orthodontics. He treats children, teens and adults with traditional metal braces, ceramic braces, gold braces and clear aligners, including Invisalign and 3M Clear Aligners, and plans each case around what the patient actually wants from their smile.'],
+            ['Treatments he provides',
+                'Dr. Alqurashi treats children, teens and adults with traditional metal braces, ceramic braces, gold braces and clear aligners, including Invisalign and 3M Clear Aligners, and plans each case around what the patient actually wants from their smile.'],
             ['What that means for your visit', [
                 'Whichever office you choose, your care follows the same pattern:',
                 [

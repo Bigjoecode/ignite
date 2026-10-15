@@ -127,8 +127,12 @@ function booking_email(array $r): array
     ]);
 
     return [
-        'subject' => ($smile ? 'Smile preview request: ' : ($virtual ? 'Video consultation booked: ' : 'Consultation request: '))
-            . ($name !== '' ? $name : 'new patient') . ' (' . ($office['name'] ?? $r['office'] ?? '') . ')',
+        // the subject says what came in and which office it is for, so the right desk
+        // can tell at a glance without opening it
+        'subject' => 'You just received a '
+            . ($smile ? 'Smile Preview request' : ($virtual ? 'Virtual Consultation' : 'Consultation request'))
+            . ' for ' . (trim((string) ($office['name'] ?? $r['office'] ?? '')) ?: cfg('site_name'))
+            . ' — ' . ($name !== '' ? $name : 'new patient'),
         'body'    => implode("\n", $lines) . "\n",
     ];
 }

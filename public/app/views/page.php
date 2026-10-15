@@ -11,6 +11,13 @@
     </div>
   </section>
 
+<?php
+// this page is about the orthodontist, so the button back to it would point at itself
+if (!empty($p['doctor'])) {
+    $GLOBALS['ig_doctor_page'] = false;
+    require APP . '/views/partials/doctor.php';
+}
+?>
 <?php if (!empty($p['sections']) || !empty($p['links']) || !empty($p['links_auto']) || !empty($p['note'])): ?>
   <section class="ig-sec">
     <div class="ig-wrap pg-body">

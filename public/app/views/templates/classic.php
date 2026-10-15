@@ -207,6 +207,12 @@ $caret     = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><p
 <?php break;
 
     case 'consult':
+    // the orthodontist, when this office is one of his (cfg('doctor_offices'))
+    if (office_has_doctor($office)) {
+        $doctorTone = 'tint';
+        require APP . '/views/partials/doctor.php';
+    }
+
     $ctaImage = $s['image'];
     $ctaPhone = $phone;
     $ctaTel   = $tel;

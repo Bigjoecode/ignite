@@ -16,9 +16,30 @@ $config = array_merge([
     'lead_email' => '',                                  // set to email each new consultation request
     'gtm_id'     => 'GTM-TPSXGSMG',                      // Google Tag Manager container; '' turns tracking off
     'meta_pixel' => '1423486759848383',                  // Meta (Facebook) pixel; '' turns it off
-    // the orthodontist, named on /meet-the-doctor/ and in the schema; '' leaves both out
-    'doctor_name'       => 'Dr Hatim Alqurashi',
-    'doctor_credential' => '',                           // e.g. DDS, MS — set once confirmed
+    // The orthodontist. Shown on /meet-the-doctor/, on the office pages listed in
+    // doctor_offices and on those offices' landing pages, and named in the schema.
+    // An empty doctor_name leaves him out everywhere.
+    'doctor_name'       => 'Dr. Hatim Alqurashi',
+    'doctor_credential' => 'PhD, MSc, MSD — Board-Certified Orthodontist',
+    'doctor_photo'      => 'dr-hatim-alqurashi.jpg',     // in assets/img
+    'doctor_photo_size' => [600, 801],
+    'doctor_bio'        => [
+        'Dr. Hatim Alqurashi is an orthodontist and researcher with expertise in tissue engineering, '
+            . 'dental biomaterials, and orthodontics.',
+        'He earned a PhD in Clinical Dentistry with a focus on tissue engineering and regenerative '
+            . 'medicine, as well as a Master of Science in Dental Materials, from the University of '
+            . 'Sheffield, United Kingdom.',
+        'He subsequently completed advanced orthodontic training and a Master of Science in Dentistry '
+            . '(MSD) in Orthodontics at Boston University, where he also achieved American Board of '
+            . 'Orthodontics certification.',
+    ],
+    'doctor_badges'     => [
+        'American Board of Orthodontics certified',
+        'MSD in Orthodontics, Boston University',
+        'PhD in Clinical Dentistry, University of Sheffield',
+    ],
+    // the offices whose pages and landing pages carry his profile
+    'doctor_offices'    => ['farmington-hills', 'madison-heights', 'sterling-heights'],
     // the practice's own profiles: shown in the footer and declared as sameAs in the schema
     'social'     => [
         'Facebook'  => 'https://www.facebook.com/Igniteorthodontics',

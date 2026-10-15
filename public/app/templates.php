@@ -147,7 +147,7 @@ function templates(): array
         'tagline' => 'The full page design: photo header, highlight cards, offers, treatment cards and FAQ.',
         'family'  => 'classic',
         'wrap'    => 'ig-locpage',
-        'css'     => ['location.css', 'map.css'],
+        'css'     => ['location.css', 'map.css', 'doctor.css'],
         'js'      => ['location.js'],
         'shape'   => ['hero', 'cards', 'cards', 'band', 'faq'],
         'sections' => [
@@ -395,6 +395,9 @@ function templates(): array
             ['key' => 'phone', 'type' => 'text', 'label' => 'Phone number', 'default' => '(xxx) xxx-xxxx', 'help' => 'Shown as typed. A real 10-digit number also becomes a tap-to-call link.'],
             ['key' => 'email', 'type' => 'text', 'label' => 'Email address'],
             ['key' => 'hours', 'type' => 'lines', 'label' => 'Opening hours (optional)', 'help' => 'One per line, for example: Monday 9:00 AM – 5:00 PM'],
+            ['key' => 'description', 'type' => 'textarea', 'label' => 'How to describe this office (optional)',
+                'help' => 'One or two sentences about this office, used in the search-engine data for this office '
+                    . 'and its landing pages. Leave empty and a sensible sentence is written for you.'],
             ['key' => 'days', 'type' => 'text', 'label' => 'Appointment days (optional)',
                 'help' => 'Which days this office takes appointments, for example: Tue. Separate several with commas (Mon, Wed). '
                     . 'Leave empty to offer every day. The booking page only shows these days once someone picks this office.'],
@@ -429,7 +432,7 @@ function templates(): array
         'tagline' => 'Every section: photo header with the address, highlights, offers, treatments, contact details and FAQ.',
         'family'  => 'classic',
         'wrap'    => 'ig-locpage',
-        'css'     => ['location.css', 'map.css'],
+        'css'     => ['location.css', 'map.css', 'doctor.css'],
         'js'      => ['location.js'],
         'shape'   => ['hero', 'cards', 'cards', 'band', 'faq'],
         'sections' => [
@@ -486,7 +489,7 @@ function templates(): array
         'tagline' => 'A lighter office page: header, introduction, treatments, contact details and FAQ.',
         'family'  => 'classic',
         'wrap'    => 'ig-locpage',
-        'css'     => ['location.css', 'map.css'],
+        'css'     => ['location.css', 'map.css', 'doctor.css'],
         'js'      => ['location.js'],
         'shape'   => ['hero', 'text', 'cards', 'band'],
         'sections' => [
@@ -573,7 +576,7 @@ function templates(): array
         'family'  => 'guide',
         'wrap'    => 'gd',
         'layout'  => 'lp',
-        'css'     => ['guide.css', 'lp.css', 'map.css'],
+        'css'     => ['guide.css', 'lp.css', 'map.css', 'doctor.css'],
         'js'      => [],
         'shape'   => ['split', 'cards', 'text', 'dark', 'faq'],
         'sections' => [

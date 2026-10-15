@@ -24,7 +24,7 @@ function schema_practice(): array
     $base = cfg('base_url');
     $org  = [
         '@type'       => 'Organization',
-        '@id'         => $base . '/#practice',
+        '@id'         => $base . '/#organization',
         'name'        => cfg('site_name'),
         'url'         => $base . '/',
         'logo'        => ['@type' => 'ImageObject', 'url' => $base . '/assets/img/ignitelogo.png'],
@@ -54,12 +54,29 @@ function schema_doctor(): array
         'name'        => $name,
         'url'         => $base . '/meet-the-doctor/',
         'jobTitle'    => 'Orthodontist',
-        'worksFor'    => ['@id' => $base . '/#practice'],
+        'worksFor'    => ['@id' => $base . '/#organization'],
         'knowsAbout'  => ['Orthodontics', 'Braces', 'Clear aligners', 'Invisalign'],
     ];
     if (($credential = trim((string) cfg('doctor_credential'))) !== '') {
         $doctor['honorificSuffix'] = $credential;
     }
+    if (($bio = array_filter((array) cfg('doctor_bio'))) !== []) {
+        $doctor['description'] = implode(' ', array_map('trim', $bio));
+    }
+    if (($photo = trim((string) cfg('doctor_photo'))) !== '') {
+        $doctor['image'] = $base . '/assets/img/' . $photo;
+    }
+    // where he trained, and the board that certified him
+    $doctor['alumniOf'] = [
+        ['@type' => 'CollegeOrUniversity', 'name' => 'University of Sheffield'],
+        ['@type' => 'CollegeOrUniversity', 'name' => 'Boston University'],
+    ];
+    $doctor['hasCredential'] = [
+        '@type'                 => 'EducationalOccupationalCredential',
+        'credentialCategory'    => 'Board certification',
+        'name'                  => 'American Board of Orthodontics certification',
+        'recognizedBy'          => ['@type' => 'Organization', 'name' => 'American Board of Orthodontics'],
+    ];
     return $doctor;
 }
 
@@ -69,11 +86,17 @@ function schema_office(array $office, string $image = ''): array
     $base = cfg('base_url');
     $url  = $base . '/locations/' . $office['slug'] . '/';
     $node = [
-        '@type'              => ['Dentist', 'MedicalBusiness'],
-        '@id'                => $url . '#office',
+        '@type'              => 'Dentist',
+        '@id'                => schema_office_id($office),
         'name'               => cfg('site_name') . ' ' . $office['name'],
         'url'                => $url,
-        'parentOrganization' => ['@id' => $base . '/#practice'],
+        'description'        => schema_office_description($office),
+        'parentOrganization' => [
+            '@type' => 'Organization',
+            '@id'   => $base . '/#organization',
+            'name'  => cfg('site_name'),
+            'url'   => $base . '/',
+        ],
         'medicalSpecialty'   => 'Orthodontic',
         'priceRange'         => '$$',
         'currenciesAccepted' => 'USD',
@@ -89,7 +112,7 @@ function schema_office(array $office, string $image = ''): array
     if ($office['tel'] !== '')   $node['telephone'] = $office['tel'];
     if ($office['email'] !== '') $node['email'] = $office['email'];
     if ($image !== '')           $node['image'] = $base . $image;
-    if ($office['city'] !== '')  $node['areaServed'] = ['@type' => 'City', 'name' => $office['city'] . ', MI'];
+    if ($office['city'] !== '')  $node['areaServed'] = ['@type' => 'City', 'name' => $office['city']];
     if ($office['map_q'] !== '') {
         $node['hasMap'] = map_url($office['map_q']);
     }
@@ -145,6 +168,44 @@ function schema_time(string $hour, string $minute, string $half): string
         $h += 12;
     }
     return sprintf('%02d:%02d', $h, $minute === '' ? 0 : (int) $minute);
+}
+
+/**
+ * The one id an office is known by, wherever it is mentioned. Its own page, every
+ * landing page for that city and the home page all point at the same business.
+ */
+function schema_office_id(array $office): string
+{
+    return cfg('base_url') . '/locations/' . $office['slug'] . '/#business';
+}
+
+/**
+ * How the office describes itself. Written on the office page when the practice
+ * wants particular words; otherwise a plain sentence naming the office.
+ */
+function schema_office_description(array $office): string
+{
+    $written = trim((string) ($office['description'] ?? ''));
+    return $written !== '' ? $written
+        : cfg('site_name') . ' ' . $office['name'] . ' provides orthodontic treatment for children, '
+            . 'teens, and adults, including metal braces, ceramic braces, gold braces, Invisalign and '
+            . 'clear aligners. Complimentary consultations and flexible payment plans are available.';
+}
+
+/**
+ * The page itself, pointing at the business it is about. Every page that belongs to
+ * an office carries one, so a landing page is tied to the same office as its office page.
+ */
+function schema_webpage(array $office, string $url, string $name): array
+{
+    return [
+        '@type'      => 'WebPage',
+        '@id'        => $url . '#webpage',
+        'url'        => $url,
+        'name'       => $name,
+        'about'      => ['@id' => schema_office_id($office)],
+        'mainEntity' => ['@id' => schema_office_id($office)],
+    ];
 }
 
 /** Practice plus every office, for the home page and the locations index. */

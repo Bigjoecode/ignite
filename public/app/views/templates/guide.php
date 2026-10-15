@@ -415,6 +415,12 @@ $cols = static function (int $n, int $max = 4): int {
 
     endswitch;
     endforeach;
+    // after the blocks: the orthodontist, when this page belongs to one of his offices.
+    // A landing page has no consult section of its own, so this is where he goes.
+    if (office_has_doctor($page['office'])) {
+        $doctorTone = 'tint';
+        require APP . '/views/partials/doctor.php';
+    }
     break;
 
     case 'offices': ?>
@@ -422,6 +428,12 @@ $cols = static function (int $n, int $max = 4): int {
 <?php break;
 
     case 'consult':
+    // the orthodontist, when this office is one of his (cfg('doctor_offices'))
+    if (office_has_doctor($page['office'])) {
+        $doctorTone = 'tint';
+        require APP . '/views/partials/doctor.php';
+    }
+
     $ctaImage = $s['image'];
     require APP . '/views/partials/consult-cta.php';
     break;

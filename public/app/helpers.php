@@ -166,6 +166,7 @@ function page_office_shape(string $slug, string $name, array $f): array
         'tel'          => $tel,
         'email'        => $get('email'),
         'hours'        => $hours,
+        'description'  => $get('description'),
         'days'         => $days,
         'address_full' => implode(', ', array_filter([$get('street'), $get('city'), trim($state . ' ' . $zip)])),
         // what the map searches for. Without a street address yet, the practice name and
@@ -320,14 +321,17 @@ function page_schema(array $p): array
     }
     $crumbs[] = ['@type' => 'ListItem', 'position' => count($crumbs) + 1, 'name' => $p['title'], 'item' => $url];
 
-    if ($p['type'] === 'location' && $p['office']) {
-        // the full local-business node: address, phone, map, hours, area served
-        $main = schema_office($p['office'], (string) $p['image']);
+    // Any page that belongs to an office — the office page itself and every landing
+    // page for that city — describes the office and says the page is about it.
+    if ($p['office']) {
+        $graph = [
+            schema_office($p['office'], (string) $p['image']),
+            schema_webpage($p['office'], $url, $p['seo_title'] !== '' ? $p['seo_title'] : $p['title'] . ' | ' . cfg('site_name')),
+        ];
     } else {
-        $main = ['@type' => 'WebPage', 'name' => $p['title'], 'url' => $url, 'description' => $p['description'], 'publisher' => $org];
+        $graph = [['@type' => 'WebPage', 'name' => $p['title'], 'url' => $url, 'description' => $p['description'], 'publisher' => $org]];
     }
-
-    $graph = [$main, ['@type' => 'BreadcrumbList', 'itemListElement' => $crumbs]];
+    $graph[] = ['@type' => 'BreadcrumbList', 'itemListElement' => $crumbs];
     // every page points back at the one practice, and names its orthodontist
     $graph[] = schema_practice();
     if (($doctor = schema_doctor()) !== []) {
@@ -538,6 +542,37 @@ function render(string $view, array $vars = [], array $meta = []): void
  * instead. Office pages, their landing pages and the booking page for one office all
  * set ig_book_office, so they keep a number.
  */
+/**
+ * The orthodontist, or [] when the practice has not set one up. Every view that shows
+ * him reads him from here, so a correction in bootstrap.php reaches all of them.
+ */
+function doctor_profile(): array
+{
+    $name  = trim((string) cfg('doctor_name'));
+    $photo = trim((string) cfg('doctor_photo'));
+    if ($name === '' || $photo === '' || !is_file(WEBROOT . '/assets/img/' . $photo)) {
+        return [];
+    }
+    [$width, $height] = (array) cfg('doctor_photo_size') + [600, 800];
+    return [
+        'name'       => $name,
+        'credential' => trim((string) cfg('doctor_credential')),
+        'photo'      => $photo,
+        'photo_w'    => $width,
+        'photo_h'    => $height,
+        'bio'        => array_values(array_filter(array_map('trim', (array) cfg('doctor_bio')))),
+        'badges'     => array_values(array_filter(array_map('trim', (array) cfg('doctor_badges')))),
+    ];
+}
+
+/** True when this office's pages should carry the orthodontist's profile. */
+function office_has_doctor(?array $office): bool
+{
+    return $office !== null
+        && doctor_profile() !== []
+        && in_array($office['slug'], (array) cfg('doctor_offices'), true);
+}
+
 /** A Google Maps search link for an address, for "Get directions". */
 function map_url(string $query): string
 {
