@@ -212,15 +212,25 @@
   });
 
   /* ---------- an office that only takes appointments on certain days ----------
-     Every day chip is tagged with its weekday, so once an office is chosen the
-     days it does not work are hidden. An office with no days set keeps them all. */
+     Every day chip is tagged with its weekday. Once an office is chosen, the days it
+     does not work are hidden outright and switched off, so neither a click nor a
+     keyboard can reach them. An office with no days set keeps every day.
+
+     The page holds six weeks of dates but never shows them all: SHOWN_DAYS of the
+     days that are actually available, which for a Tuesday-only office means the next
+     few Tuesdays rather than two. */
+  var SHOWN_DAYS = 10;
+
   function applyOfficeDays(days) {
     var allowed = String(days || '').split(',').map(function (d) { return d.trim().toLowerCase(); }).filter(Boolean);
     var note    = form.querySelector('[data-bk-days-note]');
+    var shown   = 0;
 
     form.querySelectorAll('[data-bk-day]').forEach(function (chip) {
-      var ok    = !allowed.length || allowed.indexOf(chip.getAttribute('data-bk-day')) !== -1;
-      var input = chip.querySelector('input');
+      var matches = !allowed.length || allowed.indexOf(chip.getAttribute('data-bk-day')) !== -1;
+      var ok      = matches && shown < SHOWN_DAYS;
+      var input   = chip.querySelector('input');
+      if (ok) shown++;
       chip.hidden    = !ok;
       input.disabled = !ok;
       if (!ok && input.checked) input.checked = false;
@@ -236,9 +246,11 @@
     }
   }
 
-  // an office booking link arrives with its office already chosen
+  // An office booking link arrives with its office already chosen. Either way this runs
+  // once on load, so the day buttons are trimmed to a readable number before anyone
+  // sees them, whether or not an office is known yet.
   var fixedOffice = form.querySelector('input[type="hidden"][name="office"][data-days]');
-  if (fixedOffice) applyOfficeDays(fixedOffice.getAttribute('data-days'));
+  applyOfficeDays(fixedOffice ? fixedOffice.getAttribute('data-days') : '');
   /* ---------- office search: type a city, zip code or office name, then pick a match ---------- */
   var find = root.querySelector('[data-bk-find]');
   if (find) {

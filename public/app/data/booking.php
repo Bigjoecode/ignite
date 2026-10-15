@@ -21,5 +21,8 @@ return [
         'afternoon' => 'Afternoon',
         'evening'   => 'Evening',
     ],
-    'days_ahead' => 14, // preferred-day choices start tomorrow
+    // Six weeks of preferred-day choices, so an office that sees patients one day a
+    // week still has several to offer. The booking page only ever shows a handful at
+    // once (assets/js/booking.js); this is the window, not the number of buttons.
+    'days_ahead' => 42, // preferred-day choices start tomorrow
 ];
