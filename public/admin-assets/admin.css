@@ -78,7 +78,7 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .adm-field{display:grid;gap:6px;margin-top:12px;}
 .adm-field > span{font-size:13px;font-weight:600;}
 .adm input[type=text],.adm input[type=email],.adm input[type=password],.adm input[type=url],
-.adm input[type=search],.adm input[type=datetime-local],.adm textarea,.adm select{
+.adm input[type=search],.adm input[type=datetime-local],.adm input[type=date],.adm textarea,.adm select{
   width:100%;min-height:40px;padding:8px 12px;border:1px solid var(--field);border-radius:9px;background:#FFFFFF;
   font-size:14.5px;transition:border-color .15s ease,box-shadow .15s ease;
 }
@@ -116,8 +116,17 @@ button,input,select,textarea{font:inherit;color:inherit;}
 .adm-tabs a span{font-weight:400;}
 .adm-tabs a:hover{background:#FFFFFF;color:var(--ink);}
 .adm-tabs a.is-active{background:var(--navy);color:#FFFFFF;}
-.adm-search{display:flex;gap:8px;}
-.adm .adm-search input{width:240px;}
+.adm-search{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+/* in the filter row every control sizes to its content, so they sit on one line on a
+   wide screen and wrap tidily on a narrow one */
+.adm .adm-search input[type="search"]{width:200px;}
+.adm .adm-search select{width:auto;min-width:140px;}
+.adm .adm-search input[type="date"]{width:auto;min-width:148px;}
+.adm-search__to{font-size:13.5px;color:var(--muted);}
+.adm-btn--plain{border-color:transparent;background:transparent;color:var(--muted);}
+.adm-btn--plain:hover{border-color:var(--line);color:var(--ink);}
+/* the plain-English line under the filters */
+.adm-toolbar__note{flex:1 0 100%;margin:0;font-size:13.5px;color:var(--muted);}
 .adm-table-wrap{overflow-x:auto;}
 .adm-table{width:100%;min-width:720px;border-collapse:collapse;}
 .adm-table th{padding:12px 16px;border-bottom:1px solid var(--line);background:var(--tint);color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.06em;text-align:left;text-transform:uppercase;}
@@ -378,7 +387,8 @@ a.adm-post-title:hover{color:var(--orange-600);}
   .adm-modal{padding:0;}
   .adm-modal__panel{height:100%;border-radius:0;}
   .adm-search{flex:1;}
-  .adm .adm-search input{width:100%;}
+  .adm .adm-search input[type="search"]{width:100%;}
+  .adm .adm-search input[type="date"]{flex:1 1 44%;min-width:0;}
   .adm-sec__head{flex-wrap:wrap;}
   .adm-switch{padding:0 14px 10px;}
 }

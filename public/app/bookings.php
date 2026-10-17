@@ -130,10 +130,70 @@ const BOOKING_KINDS = [
 ];
 
 /** Requests newest first. $filters: status ('trash' for the trash), kind, office, q (name, phone or email). */
+/**
+ * A YYYY-MM-DD date, or '' for anything else.
+ */
+function booking_ymd($value): string
+{
+    $value = trim((string) $value);
+    return preg_match('/^\d{4}-\d{2}-\d{2}$/', $value) ? $value : '';
+}
+
+/**
+ * The date range, read from a query string. 'by' says which date it means:
+ * 'received' is the day the request came in, 'preferred' the day the patient asked
+ * for. A range typed backwards still means the same days.
+ */
+function booking_range(array $src): array
+{
+    $from = booking_ymd($src['from'] ?? '');
+    $to   = booking_ymd($src['to'] ?? '');
+    if ($from !== '' && $to !== '' && $from > $to) {
+        [$from, $to] = [$to, $from];
+    }
+    return [
+        'by'   => ($src['by'] ?? '') === 'preferred' ? 'preferred' : 'received',
+        'from' => $from,
+        'to'   => $to,
+    ];
+}
+
+/**
+ * The WHERE for a date range, as [clauses, arguments].
+ * created_at is a UTC timestamp, so it is compared on its date part only; a request
+ * with no preferred day ("first available") is left out of a preferred-day range,
+ * because there is no day to match.
+ */
+function booking_range_where(array $filters): array
+{
+    $from = booking_ymd($filters['from'] ?? '');
+    $to   = booking_ymd($filters['to'] ?? '');
+    if ($from === '' && $to === '') {
+        return [[], []];
+    }
+    $column = ($filters['by'] ?? '') === 'preferred'
+        ? "CASE WHEN date LIKE '____-__-__' THEN date END"
+        : "substr(created_at, 1, 10)";
+    $where = [];
+    $args  = [];
+    if ($from !== '') {
+        $where[] = $column . ' >= ?';
+        $args[]  = $from;
+    }
+    if ($to !== '') {
+        $where[] = $column . ' <= ?';
+        $args[]  = $to;
+    }
+    return [$where, $args];
+}
+
 function booking_list(array $filters = [], int $limit = 200): array
 {
     $where = [($filters['status'] ?? '') === 'trash' ? 'trashed_at IS NOT NULL' : 'trashed_at IS NULL'];
     $args  = [];
+    [$rangeWhere, $rangeArgs] = booking_range_where($filters);
+    $where = array_merge($where, $rangeWhere);
+    $args  = array_merge($args, $rangeArgs);
     if (!empty($filters['kind']) && isset(BOOKING_KINDS[$filters['kind']])) {
         // anything saved before the video and smile pages existed is an office visit
         $where[] = $filters['kind'] === 'office' ? "(kind = 'office' OR kind = '')" : 'kind = ?';
@@ -159,14 +219,31 @@ function booking_list(array $filters = [], int $limit = 200): array
     return $stmt->fetchAll();
 }
 
+/**
+ * The WHERE shared by the counts: the office, when the login is tied to one, and the
+ * date range, so the numbers on the tabs always describe the list underneath them.
+ */
+function booking_scope_where(array $filters): array
+{
+    $where = [];
+    $args  = [];
+    if (($office = (string) ($filters['office'] ?? '')) !== '') {
+        $where[] = 'office = ?';
+        $args[]  = $office;
+    }
+    [$rangeWhere, $rangeArgs] = booking_range_where($filters);
+    return [array_merge($where, $rangeWhere), array_merge($args, $rangeArgs)];
+}
+
 /** How many requests sit in each status, plus '' for all and 'trash', for the filter tabs. */
-function booking_counts(string $office = ''): array
+function booking_counts(array $filters = []): array
 {
     $counts = ['' => 0, 'trash' => 0] + array_map(static fn(): int => 0, BOOKING_STATUSES);
+    [$where, $args] = booking_scope_where($filters);
     $sql = 'SELECT status, trashed_at IS NULL AS live, COUNT(*) AS n FROM bookings'
-        . ($office !== '' ? ' WHERE office = ?' : '') . ' GROUP BY status, live';
+        . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' GROUP BY status, live';
     $stmt = db()->prepare($sql);
-    $stmt->execute($office !== '' ? [$office] : []);
+    $stmt->execute($args);
     foreach ($stmt->fetchAll() as $row) {
         if (!$row['live']) {
             $counts['trash'] += (int) $row['n'];
@@ -179,13 +256,15 @@ function booking_counts(string $office = ''): array
 }
 
 /** How many of each kind are waiting, for the filter. */
-function booking_kind_counts(string $office = ''): array
+function booking_kind_counts(array $filters = []): array
 {
     $counts = ['' => 0] + array_map(static fn(): int => 0, BOOKING_KINDS);
-    $sql    = "SELECT CASE WHEN kind = '' THEN 'office' ELSE kind END AS k, COUNT(*) AS n
-                 FROM bookings WHERE trashed_at IS NULL" . ($office !== '' ? ' AND office = ?' : '') . ' GROUP BY k';
+    [$where, $args] = booking_scope_where($filters);
+    array_unshift($where, 'trashed_at IS NULL');
+    $sql = "SELECT CASE WHEN kind = '' THEN 'office' ELSE kind END AS k, COUNT(*) AS n
+              FROM bookings WHERE " . implode(' AND ', $where) . ' GROUP BY k';
     $stmt = db()->prepare($sql);
-    $stmt->execute($office !== '' ? [$office] : []);
+    $stmt->execute($args);
     foreach ($stmt->fetchAll() as $row) {
         if (isset($counts[$row['k']])) {
             $counts[$row['k']] = (int) $row['n'];

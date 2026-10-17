@@ -2,11 +2,30 @@
 // Vars: $rows, $counts, $filters (status, office, q), $onlyOffice (one office, or ''),
 //       $bookingsOnly (this login cannot leave the bookings screen)
 $query = static function (array $changes) use ($filters): string {
-    $params = array_filter(array_merge($filters, $changes), static fn(string $v): bool => $v !== '');
+    $params = array_merge($filters, $changes);
+    // which date the range means only matters when there is a range
+    if (($params['from'] ?? '') === '' && ($params['to'] ?? '') === '') {
+        unset($params['by']);
+    }
+    $params = array_filter($params, static fn(string $v): bool => $v !== '');
     return $params ? '?' . http_build_query($params) : '';
 };
 $tabs    = ['' => 'All'] + BOOKING_STATUSES + ['trash' => 'Trash'];
 $inTrash = $filters['status'] === 'trash';
+$hasRange = $filters['from'] !== '' || $filters['to'] !== '';
+// a plain-English line under the dates, so nobody has to read the boxes back
+$rangeLabel = static function (array $f): string {
+    $what = $f['by'] === 'preferred' ? 'asked to come in' : 'came in';
+    $day  = static fn(string $d): string => date('j M Y', strtotime($d));
+    if ($f['from'] !== '' && $f['to'] !== '') {
+        return $f['from'] === $f['to']
+            ? 'Requests that ' . $what . ' on ' . $day($f['from']) . '.'
+            : 'Requests that ' . $what . ' between ' . $day($f['from']) . ' and ' . $day($f['to']) . '.';
+    }
+    return $f['from'] !== ''
+        ? 'Requests that ' . $what . ' on or after ' . $day($f['from']) . '.'
+        : 'Requests that ' . $what . ' on or before ' . $day($f['to']) . '.';
+};
 ?>
 <div class="adm-head">
   <h1>Bookings</h1>
@@ -49,14 +68,30 @@ $inTrash = $filters['status'] === 'trash';
     </select>
 <?php endif; ?>
     <input type="search" name="q" value="<?= e($filters['q']) ?>" placeholder="Name, phone or email" aria-label="Search bookings">
+    <select name="by" aria-label="Which date the range means">
+      <option value="received"<?= $filters['by'] === 'received' ? ' selected' : '' ?>>Date received</option>
+      <option value="preferred"<?= $filters['by'] === 'preferred' ? ' selected' : '' ?>>Preferred day</option>
+    </select>
+    <input type="date" name="from" value="<?= e($filters['from']) ?>" aria-label="From" title="From">
+    <span class="adm-search__to">to</span>
+    <input type="date" name="to" value="<?= e($filters['to']) ?>" aria-label="To" title="To">
     <button class="adm-btn" type="submit">Search</button>
+<?php if ($hasRange || $filters['q'] !== '' || $filters['kind'] !== '' || ($onlyOffice === '' && $filters['office'] !== '')): ?>
+    <a class="adm-btn adm-btn--plain" href="/admin/bookings/<?= $filters['status'] !== '' ? e('?status=' . $filters['status']) : '' ?>">Clear</a>
+<?php endif; ?>
   </form>
+<?php if ($hasRange): ?>
+  <p class="adm-toolbar__note"><?= e($rangeLabel($filters)) ?></p>
+<?php endif; ?>
 </div>
 
 <?php if (!$rows): ?>
 <div class="adm-card adm-empty">
-<?php if ($filters['q'] !== '' || $filters['office'] !== '' || $filters['status'] !== ''): ?>
+<?php if ($hasRange || $filters['q'] !== '' || $filters['office'] !== '' || $filters['status'] !== '' || $filters['kind'] !== ''): ?>
   <h2>No bookings match</h2>
+<?php if ($hasRange): ?>
+  <p><?= e($rangeLabel($filters)) ?> Nothing was found.</p>
+<?php endif; ?>
   <p><a href="/admin/bookings/">Show them all</a></p>
 <?php else: ?>
   <h2>No requests yet</h2>

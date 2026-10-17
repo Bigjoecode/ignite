@@ -17,17 +17,20 @@ function admin_bookings_index(array $user): void
     booking_import_file();   // anything that only reached bookings.jsonl
 
     $mine    = admin_user_office($user);
-    $filters = [
+    $filters = booking_range($_GET) + [
         'status' => (string) ($_GET['status'] ?? ''),
         'kind'   => (string) ($_GET['kind'] ?? ''),
         'office' => $mine !== '' ? $mine : (string) ($_GET['office'] ?? ''),
         'q'      => mb_substr(trim((string) ($_GET['q'] ?? '')), 0, 60),
     ];
+    // the tab and type counts describe the same range as the list under them, but not
+    // the same status or kind — those are what the tabs and the type box choose between
+    $scope = ['office' => $filters['office']] + booking_range($_GET);
 
     admin_render('bookings', [
         'rows'       => booking_list($filters),
-        'counts'     => booking_counts($mine),
-        'kindCounts' => booking_kind_counts($mine),
+        'counts'     => booking_counts($scope),
+        'kindCounts' => booking_kind_counts($scope),
         'filters'    => $filters,
         'onlyOffice' => $mine,
         'bookingsOnly' => admin_office_login($user),   // no Settings to link to
@@ -121,7 +124,7 @@ function admin_bookings_export(array $user): void
         'kind'   => (string) ($_GET['kind'] ?? ''),
         'office' => $mine !== '' ? $mine : (string) ($_GET['office'] ?? ''),
         'q'      => (string) ($_GET['q'] ?? ''),
-    ], 5000);
+    ] + booking_range($_GET), 5000);   // the spreadsheet matches what is on screen
 
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="ignite-bookings-' . date('Y-m-d') . '.csv"');

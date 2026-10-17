@@ -1,38 +1,79 @@
-/* The orthodontist's profile (views/partials/doctor.php). Brand tokens come from the
-   page's own stylesheet, with fallbacks so the block also stands on a landing page. */
-.ig-doc__grid{
+/* The orthodontist's profile (views/partials/doctor.php).
+   Self-contained on purpose: this block appears on office pages, on ad landing pages and
+   on /meet-the-doctor/, and those three load different stylesheets. Nothing here leans on
+   the site's ig-btn / ig-kicker / ig-h2, so it looks the same wherever it is dropped. */
+.ig-ortho{
+  --doc-navy:#0B2A55;
+  --doc-orange:#F47421;
+  --doc-orange-dark:#DA6210;
+  --doc-muted:#5B6B82;
+  --doc-line:#E3E9F1;
+  --doc-tint:#F4F7FB;
+  padding:clamp(48px,5vw,76px) 0;
+  background:#FFFFFF;
+  font-family:"Poppins","Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+.ig-ortho--tint{background:var(--doc-tint);}
+.ig-ortho *{box-sizing:border-box;}
+
+.ig-ortho__wrap{max-width:1200px;margin:0 auto;padding:0 24px;}
+.ig-ortho__grid{
   display:grid;grid-template-columns:minmax(220px,330px) 1fr;
   gap:clamp(24px,3.4vw,56px);align-items:center;
 }
 
-.ig-doc__media{margin:0;}
-.ig-doc__media img{
+.ig-ortho__media{margin:0;}
+.ig-ortho__media img{
   display:block;width:100%;height:auto;border-radius:18px;
   box-shadow:0 14px 40px rgba(11,42,85,.16);
 }
 
-.ig-doc__copy .ig-h2{margin:6px 0 4px;}
-.ig-doc__cred{
+.ig-ortho__kicker{
+  display:block;margin:0 0 8px;
+  font-size:13px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--doc-orange);
+}
+.ig-ortho__name{
+  margin:0 0 4px;
+  font-size:clamp(26px,2.6vw,36px);font-weight:800;line-height:1.2;
+  color:var(--doc-navy);
+}
+.ig-ortho__cred{
   margin:0 0 18px;font-size:14.5px;font-weight:700;letter-spacing:.2px;
-  color:var(--ig-orange,#F47421);
+  color:var(--doc-orange);
 }
-.ig-doc__copy p{margin:0 0 14px;font-size:16px;line-height:1.75;color:var(--ig-muted,#5B6B82);}
+.ig-ortho__bio{margin:0 0 14px;font-size:16px;line-height:1.75;color:var(--doc-muted);}
 
-.ig-doc__badges{list-style:none;margin:20px 0 24px;padding:0;display:grid;gap:11px;}
-.ig-doc__badges li{
+.ig-ortho__badges{list-style:none;margin:20px 0 26px;padding:0;display:grid;gap:11px;}
+.ig-ortho__badges li{
   display:flex;align-items:flex-start;gap:10px;
-  font-size:15px;font-weight:600;color:var(--ig-navy,#0B2A55);
+  font-size:15px;font-weight:600;line-height:1.45;color:var(--doc-navy);
 }
-.ig-doc__badges svg{
+.ig-ortho__badges svg{
   flex:0 0 auto;width:20px;height:20px;margin-top:1px;
-  fill:none;stroke:var(--ig-orange,#F47421);stroke-width:2.6;
+  fill:none;stroke:var(--doc-orange);stroke-width:2.6;
   stroke-linecap:round;stroke-linejoin:round;
 }
 
+.ig-ortho__actions{display:flex;flex-wrap:wrap;gap:12px;}
+.ig-ortho__btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:52px;padding:0 28px;border-radius:8px;
+  border:2px solid var(--doc-orange);background:var(--doc-orange);
+  font-size:15.5px;font-weight:700;color:#FFFFFF !important;text-decoration:none !important;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.ig-ortho__btn:hover{background:var(--doc-orange-dark);border-color:var(--doc-orange-dark);transform:translateY(-2px);}
+.ig-ortho__btn--out{background:transparent;color:var(--doc-navy) !important;border-color:var(--doc-line);}
+.ig-ortho__btn--out:hover{background:transparent;border-color:var(--doc-orange);color:var(--doc-orange) !important;}
+
 @media (max-width:820px){
-  .ig-doc__grid{grid-template-columns:1fr;gap:26px;}
-  .ig-doc__media{max-width:300px;margin:0 auto;}
-  .ig-doc__copy{text-align:center;}
-  .ig-doc__badges li{text-align:left;}
-  .ig-doc .ig-btns{justify-content:center;}
+  .ig-ortho__grid{grid-template-columns:1fr;gap:26px;}
+  .ig-ortho__media{max-width:290px;margin:0 auto;}
+  .ig-ortho__copy{text-align:center;}
+  .ig-ortho__badges li{text-align:left;}
+  .ig-ortho__actions{justify-content:center;}
+}
+@media (max-width:460px){
+  .ig-ortho__btn{width:100%;}
 }

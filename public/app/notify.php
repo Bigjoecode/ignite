@@ -126,11 +126,15 @@ function booking_email(array $r): array
         'Request ID: ' . ($r['id'] ?? ''),
     ]);
 
+    $kindWords = $smile ? 'Smile Preview request' : ($virtual ? 'Virtual Consultation request' : 'Office Visit request');
+
     return [
-        // the subject says what came in and which office it is for, so the right desk
-        // can tell at a glance without opening it
-        'subject' => 'You just received a '
-            . ($smile ? 'Smile Preview request' : ($virtual ? 'Virtual Consultation' : 'Consultation request'))
+        // The subject says which of the three kinds of request came in and which office it
+        // is for, so the right desk can tell at a glance without opening it. The wording
+        // matches the labels on the bookings screen: Office Visit, Virtual, Smile.
+        'subject' => 'You just received '
+            // "an Office Visit", "a Virtual Consultation"
+            . ($kindWords[0] === 'O' ? 'an ' : 'a ') . $kindWords
             . ' for ' . (trim((string) ($office['name'] ?? $r['office'] ?? '')) ?: cfg('site_name'))
             . ' — ' . ($name !== '' ? $name : 'new patient'),
         'body'    => implode("\n", $lines) . "\n",
