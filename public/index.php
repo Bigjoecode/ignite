@@ -273,6 +273,20 @@ if (preg_match('#^[a-z0-9-]+(?:/[a-z0-9-]+)?$#', $path) && ($row = page_find('se
     exit;
 }
 
+// the orthodontist has a page built for him, not the generic text template
+if ($path === 'meet-the-doctor' && isset(pages()[$path]) && doctor_profile()) {
+    $p = pages()[$path];
+    render('doctor-page', ['p' => $p], $meta + [
+        'title'       => $p['title'] . ' | Ignite Orthodontics',
+        'description' => $p['description'],
+        'css' => ['doctor-page.css'],   // the layout adds consult.css for the booking band
+        'schema' => ($doctor = schema_doctor()) !== []
+            ? ['@context' => 'https://schema.org', '@graph' => [$doctor, schema_practice()]]
+            : null,
+    ]);
+    exit;
+}
+
 if (isset(pages()[$path])) {
     $p = pages()[$path];
     render('page', ['p' => $p, 'slug' => $path], $meta + [
